@@ -35,7 +35,7 @@ const AuthRouteProvider = ({ children }: ProtectedRouteProps) => {
   if (authState.authenticated) {
     const isAuthPage = ['/signup', '/login'].some(path => location.pathname.startsWith(path));
     if (isAuthPage && location.pathname !== '/') {
-      return <Navigate to="/dashboard" replace />;
+      return <Navigate to="/" replace />;
     }
     return <>{children}</>;
   }

@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     children: [
       // Protected routes
       {
-        path: '/dashboard',
+        path: '/',
         element: (
           <ProtectedRouteProvider>
             <Suspense fallback>
