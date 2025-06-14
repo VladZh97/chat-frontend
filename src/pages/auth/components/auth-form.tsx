@@ -10,6 +10,7 @@ import { loginWithEmailLink, loginWithGoogle } from '@/utils/auth';
 import { toast } from 'sonner';
 import { useState } from 'preact/compat';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -23,6 +24,7 @@ const AuthForm = ({
   isLinkAuthLoading: boolean;
   login?: boolean;
 }) => {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,6 +45,17 @@ const AuthForm = ({
       console.error(error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleLoginWithGoogle = async () => {
+    if (isLoading || isLinkAuthLoading) return;
+    try {
+      await loginWithGoogle();
+      navigate('/');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to login with Google');
     }
   };
 
@@ -89,10 +102,7 @@ const AuthForm = ({
       <Button
         variant="secondary"
         className="mb-6 w-full cursor-pointer border border-neutral-200 bg-white"
-        onClick={() => {
-          if (isLoading || isLinkAuthLoading) return;
-          loginWithGoogle();
-        }}
+        onClick={handleLoginWithGoogle}
       >
         Continue with Google
       </Button>
