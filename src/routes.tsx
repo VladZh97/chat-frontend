@@ -5,6 +5,7 @@ import ProtectedRouteProvider from './providers/protected-route-provider';
 import AuthRouteProvider from './providers/auth-route-provider';
 const Auth = lazy(() => import('./pages/auth'));
 const Dashboard = lazy(() => import('./pages/dashboard'));
+const Chatlog = lazy(() => import('./pages/chatlog'));
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,16 @@ const router = createBrowserRouter([
               <Auth login />
             </Suspense>
           </AuthRouteProvider>
+        ),
+      },
+      {
+        path: '/chatlog',
+        element: (
+          <ProtectedRouteProvider>
+            <Suspense fallback>
+              <Chatlog />
+            </Suspense>
+          </ProtectedRouteProvider>
         ),
       },
       // {

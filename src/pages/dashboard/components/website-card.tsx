@@ -19,10 +19,6 @@ const WebsiteCard = () => {
         </CardDescription>
         <span className="mb-2 text-sm font-normal text-neutral-950">Your website (optional)</span>
         <Input placeholder="https://" className="mb-6" />
-        <div className="mb-8 flex items-center space-x-2">
-          <Switch id="crawl-links" className="cursor-pointer" />
-          <Label htmlFor="crawl-link">Crawl link</Label>
-        </div>
       </CardContent>
       <CardFooter className="border-t border-neutral-200 bg-neutral-50">
         <Button className="w-full cursor-pointer">Next step</Button>
