@@ -4,6 +4,7 @@ import Logo from '@/assets/logo-dark.svg';
 import Avatar from '@/assets/avatar-placeholder.jpg';
 import { ChevronsUpDown } from 'lucide-react';
 import WelcomeMessage from './welcome-message';
+import WebsiteCard from './website-card';
 
 const Dashboard = () => {
   const { logout } = useAuth();
@@ -29,7 +30,8 @@ const Dashboard = () => {
           <ChevronsUpDown className="size-4 text-neutral-700" />
         </div>
       </div>
-      <WelcomeMessage />
+      {/* <WelcomeMessage /> */}
+      <WebsiteCard />
     </div>
   );
 };
