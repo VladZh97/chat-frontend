@@ -3,9 +3,8 @@ import App from './app';
 import { lazy, Suspense } from 'preact/compat';
 import ProtectedRouteProvider from './providers/protected-route-provider';
 import AuthRouteProvider from './providers/auth-route-provider';
-const Signup = lazy(() => import('./pages/signup'));
+const Auth = lazy(() => import('./pages/auth'));
 const Dashboard = lazy(() => import('./pages/dashboard'));
-const Login = lazy(() => import('./pages/login'));
 
 const router = createBrowserRouter([
   {
@@ -28,7 +27,7 @@ const router = createBrowserRouter([
         element: (
           <AuthRouteProvider>
             <Suspense fallback>
-              <Signup />
+              <Auth />
             </Suspense>
           </AuthRouteProvider>
         ),
@@ -38,7 +37,7 @@ const router = createBrowserRouter([
         element: (
           <AuthRouteProvider>
             <Suspense fallback>
-              <Login />
+              <Auth login />
             </Suspense>
           </AuthRouteProvider>
         ),

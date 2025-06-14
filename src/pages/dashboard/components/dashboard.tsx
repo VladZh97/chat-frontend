@@ -5,12 +5,15 @@ import Avatar from '@/assets/avatar-placeholder.jpg';
 import { ChevronsUpDown } from 'lucide-react';
 import WelcomeMessage from './welcome-message';
 import WebsiteCard from './website-card';
+import Knowledge from './knowledge/kowledge';
+import { Button } from '@/components/ui/button';
 
 const Dashboard = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   return (
     <div className="relative grid min-h-screen place-items-center">
+      <Button onClick={logout}>Logout</Button>
       <div className="absolute top-0 left-0 flex w-full items-center justify-between border-b border-neutral-200 bg-white/90 p-4 backdrop-blur-[6px]">
         <div className="flex items-center justify-center p-2">
           <img src={Logo} alt="logo" className="h-auto w-[86px]" width="86" height="20" />
@@ -31,7 +34,8 @@ const Dashboard = () => {
         </div>
       </div>
       {/* <WelcomeMessage /> */}
-      <WebsiteCard />
+      {/* <WebsiteCard /> */}
+      <Knowledge />
     </div>
   );
 };

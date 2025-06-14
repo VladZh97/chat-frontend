@@ -16,7 +16,13 @@ const formSchema = z.object({
     message: 'Invalid email address.',
   }),
 });
-const SignupForm = ({ isLinkAuthLoading }: { isLinkAuthLoading: boolean }) => {
+const AuthForm = ({
+  isLinkAuthLoading,
+  login,
+}: {
+  isLinkAuthLoading: boolean;
+  login?: boolean;
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,8 +49,14 @@ const SignupForm = ({ isLinkAuthLoading }: { isLinkAuthLoading: boolean }) => {
   return (
     <div className="mx-auto flex w-full max-w-[350px] flex-col items-center">
       <img src={Icon} alt="icon" className="mb-6 size-8" width="32" height="32" />
-      <h1 className="mb-2 text-2xl font-semibold text-neutral-950">Create an account</h1>
-      <p className="mb-6 text-sm text-neutral-500">Enter your email below to create your account</p>
+      <h1 className="mb-2 text-2xl font-semibold text-neutral-950">
+        {login ? 'Login to your account' : 'Create an account'}
+      </h1>
+      <p className="mb-6 text-sm text-neutral-500">
+        {login
+          ? 'Enter your email below to login to your account'
+          : 'Enter your email below to create your account'}
+      </p>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-2">
           <FormField
@@ -64,7 +76,7 @@ const SignupForm = ({ isLinkAuthLoading }: { isLinkAuthLoading: boolean }) => {
             className={cn('w-full cursor-pointer', isLoading && 'cursor-default')}
           >
             {isLoading || isLinkAuthLoading ? <LoaderCircle className="animate-spin" /> : <Mail />}
-            Sign In with Email
+            {login ? 'Sign In with Email' : 'Sign Up with Email'}
           </Button>
         </form>
       </Form>
@@ -99,4 +111,4 @@ const SignupForm = ({ isLinkAuthLoading }: { isLinkAuthLoading: boolean }) => {
   );
 };
 
-export default SignupForm;
+export default AuthForm;

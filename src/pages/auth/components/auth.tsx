@@ -1,10 +1,10 @@
 import signupImage from '@/assets/signup.jpg';
 import Logo from '@/assets/logo-light.svg';
-import SignupForm from './signup-form';
-import { useNavigate } from 'react-router';
+import AuthForm from './auth-form';
+import { useNavigate } from 'react-router-dom';
 import { useLinkAuth } from '@/hooks';
 
-const Signup = () => {
+const Auth = ({ login }: { login?: boolean }) => {
   const navigate = useNavigate();
   const { isLinkAuthLoading } = useLinkAuth();
   return (
@@ -36,16 +36,19 @@ const Signup = () => {
       <div className="relative grid place-items-center p-10">
         <div className="absolute top-10 left-1/2 mx-auto flex w-full max-w-[586px] -translate-x-1/2 items-center justify-end">
           <a
-            onClick={() => navigate('/login')}
+            onClick={() => {
+              console.log(login);
+              navigate(login ? '/signup' : '/login');
+            }}
             className="cursor-pointer px-4 py-2 text-sm text-neutral-950 transition-opacity hover:opacity-70"
           >
-            Login
+            {login ? 'Sign up' : 'Login'}
           </a>
         </div>
-        <SignupForm isLinkAuthLoading={isLinkAuthLoading} />
+        <AuthForm isLinkAuthLoading={isLinkAuthLoading} login={login} />
       </div>
     </div>
   );
 };
 
-export default Signup;
+export default Auth;
