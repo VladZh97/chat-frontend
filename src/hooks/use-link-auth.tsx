@@ -1,20 +1,20 @@
-import api from '@/api/api';
+import auth from '@/api/auth';
 import { getCustomClaims, isLoggedIn, refreshAuthToken } from '@/utils/auth';
 import { getAuth, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import { useNavigate } from 'react-router-dom';
 
 const useLinkAuth = () => {
-  const auth = getAuth();
+  const authFirebase = getAuth();
   const navigate = useNavigate();
   const [isLinkAuthLoading, setIsLinkAuthLoading] = useState(false);
 
   const handleLinkAuth = useCallback(async () => {
     // Early return if not a sign-in link
-    if (!isSignInWithEmailLink(auth, window.location.href)) return;
+    if (!isSignInWithEmailLink(authFirebase, window.location.href)) return;
     const claims = await getCustomClaims();
     if (!claims.accountId) {
-      await api.post('/auth');
+      await auth.create();
       await refreshAuthToken();
     }
 
@@ -33,7 +33,7 @@ const useLinkAuth = () => {
     if (!email) return;
 
     try {
-      await signInWithEmailLink(auth, email, window.location.href);
+      await signInWithEmailLink(authFirebase, email, window.location.href);
       window.localStorage.removeItem('emailForSignIn');
       navigate('/');
     } catch (error) {

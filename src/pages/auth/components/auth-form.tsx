@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 import { useState } from 'preact/compat';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
-import api from '@/api/api';
+import auth from '@/api/auth';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -60,7 +60,7 @@ const AuthForm = ({
       await loginWithGoogle();
       const claims = await getCustomClaims();
       if (!claims.accountId) {
-        await api.post('/auth');
+        await auth.create();
         await refreshAuthToken();
       }
       navigate('/');
