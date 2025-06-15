@@ -13,7 +13,7 @@ const Board = () => {
           <Button>Save changes</Button>
         </div>
       </div>
-      <div className="flex px-8 pt-4 pb-6">
+      <div className="flex gap-8 px-8 pt-4 pb-6">
         <BoardContent />
         <ChatView />
       </div>

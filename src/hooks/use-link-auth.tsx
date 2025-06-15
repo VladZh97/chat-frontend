@@ -1,4 +1,5 @@
-import { isLoggedIn } from '@/utils/auth';
+import api from '@/api/api';
+import { getCustomClaims, isLoggedIn, refreshAuthToken } from '@/utils/auth';
 import { getAuth, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +12,11 @@ const useLinkAuth = () => {
   const handleLinkAuth = useCallback(async () => {
     // Early return if not a sign-in link
     if (!isSignInWithEmailLink(auth, window.location.href)) return;
+    const claims = await getCustomClaims();
+    if (!claims.accountId) {
+      await api.post('/auth');
+      await refreshAuthToken();
+    }
 
     // Redirect if already logged in
     if (await isLoggedIn()) {

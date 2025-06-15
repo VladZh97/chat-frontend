@@ -6,11 +6,17 @@ import { LoaderCircle, Mail } from 'lucide-react';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { loginWithEmailLink, loginWithGoogle } from '@/utils/auth';
+import {
+  getCustomClaims,
+  loginWithEmailLink,
+  loginWithGoogle,
+  refreshAuthToken,
+} from '@/utils/auth';
 import { toast } from 'sonner';
 import { useState } from 'preact/compat';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
+import api from '@/api/api';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -52,6 +58,11 @@ const AuthForm = ({
     if (isLoading || isLinkAuthLoading) return;
     try {
       await loginWithGoogle();
+      const claims = await getCustomClaims();
+      if (!claims.accountId) {
+        await api.post('/auth');
+        await refreshAuthToken();
+      }
       navigate('/');
     } catch (error) {
       console.error(error);
