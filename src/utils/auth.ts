@@ -51,7 +51,9 @@ export const loginWithEmailPassword = async (email: string, password: string): P
  */
 export const loginWithEmailLink = async (email: string): Promise<void> => {
   const allowedPaths = ['/login', '/signup'];
-  const path = allowedPaths.includes(window.location.pathname) ? '' : '/login';
+  const path = allowedPaths.includes(window.location.pathname)
+    ? window.location.pathname
+    : '/login';
   try {
     const actionCodeSettings = {
       url: window.location.origin + path,
