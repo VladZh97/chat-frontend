@@ -1,4 +1,4 @@
-import ChatView from './chat-view';
+import ChatView from '@/components/chat-view';
 import ChatsList from './chats-list';
 
 const BoardMain = () => {

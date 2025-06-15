@@ -1,5 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { PaintBucket } from 'lucide-react';
+import BoardContent from './board-content';
+import ChatView from '@/components/chat-view';
+
 
 const Board = () => {
   return (
@@ -14,7 +17,10 @@ const Board = () => {
           <Button>Save changes</Button>
         </div>
       </div>
-      {/* <BoardMain /> */}
+      <div className="pt-4 pb-6 px-8 flex">
+        <BoardContent />
+        <ChatView />
+      </div>
     </div>
   );
 };

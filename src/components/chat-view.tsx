@@ -4,7 +4,7 @@ import icon from '@/assets/chat-icon.png';
 
 const ChatView = () => {
   return (
-    <div className="flex grow flex-col">
+    <div className="flex flex-col w-[480px]">
       <span className="mb-2 block text-sm text-neutral-950">Conversation</span>
       <div className="grow overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100 p-8 shadow-sm">
         <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow">

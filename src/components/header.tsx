@@ -10,7 +10,7 @@ const LINK_STYLE =
 const Header = () => {
   const { pathname } = useLocation();
   return (
-    <div className="relative top-0 left-0 flex w-full items-center justify-between border-b border-neutral-200 bg-white/90 p-4 backdrop-blur-[6px]">
+    <div className="fixed top-0 left-0 flex w-full z-50 items-center justify-between border-b border-neutral-200 bg-white/90 p-4 backdrop-blur-[6px]">
       <div className="flex items-center gap-8">
         <div className="flex items-center justify-center p-2">
           <img src={Logo} alt="logo" className="h-auto w-[86px]" width="86" height="20" />
