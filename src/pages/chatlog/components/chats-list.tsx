@@ -1,3 +1,4 @@
+import { ScrollArea } from '@/components/ui/scroll-area';
 import ChatsPagination from './chats-pagination';
 import SingleChat from './single-chat';
 
@@ -11,19 +12,9 @@ const ChatsList = () => {
           <span className="w-[88px] px-3">Messages</span>
           <span className="block w-[52px]"></span>
         </div>
-        <div className="divide-y divide-neutral-200">
+        <ScrollArea className="h-[calc(100vh-350px)] max-h-[768px] w-[580px]">
           <SingleChat />
-          <SingleChat />
-          <SingleChat />
-          <SingleChat />
-          <SingleChat />
-          <SingleChat />
-          <SingleChat />
-          <SingleChat />
-          <SingleChat />
-          <SingleChat live />
-          <SingleChat />
-        </div>
+        </ScrollArea>
       </div>
       <ChatsPagination />
     </div>

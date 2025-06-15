@@ -3,7 +3,7 @@ import { Ellipsis } from 'lucide-react';
 
 const SingleChat = ({ live }: { live?: boolean }) => {
   return (
-    <div className="flex cursor-pointer items-center border-r-2 border-r-transparent transition-colors hover:border-r-neutral-950 hover:bg-neutral-50">
+    <div className="flex cursor-pointer items-center border-r-2 border-b border-neutral-200 border-r-transparent transition-colors hover:border-r-neutral-950 hover:bg-neutral-50">
       <div className="flex w-[96px] shrink-0 items-center px-3 py-4">
         {live ? (
           <Badge variant="secondary" className="bg-green-200 text-green-800">
@@ -14,7 +14,7 @@ const SingleChat = ({ live }: { live?: boolean }) => {
         )}
       </div>
       <span className="grow truncate px-3 py-4 text-sm text-neutral-900">
-        I have a question about your services I have a question about your services
+        I have a question about your services
       </span>
       <span className="flex w-[88px] shrink-0 items-center justify-end px-3 py-4 text-sm text-neutral-500">
         12
