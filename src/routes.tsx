@@ -6,6 +6,7 @@ import AuthRouteProvider from './providers/auth-route-provider';
 const Auth = lazy(() => import('./pages/auth'));
 const Dashboard = lazy(() => import('./pages/dashboard'));
 const Chatlog = lazy(() => import('./pages/chatlog'));
+const Playground = lazy(() => import('./pages/playground'));
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,16 @@ const router = createBrowserRouter([
           <ProtectedRouteProvider>
             <Suspense fallback>
               <Chatlog />
+            </Suspense>
+          </ProtectedRouteProvider>
+        ),
+      },
+      {
+        path: '/playground',
+        element: (
+          <ProtectedRouteProvider>
+            <Suspense fallback>
+              <Playground />
             </Suspense>
           </ProtectedRouteProvider>
         ),
