@@ -59,7 +59,7 @@ const AddNewKnowledgeSource = ({ children }: { children: React.ReactNode }) => {
   return (
     <Dialog>
       <Dialog.Trigger>{children}</Dialog.Trigger>
-      <Dialog.Content className="w-[448px]">
+      <Dialog.Content className="w-[448px] overflow-hidden">
         <div className="p-6 pb-4">
           <BaseIcon className="mb-4" />
           <p className="mb-[6px] text-base font-semibold text-neutral-900">Add new source</p>
