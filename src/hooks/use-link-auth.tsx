@@ -12,11 +12,6 @@ const useLinkAuth = () => {
   const handleLinkAuth = useCallback(async () => {
     // Early return if not a sign-in link
     if (!isSignInWithEmailLink(authFirebase, window.location.href)) return;
-    const claims = await getCustomClaims();
-    if (!claims.accountId) {
-      await auth.create();
-      await refreshAuthToken();
-    }
 
     // Redirect if already logged in
     if (await isLoggedIn()) {
@@ -35,6 +30,11 @@ const useLinkAuth = () => {
     try {
       await signInWithEmailLink(authFirebase, email, window.location.href);
       window.localStorage.removeItem('emailForSignIn');
+      const claims = await getCustomClaims();
+      if (!claims.accountId) {
+        await auth.create();
+        await refreshAuthToken();
+      }
       navigate('/');
     } catch (error) {
       console.error('Link authentication failed:', error);

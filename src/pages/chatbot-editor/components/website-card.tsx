@@ -2,20 +2,22 @@ import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import Icon from '@/assets/icon.svg';
 import { Input } from '@/components/ui/input';
-import { useDashboardStoreShallow } from '../store';
-import { useMemo } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
+import { useMutation } from '@tanstack/react-query';
+import { knowledge } from '@/api/knowledge';
+import { useParams } from 'react-router-dom';
 
 const WebsiteCard = () => {
-  const { website, setWebsite, setStep } = useDashboardStoreShallow(s => ({
-    website: s.website,
-    setWebsite: s.setWebsite,
-    setStep: s.setStep,
-  }));
+  const { id } = useParams();
+  const [website, setWebsite] = useState('');
+  const { mutate: createKnowledge } = useMutation({
+    mutationFn: knowledge.website,
+  });
 
   const isValid = useMemo(() => {
     if (!website) return true; // Empty is valid since it's optional
     const urlPattern =
-      /^https:\/\/(?:www\.)?[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
+      /^https:\/\/(?:www\.)?[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}(?:\/[a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]*)?$/;
     return urlPattern.test(website);
   }, [website]);
 
@@ -46,7 +48,13 @@ const WebsiteCard = () => {
         <Button
           className="w-full cursor-pointer"
           disabled={!isValid}
-          onClick={() => setStep('content')}
+          onClick={() =>
+            createKnowledge({
+              chatbotId: id as string,
+              url: website,
+              metadata: {},
+            })
+          }
         >
           Next step
         </Button>

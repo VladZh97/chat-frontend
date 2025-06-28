@@ -6,13 +6,24 @@ import { ChevronsUpDown } from 'lucide-react';
 import WelcomeMessage from './welcome-message';
 import WebsiteCard from './website-card';
 import Knowledge from './knowledge/kowledge';
+import { useDashboardStoreShallow } from '../store';
+import Tiptap from '@/components/text-editor';
 import { Button } from '@/components/ui/button';
+
+const steps = {
+  idle: WelcomeMessage,
+  website: WebsiteCard,
+  content: Knowledge,
+};
 
 const Dashboard = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const step = useDashboardStoreShallow(s => s.step);
+  const Step = steps[step];
+
   return (
-    <div className="relative grid min-h-screen place-items-center">
+    <div className="relative grid min-h-screen place-items-center pt-20">
       <Button onClick={logout}>Logout</Button>
       <div className="absolute top-0 left-0 flex w-full items-center justify-between border-b border-neutral-200 bg-white/90 p-4 backdrop-blur-[6px]">
         <div className="flex items-center justify-center p-2">
@@ -33,9 +44,8 @@ const Dashboard = () => {
           <ChevronsUpDown className="size-4 text-neutral-700" />
         </div>
       </div>
-      {/* <WelcomeMessage /> */}
-      {/* <WebsiteCard /> */}
-      <Knowledge />
+      {/* <Tiptap /> */}
+      <Step />
     </div>
   );
 };

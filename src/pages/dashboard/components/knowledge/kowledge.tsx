@@ -8,8 +8,11 @@ import Actions from './actions';
 import EmptyState from './empty-state';
 import KnowledgeText from './knowledge-text';
 import KnowledgeFile from './knowledge-file';
+import { useDashboardStoreShallow } from '../../store';
 
 const Knowledge = () => {
+  const setStep = useDashboardStoreShallow(s => s.setStep);
+
   return (
     <Card className="w-full max-w-[448px] gap-0 overflow-hidden p-0">
       <CardContent className="px-6 pt-6 pb-5">
@@ -33,7 +36,7 @@ const Knowledge = () => {
       </CardContent>
 
       <CardFooter className="flex items-center gap-2 border-t border-neutral-200 bg-neutral-50 p-6">
-        <Button className="cursor-pointer" variant="outline">
+        <Button className="cursor-pointer" variant="outline" onClick={() => setStep('website')}>
           <ArrowLeftIcon className="size-4" />
           Go back
         </Button>

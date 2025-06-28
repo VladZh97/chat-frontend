@@ -5,9 +5,10 @@ import ProtectedRouteProvider from './providers/protected-route-provider';
 import AuthRouteProvider from './providers/auth-route-provider';
 const Auth = lazy(() => import('./pages/auth'));
 const Dashboard = lazy(() => import('./pages/dashboard'));
+const Home = lazy(() => import('./pages/home'));
 const Chatlog = lazy(() => import('./pages/chatlog'));
 const Playground = lazy(() => import('./pages/playground'));
-
+const ChatbotEditor = lazy(() => import('./pages/chatbot-editor'));
 const router = createBrowserRouter([
   {
     path: '/',
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRouteProvider>
             <Suspense fallback>
-              <Dashboard />
+              <Home />
             </Suspense>
           </ProtectedRouteProvider>
         ),
@@ -60,6 +61,16 @@ const router = createBrowserRouter([
           <ProtectedRouteProvider>
             <Suspense fallback>
               <Playground />
+            </Suspense>
+          </ProtectedRouteProvider>
+        ),
+      },
+      {
+        path: '/chatbot/:id',
+        element: (
+          <ProtectedRouteProvider>
+            <Suspense fallback>
+              <ChatbotEditor />
             </Suspense>
           </ProtectedRouteProvider>
         ),

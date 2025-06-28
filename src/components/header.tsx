@@ -1,6 +1,6 @@
 import { ChevronsUpDown } from 'lucide-react';
 import Logo from '@/assets/logo-dark.svg';
-import Avatar from '@/assets/avatar-placeholder.jpg';
+// import Avatar from '@/assets/avatar-placeholder.jpg';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
@@ -10,7 +10,7 @@ const LINK_STYLE =
 const Header = () => {
   const { pathname } = useLocation();
   return (
-    <div className="fixed top-0 left-0 flex w-full z-50 items-center justify-between border-b border-neutral-200 bg-white/90 p-4 backdrop-blur-[6px]">
+    <div className="fixed top-0 left-0 z-50 flex w-full items-center justify-between border-b border-neutral-200 bg-white/90 p-4 backdrop-blur-[6px]">
       <div className="flex items-center gap-8">
         <div className="flex items-center justify-center p-2">
           <img src={Logo} alt="logo" className="h-auto w-[86px]" width="86" height="20" />
@@ -29,7 +29,7 @@ const Header = () => {
       </div>
       <div className="flex cursor-pointer items-center p-2">
         <img
-          src={Avatar}
+          // src={Avatar}
           alt="avatar"
           className="size-6 overflow-hidden rounded-full"
           width="24"
