@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { ScrollArea } from './ui/scroll-area';
+import CreateNewChatbot from '@/dialogs/create-new-chatbot';
 
 const NAVIGATION = [
   {
@@ -79,9 +80,13 @@ const Sidebar = () => {
                 <ChevronRight className="ml-auto size-4 shrink-0" />
               </Link>
             </div>
-            <div className="mt-3 flex cursor-pointer items-center gap-2 p-2 text-sm text-neutral-400 transition-colors duration-200 hover:text-white">
-              <Plus className="size-4" />
-              Create new
+            <div className="mt-3">
+              <CreateNewChatbot className="w-full">
+                <div className="flex cursor-pointer items-center gap-2 p-2 text-sm text-neutral-400 transition-colors duration-200 hover:text-white">
+                  <Plus className="size-4" />
+                  Create new
+                </div>
+              </CreateNewChatbot>
             </div>
           </div>
           <div className="mt-auto flex items-center gap-2 p-4">

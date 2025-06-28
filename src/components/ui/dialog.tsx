@@ -1,8 +1,24 @@
 import { cn } from '@/lib/utils';
 import { Dialog as DialogBase } from '@base-ui-components/react/dialog';
 
-const Dialog = ({ children }: { children: React.ReactNode }) => {
-  return <DialogBase.Root>{children}</DialogBase.Root>;
+interface DialogProps {
+  children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  disableClose?: boolean;
+}
+
+const Dialog = ({ children, open, onOpenChange, disableClose }: DialogProps) => {
+  // Handler to prevent close if disableClose is true
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (disableClose && !nextOpen) return; // Prevent closing
+    onOpenChange?.(nextOpen);
+  };
+  return (
+    <DialogBase.Root open={open} onOpenChange={handleOpenChange}>
+      {children}
+    </DialogBase.Root>
+  );
 };
 
 Dialog.Trigger = DialogBase.Trigger;
