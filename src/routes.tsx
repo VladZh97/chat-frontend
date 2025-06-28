@@ -1,14 +1,19 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import App from './app';
 import { lazy, Suspense } from 'preact/compat';
 import ProtectedRouteProvider from './providers/protected-route-provider';
 import AuthRouteProvider from './providers/auth-route-provider';
 const Auth = lazy(() => import('./pages/auth'));
-const Dashboard = lazy(() => import('./pages/dashboard'));
 const Home = lazy(() => import('./pages/home'));
-const Chatlog = lazy(() => import('./pages/chatlog'));
-const Playground = lazy(() => import('./pages/playground'));
-const ChatbotEditor = lazy(() => import('./pages/chatbot-editor'));
+// const Dashboard = lazy(() => import('./pages/dashboard'));
+// const Chatlog = lazy(() => import('./pages/chatlog'));
+// const Playground = lazy(() => import('./pages/playground'));
+// const ChatbotEditor = lazy(() => import('./pages/chatbot-editor'));
+const Chatbot = lazy(() => import('./pages/chatbot'));
+const Overview = lazy(() => import('./pages/chatbot/overview'));
+const Knowledge = lazy(() => import('./pages/chatbot/knowledge'));
+const Playground = lazy(() => import('./pages/chatbot/playground'));
+const Settings = lazy(() => import('./pages/chatbot/settings'));
 const router = createBrowserRouter([
   {
     path: '/',
@@ -46,34 +51,32 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/chatlog',
-        element: (
-          <ProtectedRouteProvider>
-            <Suspense fallback>
-              <Chatlog />
-            </Suspense>
-          </ProtectedRouteProvider>
-        ),
-      },
-      {
-        path: '/playground',
-        element: (
-          <ProtectedRouteProvider>
-            <Suspense fallback>
-              <Playground />
-            </Suspense>
-          </ProtectedRouteProvider>
-        ),
-      },
-      {
         path: '/chatbot/:id',
         element: (
           <ProtectedRouteProvider>
             <Suspense fallback>
-              <ChatbotEditor />
+              <Chatbot />
             </Suspense>
           </ProtectedRouteProvider>
         ),
+        children: [
+          {
+            path: '/chatbot/:id/knowledge',
+            Component: Knowledge,
+          },
+          {
+            path: '/chatbot/:id/playground',
+            Component: Playground,
+          },
+          {
+            path: '/chatbot/:id/settings',
+            Component: Settings,
+          },
+          {
+            path: '/chatbot/:id/overview',
+            Component: Overview,
+          },
+        ],
       },
       // {
       //   path: "plans",

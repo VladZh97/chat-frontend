@@ -35,7 +35,7 @@ const ChatbotsList = () => {
           </span>
         </CreateNewChatbot>
       </div>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-x-2 gap-y-4">
         {chatbots?.map(chatbot => (
           <div className="group cursor-pointer">
             <div
