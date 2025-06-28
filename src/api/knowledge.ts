@@ -1,29 +1,24 @@
 import type { IKnowledge } from '@/types/knowledge.type';
 import api from './api';
 
-type TPdf = {
-  url: string;
+type TKnowledgeSource = {
   chatbotId: string;
   metadata: Record<string, unknown>;
 };
 
-type TText = {
+export type TPdf = {
   url: string;
-  chatbotId: string;
-  metadata: Record<string, unknown>;
-};
+} & TKnowledgeSource;
 
-type TRawText = {
+export type TText = {
+  url: string;
+} & TKnowledgeSource;
+
+export type TRawText = {
   text: string;
-  chatbotId: string;
-  metadata: Record<string, unknown>;
-};
+} & TKnowledgeSource;
 
-type TWebsite = {
-  url: string;
-  chatbotId: string;
-  metadata: Record<string, unknown>;
-};
+export type TWebsite = TKnowledgeSource;
 
 export const knowledge = {
   website: async (data: TWebsite) => {

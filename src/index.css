@@ -129,89 +129,60 @@
   :first-child {
     margin-top: 0;
   }
+  @apply text-sm text-neutral-700;
 
   /* List styles */
   ul,
   ol {
     padding: 0 1rem;
     margin: 1.25rem 1rem 1.25rem 0.4rem;
-
-    li p {
-      margin-top: 0.25em;
-      margin-bottom: 0.25em;
-    }
   }
 
-  /* Heading styles */
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  li {
+    @apply mb-0.5;
+  }
+
+  li p {
+    @apply mb-1;
+  }
+
   h1,
   h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h3 {
     line-height: 1.1;
-    margin-top: 2.5rem;
     text-wrap: pretty;
   }
 
-  h1,
-  h2 {
-    margin-top: 3.5rem;
-    margin-bottom: 1.5rem;
-  }
-
   h1 {
-    font-size: 1.4rem;
+    @apply mb-1 text-xl font-medium;
   }
 
   h2 {
-    font-size: 1.2rem;
+    @apply mb-1 text-lg font-medium;
   }
 
   h3 {
-    font-size: 1.1rem;
+    @apply text-base font-medium;
   }
 
-  h4,
-  h5,
-  h6 {
-    font-size: 1rem;
-  }
+  [contenteditable] {
+    outline: none;
+    height: 124px;
+    padding: 16px 12px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 
-  /* Code and preformatted text styles */
-  code {
-    background-color: var(--purple-light);
-    border-radius: 0.4rem;
-    color: var(--black);
-    font-size: 0.85rem;
-    padding: 0.25em 0.3em;
-  }
-
-  pre {
-    background: var(--black);
-    border-radius: 0.5rem;
-    color: var(--white);
-    font-family: 'JetBrainsMono', monospace;
-    margin: 1.5rem 0;
-    padding: 0.75rem 1rem;
-
-    code {
-      background: none;
-      color: inherit;
-      font-size: 0.8rem;
-      padding: 0;
+    &::-webkit-scrollbar {
+      display: none;
     }
-  }
-
-  blockquote {
-    border-left: 3px solid var(--gray-3);
-    margin: 1.5rem 0;
-    padding-left: 1rem;
-  }
-
-  hr {
-    border: none;
-    border-top: 1px solid var(--gray-2);
-    margin: 2rem 0;
   }
 }
