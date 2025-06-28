@@ -1,17 +1,13 @@
-import Board from '@/components/board';
-import Sidebar from '@/components/sidebar';
-import { Navigate, Outlet, useParams } from 'react-router';
+import { useParams, Navigate, Outlet } from 'react-router-dom';
 
 const Chatbot = () => {
   const { id } = useParams();
+
   return (
-    <div className="relative flex h-screen bg-neutral-900">
-      <Sidebar />
-      <Board>
-        <Outlet />
-        <Navigate to={`/chatbot/${id}/overview`} replace />
-      </Board>
-    </div>
+    <>
+      <Outlet />
+      <Navigate to={`/chatbot/${id}/overview`} replace />
+    </>
   );
 };
 

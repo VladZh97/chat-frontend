@@ -3,33 +3,20 @@ import App from './app';
 import { lazy, Suspense } from 'preact/compat';
 import ProtectedRouteProvider from './providers/protected-route-provider';
 import AuthRouteProvider from './providers/auth-route-provider';
+import BaseLayout from './layouts/base.layout';
 const Auth = lazy(() => import('./pages/auth'));
 const Home = lazy(() => import('./pages/home'));
-// const Dashboard = lazy(() => import('./pages/dashboard'));
-// const Chatlog = lazy(() => import('./pages/chatlog'));
-// const Playground = lazy(() => import('./pages/playground'));
-// const ChatbotEditor = lazy(() => import('./pages/chatbot-editor'));
 const Chatbot = lazy(() => import('./pages/chatbot'));
 const Overview = lazy(() => import('./pages/chatbot/overview'));
 const Knowledge = lazy(() => import('./pages/chatbot/knowledge'));
 const Playground = lazy(() => import('./pages/chatbot/playground'));
 const Settings = lazy(() => import('./pages/chatbot/settings'));
+
 const router = createBrowserRouter([
   {
     path: '/',
     Component: App,
     children: [
-      // Protected routes
-      {
-        path: '/',
-        element: (
-          <ProtectedRouteProvider>
-            <Suspense fallback>
-              <Home />
-            </Suspense>
-          </ProtectedRouteProvider>
-        ),
-      },
       {
         path: '/signup',
         element: (
@@ -51,82 +38,64 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/chatbot/:id',
         element: (
           <ProtectedRouteProvider>
-            <Suspense fallback>
-              <Chatbot />
-            </Suspense>
+            <BaseLayout />
           </ProtectedRouteProvider>
         ),
         children: [
           {
-            path: '/chatbot/:id/knowledge',
-            Component: Knowledge,
+            path: '/',
+            element: (
+              <Suspense fallback>
+                <Home />
+              </Suspense>
+            ),
           },
           {
-            path: '/chatbot/:id/playground',
-            Component: Playground,
-          },
-          {
-            path: '/chatbot/:id/settings',
-            Component: Settings,
-          },
-          {
-            path: '/chatbot/:id/overview',
-            Component: Overview,
+            path: '/chatbot/:id',
+            element: (
+              <Suspense fallback>
+                <Chatbot />
+              </Suspense>
+            ),
+            children: [
+              {
+                path: '/chatbot/:id/knowledge',
+                element: (
+                  <Suspense fallback>
+                    <Knowledge />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/chatbot/:id/playground',
+                element: (
+                  <Suspense fallback>
+                    <Playground />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/chatbot/:id/settings',
+                element: (
+                  <Suspense fallback>
+                    <Settings />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/chatbot/:id/overview',
+                element: (
+                  <Suspense fallback>
+                    <Overview />
+                  </Suspense>
+                ),
+              },
+            ],
           },
         ],
       },
-      // {
-      //   path: "plans",
-      //   element: (
-      //     <ProtectedRouteProvider>
-      //       <BaseLayout>
-      //         <Plans />
-      //       </BaseLayout>
-      //     </ProtectedRouteProvider>
-      //   ),
-      // },
-      // {
-      //   path: "employees",
-      //   element: (
-      //     <ProtectedRouteProvider>
-      //       <BaseLayout>
-      //         <Employees />
-      //       </BaseLayout>
-      //     </ProtectedRouteProvider>
-      //   ),
-      // },
-      // {
-      //   path: "editor/:id",
-      //   element: (
-      //     <ProtectedRouteProvider>
-      //       <BaseLayout>
-      //         <Editor />
-      //       </BaseLayout>
-      //     </ProtectedRouteProvider>
-      //   ),
-      // },
-      // // Redirect to home
-      // {
-      //   path: "/editor",
-      //   element: <Navigate to="/" replace />,
-      // },
-      // // Auth routes (public)
-      // {
-      //   path: "auth",
-      //   element: (
-      //     <AuthRouteProvider>
-      //       <AuthLayout />
-      //     </AuthRouteProvider>
-      //   ),
-      //   children: [
-      //     { path: "login", Component: Login },
-      //     { path: "signup", Component: Signup },
-      //     { path: "", element: <Navigate to="/auth/login" replace /> },
-      //   ],
-      // },
       // // 404 page (public)
       // { path: "*", Component: NotFound },
     ],

@@ -35,14 +35,12 @@ const SidebarChatbots = () => {
     pathname.includes(item.path.replace(':id', id ?? ''))
   );
 
-  console.log(position);
-
   return (
     <div className="space-y-3">
       {chatbots?.map(chatbot => (
         <div key={chatbot._id}>
           <Link
-            to={`/chatbot/${chatbot._id}`}
+            to={`/chatbot/${chatbot._id}/overview`}
             className={cn(
               'flex items-center gap-2 rounded-lg border border-transparent p-2 text-sm text-neutral-400 transition-colors duration-200 hover:text-white',
               id === chatbot._id && 'border-neutral-700 bg-neutral-800 font-semibold text-white'
@@ -71,7 +69,7 @@ const SidebarChatbots = () => {
               <span className="absolute top-0.5 left-3.5 h-full w-px bg-neutral-800">
                 <span
                   className="absolute h-7 w-px bg-white transition-transform duration-200"
-                  style={{ transform: `translateY(${position * 28 + position * 8}px)` }}
+                  style={{ transform: `translateY(${position * 36}px)` }}
                 ></span>
               </span>
             </div>
