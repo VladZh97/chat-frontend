@@ -12,6 +12,7 @@ import {
   Wallet,
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { ScrollArea } from './ui/scroll-area';
 
 const NAVIGATION = [
   {
@@ -39,66 +40,70 @@ const NAVIGATION = [
 const Sidebar = () => {
   const { pathname } = useLocation();
   return (
-    <div className="flex max-w-[272px] shrink-0 flex-col bg-neutral-900">
-      <div className="p-4">
-        <div className="p-2">
-          <LogoLight className="h-auto max-w-20" />
+    <div className="flex h-full max-w-[272px] shrink-0 flex-col overflow-hidden bg-neutral-900">
+      <ScrollArea className="h-full [&>div>div]:h-full">
+        <div className="flex h-full flex-col">
+          <div className="p-4">
+            <div className="p-2">
+              <LogoLight className="h-auto max-w-20" />
+            </div>
+          </div>
+          <div className="p-4 pt-3">
+            <span className="mb-2 block p-2 text-sm text-neutral-400/70">Platform</span>
+            <div className="space-y-3">
+              {NAVIGATION.map(item => (
+                <Link
+                  to={item.path}
+                  className={cn(
+                    'flex items-center gap-2 rounded-lg border border-transparent p-2 text-sm text-neutral-400 transition-colors duration-200 hover:text-white',
+                    pathname === item.path &&
+                      'border-neutral-700 bg-neutral-800 font-semibold text-white'
+                  )}
+                  key={item.path}
+                >
+                  {item.icon}
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="p-4">
+            <span className="mb-2 block p-2 text-sm text-neutral-400/70">Chatbots</span>
+            <div className="space-y-3">
+              <Link
+                to="/chatbot/123"
+                className="flex items-center gap-2 p-2 text-sm text-neutral-400 transition-colors duration-200 hover:text-white"
+              >
+                <Bot className="size-4 shrink-0" />
+                <span className="truncate">MediaMarkt chatbot</span>
+                <ChevronRight className="ml-auto size-4 shrink-0" />
+              </Link>
+            </div>
+            <div className="mt-3 flex cursor-pointer items-center gap-2 p-2 text-sm text-neutral-400 transition-colors duration-200 hover:text-white">
+              <Plus className="size-4" />
+              Create new
+            </div>
+          </div>
+          <div className="mt-auto flex items-center gap-2 p-4">
+            <div className="flex shrink-0 items-center gap-2">
+              <img
+                src={Avatar}
+                alt="avatar"
+                className="size-8 overflow-hidden rounded-lg"
+                width="32"
+                height="32"
+              />
+            </div>
+            <div className="grid">
+              <span className="truncate text-sm font-semibold text-neutral-400">John Doe</span>
+              <span className="truncate text-xs text-neutral-400/70">john.doe@mycompany.com</span>
+            </div>
+            <div className="ml-auto flex cursor-pointer items-center justify-center text-neutral-400 transition-colors duration-200 hover:text-white">
+              <ChevronsUpDown className="size-4 shrink-0" />
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="p-4 pt-3">
-        <span className="mb-2 block p-2 text-sm text-neutral-400/70">Platform</span>
-        <div className="space-y-3">
-          {NAVIGATION.map(item => (
-            <Link
-              to={item.path}
-              className={cn(
-                'flex items-center gap-2 rounded-lg border border-transparent p-2 text-sm text-neutral-400 transition-colors duration-200 hover:text-white',
-                pathname === item.path &&
-                  'border-neutral-700 bg-neutral-800 font-semibold text-white'
-              )}
-              key={item.path}
-            >
-              {item.icon}
-              {item.label}
-            </Link>
-          ))}
-        </div>
-      </div>
-      <div className="p-4">
-        <span className="mb-2 block p-2 text-sm text-neutral-400/70">Chatbots</span>
-        <div className="space-y-3">
-          <Link
-            to="/chatbot/123"
-            className="flex items-center gap-2 p-2 text-sm text-neutral-400 transition-colors duration-200 hover:text-white"
-          >
-            <Bot className="size-4 shrink-0" />
-            <span className="truncate">MediaMarkt chatbot</span>
-            <ChevronRight className="ml-auto size-4 shrink-0" />
-          </Link>
-        </div>
-        <div className="mt-3 flex cursor-pointer items-center gap-2 p-2 text-sm text-neutral-400 transition-colors duration-200 hover:text-white">
-          <Plus className="size-4" />
-          Create new
-        </div>
-      </div>
-      <div className="mt-auto flex items-center gap-2 p-4">
-        <div className="flex shrink-0 items-center gap-2">
-          <img
-            src={Avatar}
-            alt="avatar"
-            className="size-8 overflow-hidden rounded-lg"
-            width="32"
-            height="32"
-          />
-        </div>
-        <div className="grid">
-          <span className="truncate text-sm font-semibold text-neutral-400">John Doe</span>
-          <span className="truncate text-xs text-neutral-400/70">john.doe@mycompany.com</span>
-        </div>
-        <div className="ml-auto flex cursor-pointer items-center justify-center text-neutral-400 transition-colors duration-200 hover:text-white">
-          <ChevronsUpDown className="size-4 shrink-0" />
-        </div>
-      </div>
+      </ScrollArea>
     </div>
   );
 };
