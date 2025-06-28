@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import App from './app';
 import { lazy, Suspense } from 'preact/compat';
 import ProtectedRouteProvider from './providers/protected-route-provider';
