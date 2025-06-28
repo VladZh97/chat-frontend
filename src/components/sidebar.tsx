@@ -14,6 +14,8 @@ import {
 import { Link, useLocation } from 'react-router-dom';
 import { ScrollArea } from './ui/scroll-area';
 import CreateNewChatbot from '@/dialogs/create-new-chatbot';
+import chatbot from '@/api/chatbot';
+import { useQuery } from '@tanstack/react-query';
 
 const NAVIGATION = [
   {
@@ -40,6 +42,11 @@ const NAVIGATION = [
 
 const Sidebar = () => {
   const { pathname } = useLocation();
+  const { data: chatbots } = useQuery({
+    queryKey: ['chatbots'],
+    queryFn: () => chatbot.get(),
+  });
+
   return (
     <div className="flex h-full max-w-[272px] shrink-0 flex-col overflow-hidden bg-neutral-900">
       <ScrollArea className="h-full [&>div>div]:h-full">
@@ -71,14 +78,16 @@ const Sidebar = () => {
           <div className="p-4">
             <span className="mb-2 block p-2 text-sm text-neutral-400/70">Chatbots</span>
             <div className="space-y-3">
-              <Link
-                to="/chatbot/123"
-                className="flex items-center gap-2 p-2 text-sm text-neutral-400 transition-colors duration-200 hover:text-white"
-              >
-                <Bot className="size-4 shrink-0" />
-                <span className="truncate">MediaMarkt chatbot</span>
-                <ChevronRight className="ml-auto size-4 shrink-0" />
-              </Link>
+              {chatbots?.map(chatbot => (
+                <Link
+                  to={`/chatbot/${chatbot._id}`}
+                  className="flex items-center gap-2 p-2 text-sm text-neutral-400 transition-colors duration-200 hover:text-white"
+                >
+                  <Bot className="size-4 shrink-0" />
+                  <span className="truncate">{chatbot.name}</span>
+                  <ChevronRight className="ml-auto size-4 shrink-0" />
+                </Link>
+              ))}
             </div>
             <div className="mt-3">
               <CreateNewChatbot className="w-full">

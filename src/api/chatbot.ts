@@ -1,9 +1,11 @@
 import type { IChatbot } from '@/types/chatbot.type';
 import api from './api';
+import queryClient from '@/lib/query';
 
 const chatbot = {
   create: async (data: Partial<IChatbot>) => {
     const { data: chatbot } = await api.post<IChatbot>('/chatbot', data);
+    queryClient.invalidateQueries({ queryKey: ['chatbots'] });
     return chatbot;
   },
   get: async () => {
