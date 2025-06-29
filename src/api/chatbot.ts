@@ -5,7 +5,10 @@ import queryClient from '@/lib/query';
 const chatbot = {
   create: async (data: Partial<IChatbot>) => {
     const { data: chatbot } = await api.post<IChatbot>('/chatbot', data);
-    queryClient.invalidateQueries({ queryKey: ['chatbots'] });
+    queryClient.setQueryData(['chatbots'], (oldData: IChatbot[] | undefined) => {
+      if (!oldData) return [chatbot];
+      return [...oldData, chatbot];
+    });
     return chatbot;
   },
   get: async () => {
