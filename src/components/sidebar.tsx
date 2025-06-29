@@ -1,11 +1,23 @@
 import LogoLight from '@/assets/logo-light.svg?react';
 import Avatar from '@/assets/avatar-placeholder.png';
 import { cn } from '@/lib/utils';
-import { ChevronsUpDown, Gauge, House, Plus, Settings2, Wallet } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import {
+  ChevronsUpDown,
+  Gauge,
+  House,
+  LogOut,
+  PencilLine,
+  Plus,
+  Settings2,
+  Wallet,
+} from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ScrollArea } from './ui/scroll-area';
 import CreateNewChatbot from '@/dialogs/create-new-chatbot';
 import SidebarChatbots from './sidebar-chatbots';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { useState } from 'preact/hooks';
+import { useAuth } from '@/providers/auth-provider';
 
 const NAVIGATION = [
   {
@@ -73,7 +85,33 @@ const Sidebar = () => {
               </CreateNewChatbot>
             </div>
           </div>
-          <div className="mt-auto flex items-center gap-2 p-4">
+          <Profile />
+        </div>
+      </ScrollArea>
+    </div>
+  );
+};
+
+export default Sidebar;
+
+const Profile = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+  return (
+    <div className="mt-auto p-2">
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger
+          className={cn(
+            'group cursor-pointer rounded-md transition-colors duration-200 hover:bg-neutral-800',
+            isOpen && 'bg-neutral-800'
+          )}
+        >
+          <div className="flex items-center gap-2 p-2">
             <div className="flex shrink-0 items-center gap-2">
               <img
                 src={Avatar}
@@ -87,14 +125,29 @@ const Sidebar = () => {
               <span className="truncate text-sm font-semibold text-neutral-400">John Doe</span>
               <span className="truncate text-xs text-neutral-400/70">john.doe@mycompany.com</span>
             </div>
-            <div className="ml-auto flex cursor-pointer items-center justify-center text-neutral-400 transition-colors duration-200 hover:text-white">
+            <div className="ml-auto flex cursor-pointer items-center justify-center text-neutral-400 transition-colors duration-200 group-hover:text-white">
               <ChevronsUpDown className="size-4 shrink-0" />
             </div>
           </div>
-        </div>
-      </ScrollArea>
+        </PopoverTrigger>
+        <PopoverContent
+          align="end"
+          side="top"
+          className="w-48 space-y-1 rounded-lg bg-white p-2 shadow-lg"
+        >
+          <div className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-neutral-900 hover:bg-neutral-100">
+            <PencilLine className="size-4" />
+            Edit profile
+          </div>
+          <div
+            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-red-600 hover:bg-red-50"
+            onClick={handleLogout}
+          >
+            <LogOut className="size-4" />
+            Log out
+          </div>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 };
-
-export default Sidebar;
