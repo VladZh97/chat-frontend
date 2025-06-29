@@ -12,6 +12,7 @@ const ChatbotsList = () => {
   const { data: chatbots, isLoading } = useQuery({
     queryKey: ['chatbots'],
     queryFn: () => chatbot.get(),
+    refetchOnWindowFocus: false,
   });
 
   const handleChatbotClick = useCallback(

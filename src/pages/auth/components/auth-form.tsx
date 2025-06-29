@@ -56,6 +56,7 @@ const AuthForm = ({
 
   const handleLoginWithGoogle = async () => {
     if (isLoading || isLinkAuthLoading) return;
+    setIsLoading(true);
     try {
       await loginWithGoogle();
       const claims = await getCustomClaims();
@@ -67,6 +68,8 @@ const AuthForm = ({
     } catch (error) {
       console.error(error);
       toast.error('Failed to login with Google');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -115,7 +118,14 @@ const AuthForm = ({
         className="mb-6 w-full cursor-pointer border border-neutral-200 bg-white"
         onClick={handleLoginWithGoogle}
       >
-        Continue with Google
+        {isLoading ? (
+          <>
+            <LoaderCircle className="animate-spin" />
+            Loading...
+          </>
+        ) : (
+          'Continue with Google'
+        )}
       </Button>
       <p className="text-center text-sm text-neutral-500">
         By clicking continue, you agree to our <br />{' '}

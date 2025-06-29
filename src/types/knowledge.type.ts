@@ -1,9 +1,13 @@
+import type { IAccount } from './account.type';
+import type { IChatbot } from './chatbot.type';
+import type { IUser } from './user.type';
+
 export interface IKnowledge {
   _id: string;
   name: string;
-  accountId: string;
-  chatbotId: string;
-  userId: string;
+  accountId: IAccount['_id'];
+  chatbotId: IChatbot['_id'];
+  userId: IUser['_id'];
   type: 'website' | 'file' | 'text';
   url: string;
   file: string;

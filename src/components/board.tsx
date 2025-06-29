@@ -8,7 +8,7 @@ const Board = ({ children }: { children: React.ReactNode }) => {
   const isOmitScrollArea = OMIT_SCROLL_AREA_PATHS.some(path => pathname.includes(path));
 
   return (
-    <div className="grow p-2">
+    <div className="w-[calc(100%-272px)] p-2">
       <div className="h-full overflow-hidden rounded-xl bg-neutral-50 shadow-md">
         {isOmitScrollArea ? children : <ScrollArea className="h-full">{children}</ScrollArea>}
       </div>

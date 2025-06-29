@@ -1,21 +1,15 @@
 import { getMediaUploadToken, uploadFile } from '@/api/media';
-import { useCallback, useState } from 'preact/hooks';
+import { environment } from '@/environment';
+import { useMutation } from '@tanstack/react-query';
 
 const useUploadFile = () => {
-  const [loading, setLoading] = useState(false);
-
-  const uploadFileFn = useCallback(async (file: File) => {
-    try {
-      setLoading(true);
+  const { mutateAsync: uploadFileFn, isPending: loading } = useMutation({
+    mutationFn: async (file: File) => {
       const { url, fields } = await getMediaUploadToken(file.type);
-      const uploadResponse = await uploadFile({ url, fields }, file);
-      return uploadResponse;
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      await uploadFile({ url, fields }, file);
+      return `${environment.assetsBaseUrl}/${fields.key}`;
+    },
+  });
 
   return { uploadFileFn, loading };
 };

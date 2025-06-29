@@ -1,4 +1,6 @@
+import account from '@/api/account';
 import auth from '@/api/auth';
+import user from '@/api/user';
 import { getCustomClaims, isLoggedIn, refreshAuthToken } from '@/utils/auth';
 import { getAuth, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'preact/hooks';
@@ -34,6 +36,8 @@ const useLinkAuth = () => {
       if (!claims.accountId) {
         await auth.create();
         await refreshAuthToken();
+      } else {
+        await Promise.all([account.get(), user.get()]);
       }
       navigate('/');
     } catch (error) {

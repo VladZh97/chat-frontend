@@ -1,5 +1,4 @@
 import LogoLight from '@/assets/logo-light.svg?react';
-import Avatar from '@/assets/avatar-placeholder.png';
 import { cn } from '@/lib/utils';
 import {
   ChevronsUpDown,
@@ -18,6 +17,8 @@ import SidebarChatbots from './sidebar-chatbots';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { useState } from 'preact/hooks';
 import { useAuth } from '@/providers/auth-provider';
+import { useQuery } from '@tanstack/react-query';
+import user from '@/api/user';
 
 const NAVIGATION = [
   {
@@ -46,7 +47,7 @@ const Sidebar = () => {
   const { pathname } = useLocation();
 
   return (
-    <div className="flex h-full max-w-[272px] shrink-0 flex-col overflow-hidden bg-neutral-900">
+    <div className="flex h-full w-[272px] shrink-0 flex-col overflow-hidden bg-neutral-900">
       <ScrollArea className="h-full [&>div>div]:h-full">
         <div className="flex h-full flex-col">
           <div className="p-4">
@@ -95,6 +96,11 @@ const Sidebar = () => {
 export default Sidebar;
 
 const Profile = () => {
+  const { data: me } = useQuery({
+    queryKey: ['user'],
+    queryFn: () => user.get(),
+    refetchOnWindowFocus: false,
+  });
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -114,7 +120,7 @@ const Profile = () => {
           <div className="flex items-center gap-2 p-2">
             <div className="flex shrink-0 items-center gap-2">
               <img
-                src={Avatar}
+                src={me?.picture}
                 alt="avatar"
                 className="size-8 overflow-hidden rounded-lg"
                 width="32"
@@ -122,8 +128,8 @@ const Profile = () => {
               />
             </div>
             <div className="grid">
-              <span className="truncate text-sm font-semibold text-neutral-400">John Doe</span>
-              <span className="truncate text-xs text-neutral-400/70">john.doe@mycompany.com</span>
+              <span className="truncate text-sm font-semibold text-neutral-400">{me?.name}</span>
+              <span className="truncate text-xs text-neutral-400/70">{me?.email}</span>
             </div>
             <div className="ml-auto flex cursor-pointer items-center justify-center text-neutral-400 transition-colors duration-200 group-hover:text-white">
               <ChevronsUpDown className="size-4 shrink-0" />

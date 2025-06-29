@@ -11,7 +11,7 @@ export interface IChatbot {
   rateLimitInterval: number;
   rateLimitMessage: string;
   initialMessage: string;
-  conversationStarters: string[];
+  conversationStarters: { id: string; value: string }[];
   prompt: string;
   instructions: string;
   createdAt: string;
