@@ -35,7 +35,6 @@ const CreateNewChatbot = ({ children, className }: CreateNewChatbotProps) => {
     if (!name.trim() || isPending) return;
     createChatbot({
       name,
-      website,
     });
   }, [name, website, isPending, createChatbot]);
 
@@ -46,6 +45,13 @@ const CreateNewChatbot = ({ children, className }: CreateNewChatbotProps) => {
   const handleWebsiteChange = useCallback((e: Event) => {
     setWebsite((e.target as HTMLInputElement).value);
   }, []);
+
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Enter') handleCreate();
+    },
+    [handleCreate]
+  );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -61,7 +67,12 @@ const CreateNewChatbot = ({ children, className }: CreateNewChatbotProps) => {
           </p>
           <div className="mb-6">
             <span className="mb-2 block text-sm font-medium text-neutral-900">Chatbot name</span>
-            <Input className="h-10" value={name} onChange={handleNameChange} />
+            <Input
+              className="h-10"
+              value={name}
+              onChange={handleNameChange}
+              onKeyDown={onKeyDown}
+            />
           </div>
           <div>
             <span className="mb-2 block text-sm font-medium text-neutral-900">

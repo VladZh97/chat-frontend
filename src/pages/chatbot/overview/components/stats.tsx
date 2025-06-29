@@ -8,21 +8,21 @@ const Stats = () => {
           <MessagesSquare className="size-4 text-neutral-500" />
           Chats
         </div>
-        <span className="text-2xl font-bold text-neutral-900">152</span>
+        <span className="text-2xl font-bold text-neutral-900">0</span>
       </Card>
       <Card>
         <div className="mb-2 flex items-center gap-2 text-sm font-medium text-neutral-900">
           <MessageSquareText className="size-4 text-neutral-500" />
           Messages
         </div>
-        <span className="text-2xl font-bold text-neutral-900">2,520</span>
+        <span className="text-2xl font-bold text-neutral-900">0</span>
       </Card>
       <Card>
         <div className="mb-2 flex items-center gap-2 text-sm font-medium text-neutral-900">
           <CreditCard className="size-4 text-neutral-500" />
           Used credits
         </div>
-        <span className="text-2xl font-bold text-neutral-900">20/1000</span>
+        <span className="text-2xl font-bold text-neutral-900">0/1000</span>
       </Card>
     </div>
   );

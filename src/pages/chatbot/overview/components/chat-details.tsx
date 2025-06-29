@@ -1,10 +1,18 @@
 import { cn } from '@/lib/utils';
-import { Ellipsis, MessageSquareMore, MessageSquareText, Trash } from 'lucide-react';
+import {
+  Ellipsis,
+  MessageCircle,
+  MessageSquareMore,
+  MessageSquareText,
+  Plus,
+  Trash,
+} from 'lucide-react';
 import { TABLE_SIZES } from '../constants';
 import moment from 'moment';
 import { Popover, PopoverContent } from '@/components/ui/popover';
 import { PopoverTrigger } from '@radix-ui/react-popover';
 import { useState } from 'preact/hooks';
+import { Button } from '@/components/ui/button';
 
 const ChatDetails = () => {
   return (
@@ -24,10 +32,11 @@ const ChatDetails = () => {
           <span className={cn(TABLE_SIZES.DATE, 'px-3')}>Date</span>
           <span className={cn(TABLE_SIZES.ACTIONS, 'px-3')}></span>
         </div>
+        {/* <Row />
         <Row />
         <Row />
-        <Row />
-        <Row />
+        <Row /> */}
+        <EmptyState />
       </div>
     </div>
   );
@@ -83,6 +92,20 @@ const Row = () => {
           </PopoverContent>
         </Popover>
       </span>
+    </div>
+  );
+};
+
+const EmptyState = () => {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 text-center">
+      <div className="bg-muted mb-4 rounded-full p-4">
+        <MessageCircle className="text-muted-foreground h-8 w-8" />
+      </div>
+      <h3 className="mb-2 text-lg font-semibold">No chats yet</h3>
+      <p className="text-muted-foreground mb-6 max-w-sm">
+        You'll see all your chat conversations here once users start chatting with your chatbot.
+      </p>
     </div>
   );
 };

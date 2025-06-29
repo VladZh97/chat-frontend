@@ -8,7 +8,7 @@ const user = {
     queryClient.setQueryData(['user'], response.data);
     return response.data;
   },
-  update: async ({ _id, ...data }: { _id: string; data: Partial<IUser> }) => {
+  update: async ({ _id, data }: { _id: string; data: Partial<IUser> }) => {
     const response = await api.put(`/user/${_id}`, data);
     queryClient.setQueryData(['user'], response.data);
     return response.data;

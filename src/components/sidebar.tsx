@@ -19,6 +19,7 @@ import { useState } from 'preact/hooks';
 import { useAuth } from '@/providers/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import user from '@/api/user';
+import EditUserProfile from '@/dialogs/edit-user-profile';
 
 const NAVIGATION = [
   {
@@ -101,6 +102,7 @@ const Profile = () => {
     queryFn: () => user.get(),
     refetchOnWindowFocus: false,
   });
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -141,7 +143,10 @@ const Profile = () => {
           side="top"
           className="w-48 space-y-1 rounded-lg bg-white p-2 shadow-lg"
         >
-          <div className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-neutral-900 hover:bg-neutral-100">
+          <div
+            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-neutral-900 hover:bg-neutral-100"
+            onClick={() => setIsEditProfileOpen(true)}
+          >
             <PencilLine className="size-4" />
             Edit profile
           </div>
@@ -154,6 +159,7 @@ const Profile = () => {
           </div>
         </PopoverContent>
       </Popover>
+      <EditUserProfile open={isEditProfileOpen} setOpen={setIsEditProfileOpen} />
     </div>
   );
 };

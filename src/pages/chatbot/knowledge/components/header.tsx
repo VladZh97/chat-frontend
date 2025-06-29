@@ -1,13 +1,17 @@
 import { Button } from '@/components/ui/button';
 import { Bot, Check, X } from 'lucide-react';
+import { useChatbotStoreShallow } from '@/store/chatbot.store';
+import TrainingStatusLabel from '@/components/training-status-label';
 
 const Header = () => {
+  const { name } = useChatbotStoreShallow(s => ({
+    name: s.name,
+  }));
   return (
     <div className="flex items-center justify-between pb-6">
       <div className="ju flex items-center gap-2.5">
-        <span className="text-2xl font-medium text-neutral-900">MediaMarkt chatbot knowledge</span>
-        {/* <NotTrainedBadge /> */}
-        <TrainedBadge />
+        <span className="text-2xl font-medium text-neutral-900">{name} chatbot knowledge</span>
+        <TrainingStatusLabel status="not_trained" />
       </div>
       <div className="flex items-center gap-4 px-8">
         <div className="flex flex-col">
@@ -27,21 +31,3 @@ const Header = () => {
 };
 
 export default Header;
-
-const NotTrainedBadge = () => {
-  return (
-    <span className="flex h-7 items-center justify-center gap-2 rounded-md bg-neutral-200 px-2 py-1.5 text-sm font-semibold text-neutral-500">
-      <X className="size-4 text-neutral-500" />
-      Not trained
-    </span>
-  );
-};
-
-const TrainedBadge = () => {
-  return (
-    <span className="flex h-7 items-center justify-center gap-2 rounded-md bg-green-100 px-2 py-1.5 text-sm font-semibold text-green-600">
-      <Check className="size-4 text-green-600" />
-      Trained
-    </span>
-  );
-};
