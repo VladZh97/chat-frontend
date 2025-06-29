@@ -85,7 +85,7 @@ function Option<T = string>({ value: optionValue, children }: OptionProps<T>) {
   return (
     <span
       className={cn(
-        'flex cursor-pointer items-center justify-between rounded px-2 py-1.5 text-sm text-neutral-500 transition-colors duration-200 hover:bg-neutral-100',
+        'flex cursor-pointer items-center justify-between rounded px-2 py-1.5 text-sm text-neutral-900 transition-colors duration-200 hover:bg-neutral-100',
         isSelected && 'bg-neutral-100'
       )}
       onClick={() => {
