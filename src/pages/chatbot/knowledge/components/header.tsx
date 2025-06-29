@@ -8,7 +8,7 @@ const Header = () => {
     name: s.name,
   }));
   return (
-    <div className="flex items-center justify-between pb-6">
+    <div className="flex h-[85px] items-center justify-between border-b border-transparent py-6">
       <div className="ju flex items-center gap-2.5">
         <span className="text-2xl font-medium text-neutral-900">{name} chatbot knowledge</span>
         <TrainingStatusLabel status="not_trained" />

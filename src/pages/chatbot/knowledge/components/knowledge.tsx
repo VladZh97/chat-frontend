@@ -3,7 +3,7 @@ import Header from './header';
 
 const Knowledge = () => {
   return (
-    <div className="px-8 py-6">
+    <div className="px-8 pb-6">
       <Header />
       <EmptyState />
     </div>
