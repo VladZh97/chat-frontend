@@ -5,7 +5,7 @@ import { Bot, Plus } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import chatbot from '@/api/chatbot';
 import { useNavigate } from 'react-router-dom';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 const ChatbotsList = () => {
   const navigate = useNavigate();
@@ -52,6 +52,7 @@ const ChatbotsList = () => {
             <span className="mt-3 block text-sm font-medium text-neutral-900">{chatbot.name}</span>
           </div>
         ))}
+        {isLoading && <Skeleton />}
         {!isLoading && !chatbots?.length && (
           <CreateNewChatbot>
             <div className="flex h-40 cursor-pointer flex-col items-center justify-center rounded-xl border border-neutral-200 bg-white text-sm text-neutral-500 shadow transition-all duration-300 hover:shadow-lg">
@@ -66,3 +67,20 @@ const ChatbotsList = () => {
 };
 
 export default ChatbotsList;
+
+const Skeleton = () => {
+  const width = useMemo(
+    () => Array.from({ length: 3 }).map(() => Math.floor(Math.random() * 80) + 10),
+    []
+  );
+  return width.map((w, index) => (
+    <div key={index} className="group animate-pulse-fast">
+      <div className="relative flex h-40 items-center justify-center rounded-xl border border-neutral-200 bg-neutral-100 shadow transition-all duration-300 group-hover:shadow-lg">
+        <Bot className="size-8 text-neutral-900" />
+      </div>
+      <div className="mt-3 flex h-5 items-center">
+        <span className="block h-1.5 rounded-full bg-neutral-200" style={{ width: `${w}%` }} />
+      </div>
+    </div>
+  ));
+};
