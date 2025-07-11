@@ -31,7 +31,7 @@ const AuthForm = ({
   login?: boolean;
 }) => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const [type, setType] = useState<'email' | 'google'>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,8 +40,8 @@ const AuthForm = ({
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (isLoading || isLinkAuthLoading) return;
-    setIsLoading(true);
+    if (type || isLinkAuthLoading) return;
+    setType('email');
     try {
       await loginWithEmailLink(values.email);
       window.localStorage.setItem('emailForSignIn', values.email);
@@ -50,13 +50,13 @@ const AuthForm = ({
     } catch (error) {
       console.error(error);
     } finally {
-      setIsLoading(false);
+      setType(undefined);
     }
   };
 
   const handleLoginWithGoogle = async () => {
-    if (isLoading || isLinkAuthLoading) return;
-    setIsLoading(true);
+    if (type || isLinkAuthLoading) return;
+    setType('google');
     try {
       await loginWithGoogle();
       const claims = await getCustomClaims();
@@ -69,7 +69,7 @@ const AuthForm = ({
       console.error(error);
       toast.error('Failed to login with Google');
     } finally {
-      setIsLoading(false);
+      setType(undefined);
     }
   };
 
@@ -100,9 +100,13 @@ const AuthForm = ({
           />
           <Button
             type="submit"
-            className={cn('w-full cursor-pointer', isLoading && 'cursor-default')}
+            className={cn('w-full cursor-pointer', type === 'email' && 'cursor-default')}
           >
-            {isLoading || isLinkAuthLoading ? <LoaderCircle className="animate-spin" /> : <Mail />}
+            {type === 'email' || isLinkAuthLoading ? (
+              <LoaderCircle className="animate-spin" />
+            ) : (
+              <Mail />
+            )}
             {login ? 'Sign In with Email' : 'Sign Up with Email'}
           </Button>
         </form>
@@ -118,7 +122,7 @@ const AuthForm = ({
         className="mb-6 w-full cursor-pointer border border-neutral-200 bg-white"
         onClick={handleLoginWithGoogle}
       >
-        {isLoading ? (
+        {type === 'google' ? (
           <>
             <LoaderCircle className="animate-spin" />
             Loading...

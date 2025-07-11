@@ -37,7 +37,6 @@ const Auth = ({ login }: { login?: boolean }) => {
         <div className="absolute top-10 left-1/2 mx-auto flex w-full max-w-[586px] -translate-x-1/2 items-center justify-end">
           <a
             onClick={() => {
-              console.log(login);
               navigate(login ? '/signup' : '/login');
             }}
             className="cursor-pointer px-4 py-2 text-sm text-neutral-950 transition-opacity hover:opacity-70"
