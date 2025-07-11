@@ -17,7 +17,6 @@ interface CreateNewChatbotProps {
 
 const CreateNewChatbot = ({ children, className }: CreateNewChatbotProps) => {
   const navigate = useNavigate();
-  const [website, setWebsite] = useState('');
   const [name, setName] = useState('');
   const [open, setOpen] = useState(false);
 
@@ -26,7 +25,6 @@ const CreateNewChatbot = ({ children, className }: CreateNewChatbotProps) => {
     onSuccess: response => {
       setOpen(false);
       setName('');
-      setWebsite('');
       navigate(`/chatbot/${response._id}`);
     },
   });
@@ -36,14 +34,10 @@ const CreateNewChatbot = ({ children, className }: CreateNewChatbotProps) => {
     createChatbot({
       name,
     });
-  }, [name, website, isPending, createChatbot]);
+  }, [name, isPending, createChatbot]);
 
   const handleNameChange = useCallback((e: Event) => {
     setName((e.target as HTMLInputElement).value);
-  }, []);
-
-  const handleWebsiteChange = useCallback((e: Event) => {
-    setWebsite((e.target as HTMLInputElement).value);
   }, []);
 
   const onKeyDown = useCallback(
@@ -72,17 +66,6 @@ const CreateNewChatbot = ({ children, className }: CreateNewChatbotProps) => {
               value={name}
               onChange={handleNameChange}
               onKeyDown={onKeyDown}
-            />
-          </div>
-          <div>
-            <span className="mb-2 block text-sm font-medium text-neutral-900">
-              Your website (optional)
-            </span>
-            <Input
-              className="h-10"
-              placeholder="https://"
-              value={website}
-              onChange={handleWebsiteChange}
             />
           </div>
         </div>
