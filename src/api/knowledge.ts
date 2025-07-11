@@ -6,16 +6,9 @@ type TKnowledgeSource = {
   metadata: Record<string, unknown>;
 };
 
-export type TPdf = {
-  url: string;
-} & TKnowledgeSource;
-
-export type TText = {
-  url: string;
-} & TKnowledgeSource;
-
-export type TRawText = TKnowledgeSource;
 export type TWebsite = TKnowledgeSource;
+export type TRawText = TKnowledgeSource;
+export type TFile = TKnowledgeSource;
 
 export const knowledge = {
   list: async (chatbotId: string) => {
@@ -30,12 +23,8 @@ export const knowledge = {
     const { data: knowledge } = await api.post<IKnowledge>('/knowledge/website', data);
     return knowledge;
   },
-  pdf: async (data: TPdf) => {
-    const { data: knowledge } = await api.post<IKnowledge>('/knowledge/pdf', data);
-    return knowledge;
-  },
-  text: async (data: TText) => {
-    const { data: knowledge } = await api.post<IKnowledge>('/knowledge/text', data);
+  file: async (data: TFile) => {
+    const { data: knowledge } = await api.post<IKnowledge>('/knowledge/file', data);
     return knowledge;
   },
   rawText: async (data: TRawText) => {

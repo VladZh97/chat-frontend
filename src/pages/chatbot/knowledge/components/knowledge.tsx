@@ -9,6 +9,7 @@ const Knowledge = () => {
   const { data } = useQuery({
     queryKey: ['knowledge', chatbotId],
     queryFn: () => knowledge.list(chatbotId as string),
+    refetchOnWindowFocus: false,
   });
   return (
     <div className="px-8 pb-6">

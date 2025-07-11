@@ -10,15 +10,16 @@ import SubmitAction from './submit-action';
 
 const AddNewKnowledgeSource = ({ children }: { children: React.ReactNode }) => {
   const [parent] = useAutoAnimate();
-  const { type, setType, open, setOpen } = useKnowledgeDialogStoreShallow(s => ({
+  const { type, setType, open, setOpen, disableClose } = useKnowledgeDialogStoreShallow(s => ({
     type: s.type,
     setType: s.setType,
     open: s.open,
     setOpen: s.setOpen,
+    disableClose: s.disableClose,
   }));
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={setOpen} disableClose={disableClose}>
       <Dialog.Trigger>{children}</Dialog.Trigger>
       <Dialog.Content className="w-[448px] overflow-hidden">
         <div className="p-6 pb-4">

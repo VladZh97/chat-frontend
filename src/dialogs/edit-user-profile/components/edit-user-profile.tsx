@@ -22,6 +22,7 @@ const EditUserProfile = ({
   const { data: me } = useQuery({
     queryKey: ['user'],
     queryFn: () => user.get(),
+    refetchOnWindowFocus: false,
   });
 
   const [userData, setUserData] = useState({ name: '', picture: '' });
