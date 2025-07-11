@@ -7,7 +7,7 @@ type TKnowledgeSource = {
 };
 
 export type TWebsite = TKnowledgeSource;
-export type TRawText = TKnowledgeSource;
+export type TText = TKnowledgeSource;
 export type TFile = TKnowledgeSource;
 
 export const knowledge = {
@@ -19,6 +19,14 @@ export const knowledge = {
     });
     return knowledge;
   },
+  tokensUsage: async (chatbotId: string) => {
+    const { data: tokens } = await api.get<{ count: number }>(`/knowledge/tokens-usage`, {
+      params: {
+        chatbotId,
+      },
+    });
+    return tokens;
+  },
   website: async (data: TWebsite) => {
     const { data: knowledge } = await api.post<IKnowledge>('/knowledge/website', data);
     return knowledge;
@@ -27,8 +35,8 @@ export const knowledge = {
     const { data: knowledge } = await api.post<IKnowledge>('/knowledge/file', data);
     return knowledge;
   },
-  rawText: async (data: TRawText) => {
-    const { data: knowledge } = await api.post<IKnowledge>('/knowledge/raw-text', data);
+  text: async (data: TText) => {
+    const { data: knowledge } = await api.post<IKnowledge>('/knowledge/text', data);
     return knowledge;
   },
 };

@@ -1,18 +1,17 @@
 import { ArrowLeft, ArrowUp, Bot, Ellipsis } from 'lucide-react';
 import PoveredBy from '@/assets/povered-by.svg?react';
-import ChatIcon from '@/assets/chat-icon.png';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
+import { environment } from '@/environment';
 
 const Widget = () => {
-  const { removeBranding, accentColor, backgroundColor, avatarIcon, initialMessage } =
-    useChatbotStoreShallow(s => ({
-      removeBranding: s.removeBranding,
-      accentColor: s.accentColor,
-      backgroundColor: s.backgroundColor,
-      avatarIcon: s.avatarIcon,
-      initialMessage: s.initialMessage,
-    }));
+  const { removeBranding, accentColor, avatarIcon, initialMessage } = useChatbotStoreShallow(s => ({
+    removeBranding: s.removeBranding,
+    accentColor: s.accentColor,
+    backgroundColor: s.backgroundColor,
+    avatarIcon: s.avatarIcon,
+    initialMessage: s.initialMessage,
+  }));
   return (
     <div className="mx-auto flex w-full max-w-[416px] grow flex-col overflow-hidden rounded-2xl bg-white shadow-sm">
       <div className="relative flex items-center justify-between px-4 pt-6 pb-6">
@@ -28,7 +27,7 @@ const Widget = () => {
             <div className="flex items-end gap-2">
               {avatarIcon ? (
                 <img
-                  src={avatarIcon}
+                  src={`${environment.assetsBaseUrl}/${avatarIcon}`}
                   alt=""
                   className="size-6 overflow-hidden rounded-full object-cover"
                 />

@@ -13,7 +13,6 @@ const Chatbot = () => {
     queryKey: ['chatbot', id],
     queryFn: () => chatbot.getById(id!),
     enabled: !!id,
-    refetchOnWindowFocus: false,
     retry: false,
   });
 

@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import user from '@/api/user';
 import { useUploadFile } from '@/hooks';
 import type { IUser } from '@/types/user.type';
+import { environment } from '@/environment';
 
 interface EditUserProfileProps {
   open?: boolean;
@@ -22,7 +23,6 @@ const EditUserProfile = ({
   const { data: me } = useQuery({
     queryKey: ['user'],
     queryFn: () => user.get(),
-    refetchOnWindowFocus: false,
   });
 
   const [userData, setUserData] = useState({ name: '', picture: '' });
@@ -86,13 +86,15 @@ const EditUserProfile = ({
       <Dialog.Content className="w-[448px]">
         <div className="p-6 pb-8">
           <BaseIcon className="mb-4" />
-          <p className="mb-[6px] cursor-pointer text-base font-semibold text-neutral-900">
-            Edit profile
-          </p>
+          <p className="mb-[6px] text-base font-semibold text-neutral-900">Edit profile</p>
           <p className="text-sm text-neutral-500">Update your profile information.</p>
           <div className="relative mx-auto mt-8 mb-4 size-20 rounded-full bg-neutral-200">
             {userData.picture ? (
-              <img src={userData.picture} alt="" className="size-full rounded-full" />
+              <img
+                src={`${environment.assetsBaseUrl}/${userData.picture}`}
+                alt=""
+                className="size-full rounded-full"
+              />
             ) : (
               <span className="flex size-full items-center justify-center rounded-full bg-neutral-200 text-2xl font-medium text-neutral-900">
                 {userData.name

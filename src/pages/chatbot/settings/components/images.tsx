@@ -6,6 +6,7 @@ import Icon from '@/assets/chat.svg';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import { useUploadFile } from '@/hooks';
 import { useState } from 'preact/hooks';
+import { environment } from '@/environment';
 
 const Images = () => {
   const { uploadFileFn, loading } = useUploadFile();
@@ -50,7 +51,7 @@ const Images = () => {
       <div className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
         {avatarIcon ? (
           <img
-            src={avatarIcon}
+            src={`${environment.assetsBaseUrl}/${avatarIcon}`}
             alt="Chatbot image"
             className="size-12 overflow-hidden rounded-full object-cover"
           />
@@ -93,7 +94,11 @@ const Images = () => {
           className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#0A0A0A1A]"
           style={{ backgroundColor: backgroundColor }}
         >
-          <img src={chatIcon || Icon} alt="Chatbot image" className="size-6" />
+          <img
+            src={chatIcon ? `${environment.assetsBaseUrl}/${chatIcon}` : Icon}
+            alt="Chatbot image"
+            className="size-6"
+          />
         </div>
         <div>
           <Label className="mb-2">Chat icon</Label>

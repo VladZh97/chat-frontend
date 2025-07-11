@@ -1,8 +1,8 @@
-import { knowledge, type TFile, type TRawText, type TWebsite } from '@/api/knowledge';
+import { knowledge, type TFile, type TText, type TWebsite } from '@/api/knowledge';
 import { Button } from '@/components/ui/button';
 import { useMutation } from '@tanstack/react-query';
 import { LoaderCircle } from 'lucide-react';
-import { useCallback, useMemo } from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 import { useParams } from 'react-router-dom';
 import { useKnowledgeDialogStoreShallow } from '../store';
 import { toast } from 'sonner';
@@ -13,27 +13,28 @@ import { useUploadFile } from '@/hooks';
 const SubmitAction = () => {
   const { id: chatbotId } = useParams();
   const { uploadFileFn } = useUploadFile();
-  const { mutateAsync: addWebsiteSource, isPending: isAddingWebsiteSource } = useMutation({
+
+  const { mutateAsync: addWebsiteSource } = useMutation({
     mutationFn: (data: TWebsite) => knowledge.website(data),
+  });
+  const { mutateAsync: addFileSource } = useMutation({
+    mutationFn: (data: TFile) => knowledge.file(data),
+  });
+  const { mutateAsync: addRawTextSource } = useMutation({
+    mutationFn: (data: TText) => knowledge.text(data),
   });
 
   const { textSnippet, type, setOpen, websiteUrl, setDisableClose, disableClose, selectedFile } =
     useKnowledgeDialogStoreShallow(s => ({
       textSnippet: s.textSnippet,
       type: s.type,
-      setOpen: s.setOpen,
       websiteUrl: s.websiteUrl,
-      setDisableClose: s.setDisableClose,
       disableClose: s.disableClose,
       selectedFile: s.selectedFile,
+      setOpen: s.setOpen,
+      setDisableClose: s.setDisableClose,
     }));
 
-  const { mutateAsync: addFileSource } = useMutation({
-    mutationFn: (data: TFile) => knowledge.file(data),
-  });
-  const { mutateAsync: addRawTextSource } = useMutation({
-    mutationFn: (data: TRawText) => knowledge.rawText(data),
-  });
   const handleSubmit = async () => {
     setDisableClose(true);
     try {
@@ -70,16 +71,9 @@ const SubmitAction = () => {
   };
 
   const isDisabled = useMemo(() => {
-    if (type === 'text-snippet') {
-      return !textSnippet.title || !textSnippet.content;
-    }
-    if (type === 'links') {
-      return !websiteUrl || !isValidUrl(websiteUrl);
-    }
-
-    if (type === 'files') {
-      return !selectedFile;
-    }
+    if (type === 'text-snippet') return !textSnippet.title || !textSnippet.content;
+    if (type === 'links') return !websiteUrl || !isValidUrl(websiteUrl);
+    if (type === 'files') return !selectedFile;
 
     return false;
   }, [type, textSnippet.title, textSnippet.content, websiteUrl, selectedFile]);
@@ -90,7 +84,7 @@ const SubmitAction = () => {
       disabled={isDisabled}
       onClick={handleSubmit}
     >
-      {disableClose && <LoaderCircle className="mr-2 size-4 animate-spin" />}
+      {disableClose && <LoaderCircle className="size-4 animate-spin" />}
       {disableClose ? 'Adding source...' : 'Add source'}
     </Button>
   );

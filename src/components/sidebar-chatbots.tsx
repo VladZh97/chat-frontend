@@ -29,7 +29,6 @@ const SidebarChatbots = () => {
   const { data: chatbots, isLoading } = useQuery({
     queryKey: ['chatbots'],
     queryFn: () => chatbot.get(),
-    refetchOnWindowFocus: false,
   });
 
   const position = NAVIGATION.findIndex(item =>

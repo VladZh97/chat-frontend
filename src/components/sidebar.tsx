@@ -20,6 +20,7 @@ import { useAuth } from '@/providers/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import user from '@/api/user';
 import EditUserProfile from '@/dialogs/edit-user-profile';
+import { environment } from '@/environment';
 
 const NAVIGATION = [
   {
@@ -100,7 +101,6 @@ const Profile = () => {
   const { data: me } = useQuery({
     queryKey: ['user'],
     queryFn: () => user.get(),
-    refetchOnWindowFocus: false,
   });
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -122,7 +122,7 @@ const Profile = () => {
           <div className="flex items-center gap-2 p-2">
             <div className="flex shrink-0 items-center gap-2">
               <img
-                src={me?.picture}
+                src={`${environment.assetsBaseUrl}/${me?.picture}`}
                 alt="avatar"
                 className="size-8 overflow-hidden rounded-lg"
                 width="32"
