@@ -1,7 +1,6 @@
 import { cn } from '@/lib/utils';
-import { useState } from 'preact/hooks';
 
-const OPTIONS = [
+const OPTIONS: { label: string; value: 'links' | 'files' | 'text-snippet' }[] = [
   {
     label: 'Links',
     value: 'links',
@@ -17,11 +16,11 @@ const OPTIONS = [
 ];
 
 const Tabs = ({
-  activeTab,
-  setActiveTab,
+  type,
+  setType,
 }: {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
+  type: 'links' | 'files' | 'text-snippet';
+  setType: (type: 'links' | 'files' | 'text-snippet') => void;
 }) => {
   return (
     <div className="mb-5 h-10 rounded-lg bg-neutral-100 p-1">
@@ -30,10 +29,10 @@ const Tabs = ({
           {OPTIONS.map(option => (
             <span
               key={option.value}
-              onClick={() => setActiveTab(option.value)}
+              onClick={() => setType(option.value)}
               className={cn(
                 'flex cursor-pointer items-center justify-center text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900',
-                activeTab === option.value && 'text-neutral-900'
+                type === option.value && 'text-neutral-900'
               )}
             >
               {option.label}
@@ -43,9 +42,9 @@ const Tabs = ({
         <span
           className={cn(
             'absolute top-0 left-0 h-full w-1/3 rounded-md bg-white shadow transition-transform duration-300',
-            activeTab === 'links' && 'translate-x-0',
-            activeTab === 'files' && 'translate-x-full',
-            activeTab === 'text-snippet' && 'translate-x-[200%]'
+            type === 'links' && 'translate-x-0',
+            type === 'files' && 'translate-x-full',
+            type === 'text-snippet' && 'translate-x-[200%]'
           )}
         ></span>
       </div>

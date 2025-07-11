@@ -14,13 +14,18 @@ export type TText = {
   url: string;
 } & TKnowledgeSource;
 
-export type TRawText = {
-  text: string;
-} & TKnowledgeSource;
-
+export type TRawText = TKnowledgeSource;
 export type TWebsite = TKnowledgeSource;
 
 export const knowledge = {
+  list: async (chatbotId: string) => {
+    const { data: knowledge } = await api.get<IKnowledge[]>(`/knowledge`, {
+      params: {
+        chatbotId,
+      },
+    });
+    return knowledge;
+  },
   website: async (data: TWebsite) => {
     const { data: knowledge } = await api.post<IKnowledge>('/knowledge/website', data);
     return knowledge;

@@ -1,1 +1,1 @@
-export * from './knowledge.store';
+export * from './knowledge-dialog.store';

@@ -1,9 +1,9 @@
 import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
-import { useKnowledgeStoreShallow } from '../store';
+// import { Switch } from '@/components/ui/switch';
+import { useKnowledgeDialogStoreShallow } from '../store';
 
 const AddLinkOption = () => {
-  const { websiteUrl, setWebsiteUrl } = useKnowledgeStoreShallow(s => ({
+  const { websiteUrl, setWebsiteUrl } = useKnowledgeDialogStoreShallow(s => ({
     websiteUrl: s.websiteUrl,
     setWebsiteUrl: s.setWebsiteUrl,
   }));
@@ -20,10 +20,10 @@ const AddLinkOption = () => {
         }}
         onChange={e => setWebsiteUrl((e.target as HTMLInputElement).value)}
       />
-      <div className="mt-6 flex items-center gap-2">
+      {/* <div className="mt-6 flex items-center gap-2">
         <Switch />
         <span className="text-sm font-medium text-neutral-900">Crawl links</span>
-      </div>
+      </div> */}
     </div>
   );
 };
