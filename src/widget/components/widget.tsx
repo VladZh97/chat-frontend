@@ -72,7 +72,7 @@ const Widget = () => {
         />
         <div
           className="group flex size-10 cursor-pointer items-center justify-center rounded-full text-white"
-          style={{ backgroundColor: backgroundColor }}
+          style={{ backgroundColor: accentColor }}
         >
           <ArrowUp className="size-6 transition-opacity group-hover:opacity-80" />
         </div>
