@@ -39,4 +39,10 @@ export const knowledge = {
     const { data: knowledge } = await api.post<IKnowledge>('/knowledge/text', data);
     return knowledge;
   },
+  train: async (chatbotId: string) => {
+    const { data: knowledge } = await api.post<IKnowledge>(`/knowledge/train`, {
+      chatbotId,
+    });
+    return knowledge;
+  },
 };
