@@ -32,7 +32,7 @@ const Header = () => {
   return (
     <div className="flex items-center justify-between border-b border-neutral-200 px-8 py-6">
       <span className="flex items-center gap-4 text-2xl font-medium text-neutral-900">
-        {name} chatbot playground <TrainingStatusLabel status="not_trained" />
+        {name} chatbot playground <TrainingStatusLabel />
       </span>
       <div className="flex items-center gap-2">
         <Button variant="outline">

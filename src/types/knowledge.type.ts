@@ -14,4 +14,5 @@ export interface IKnowledge {
   createdAt: string;
   updatedAt: string;
   metadata: Record<string, unknown>;
+  trained: boolean;
 }

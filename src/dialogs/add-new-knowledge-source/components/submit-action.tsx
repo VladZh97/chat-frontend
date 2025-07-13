@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { isValidUrl } from '@/utils/is-valid-url';
 import { useUploadFile } from '@/hooks';
+import queryClient from '@/lib/query';
 
 const SubmitAction = () => {
   const { id: chatbotId } = useParams();
@@ -60,6 +61,11 @@ const SubmitAction = () => {
           metadata: { filePath: fileUrl, ...selectedFile?.metadata },
         });
       }
+
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['knowledge', chatbotId] }),
+        queryClient.invalidateQueries({ queryKey: ['tokens-usage', chatbotId] }),
+      ]);
 
       toast.success('Source added successfully');
     } catch (error) {

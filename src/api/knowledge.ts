@@ -27,6 +27,14 @@ export const knowledge = {
     });
     return tokens;
   },
+  delete: async (knowledgeId: string, chatbotId: string) => {
+    const { data: knowledge } = await api.delete<IKnowledge>(`/knowledge/${knowledgeId}`, {
+      params: {
+        chatbotId,
+      },
+    });
+    return knowledge;
+  },
   website: async (data: TWebsite) => {
     const { data: knowledge } = await api.post<IKnowledge>('/knowledge/website', data);
     return knowledge;
