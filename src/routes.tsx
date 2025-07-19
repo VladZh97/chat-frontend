@@ -11,6 +11,8 @@ const Overview = lazy(() => import('./pages/chatbot/overview'));
 const Knowledge = lazy(() => import('./pages/chatbot/knowledge'));
 const Playground = lazy(() => import('./pages/chatbot/playground'));
 const Settings = lazy(() => import('./pages/chatbot/settings'));
+const Chat = lazy(() => import('./pages/chat'));
+const Subscription = lazy(() => import('./pages/subscription'));
 
 const router = createBrowserRouter([
   {
@@ -38,6 +40,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: '/chat/:id',
+        element: (
+          <Suspense fallback>
+            <Chat />
+          </Suspense>
+        ),
+      },
+      {
         element: (
           <ProtectedRouteProvider>
             <BaseLayout />
@@ -49,6 +59,14 @@ const router = createBrowserRouter([
             element: (
               <Suspense fallback>
                 <Home />
+              </Suspense>
+            ),
+          },
+          {
+            path: '/subscription',
+            element: (
+              <Suspense fallback>
+                <Subscription />
               </Suspense>
             ),
           },

@@ -27,7 +27,7 @@ const Widget = () => {
             <div className="flex items-end gap-2">
               {avatarIcon ? (
                 <img
-                  src={`${environment.assetsBaseUrl}/${avatarIcon}`}
+                  src={avatarIcon}
                   alt=""
                   className="size-6 overflow-hidden rounded-full object-cover"
                 />

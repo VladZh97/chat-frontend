@@ -90,11 +90,7 @@ const EditUserProfile = ({
           <p className="text-sm text-neutral-500">Update your profile information.</p>
           <div className="relative mx-auto mt-8 mb-4 size-20 rounded-full bg-neutral-200">
             {userData.picture ? (
-              <img
-                src={`${environment.assetsBaseUrl}/${userData.picture}`}
-                alt=""
-                className="size-full rounded-full"
-              />
+              <img src={userData.picture} alt="" className="size-full rounded-full" />
             ) : (
               <span className="flex size-full items-center justify-center rounded-full bg-neutral-200 text-2xl font-medium text-neutral-900">
                 {userData.name

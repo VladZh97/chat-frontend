@@ -38,11 +38,6 @@ const NAVIGATION = [
     path: '/subscription',
     icon: <Wallet className="size-4" />,
   },
-  {
-    label: 'Settings',
-    path: '/settings',
-    icon: <Settings2 className="size-4" />,
-  },
 ];
 
 const Sidebar = () => {
@@ -122,7 +117,7 @@ const Profile = () => {
           <div className="flex items-center gap-2 p-2">
             <div className="flex shrink-0 items-center gap-2">
               <img
-                src={`${environment.assetsBaseUrl}/${me?.picture}`}
+                src={me?.picture}
                 alt="avatar"
                 className="size-8 overflow-hidden rounded-lg"
                 width="32"

@@ -17,7 +17,7 @@ const Auth = ({ login }: { login?: boolean }) => {
         </div>
         <div className="relative z-10 mx-auto w-full max-w-[586px]">
           <p className="mb-2 text-lg text-white">
-            “Chat.io has completely transformed how we handle support. It’s like having an extra
+            Heyway.chat has completely transformed how we handle support. It’s like having an extra
             team member working 24/7 — fast, reliable, and always on point.
           </p>
           <span className="text-sm text-white">Jordan Lee</span>

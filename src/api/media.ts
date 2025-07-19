@@ -1,10 +1,5 @@
 import api from './api';
 
-type DataType = {
-  url: string;
-  fields: Record<string, string>;
-};
-
 const getMediaUploadToken = async (contentType: string) => {
   const response = await api.get('/media/upload', {
     params: {
@@ -14,16 +9,19 @@ const getMediaUploadToken = async (contentType: string) => {
   return response.data;
 };
 
-const uploadFile = async (data: DataType, file: Blob) => {
-  const formData = new FormData();
-  Object.entries({ ...data.fields, file }).forEach(([key, value]) => {
-    formData.append(key, value as string | Blob);
+const uploadFile = async (data: { url: string; fields: Record<string, string> }, file: Blob) => {
+  const uploadRes = await fetch(data.url, {
+    method: 'PUT',
+    body: file,
+    headers: {
+      'Content-Type': file.type,
+    },
   });
 
-  return await fetch(data.url, {
-    method: 'POST',
-    body: formData,
-  });
+  if (!uploadRes.ok) {
+    const errorText = await uploadRes.text();
+    throw new Error(`Upload failed: ${uploadRes.status} ${errorText}`);
+  }
 };
 
 export { getMediaUploadToken, uploadFile };

@@ -1,5 +1,5 @@
 const environment = {
-  assetsBaseUrl: 'https://storage.googleapis.com/chat-upload-files',
+  assetsBaseUrl: 'https://assets.heyway.chat',
 };
 
 export { environment };

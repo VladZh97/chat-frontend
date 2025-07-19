@@ -1,12 +1,13 @@
 import { getMediaUploadToken, uploadFile } from '@/api/media';
+import { environment } from '@/environment';
 import { useMutation } from '@tanstack/react-query';
 
 const useUploadFile = () => {
   const { mutateAsync: uploadFileFn, isPending: loading } = useMutation({
     mutationFn: async (file: File) => {
-      const { url, fields } = await getMediaUploadToken(file.type);
-      await uploadFile({ url, fields }, file);
-      return fields.key;
+      const { token, path } = await getMediaUploadToken(file.type);
+      await uploadFile(token, file);
+      return `${environment.assetsBaseUrl}/${path}`;
     },
   });
 
