@@ -1,4 +1,4 @@
-import { Bot, CreditCard, MessageSquareText, MessagesSquare } from 'lucide-react';
+import { CreditCard, MessageSquareText, MessagesSquare } from 'lucide-react';
 
 const Stats = () => {
   return (

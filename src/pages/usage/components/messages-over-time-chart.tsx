@@ -1,4 +1,4 @@
-import { Bot, CalendarDays, Calendar as CalendarIcon } from 'lucide-react';
+import { CalendarDays, Calendar as CalendarIcon } from 'lucide-react';
 import {
   type ChartConfig,
   ChartContainer,

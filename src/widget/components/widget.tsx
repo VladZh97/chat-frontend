@@ -2,7 +2,6 @@ import { ArrowLeft, ArrowUp, Bot, Ellipsis } from 'lucide-react';
 import PoveredBy from '@/assets/povered-by.svg?react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
-import { environment } from '@/environment';
 
 const Widget = () => {
   const { removeBranding, accentColor, avatarIcon, initialMessage } = useChatbotStoreShallow(s => ({

@@ -1,5 +1,5 @@
 import { knowledge } from '@/api/knowledge';
-import { useMutation, useMutationState, useQuery } from '@tanstack/react-query';
+import { useMutationState, useQuery } from '@tanstack/react-query';
 import { Check, LoaderCircle, X } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { Skeleton } from './ui/skeleton';

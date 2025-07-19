@@ -1,4 +1,5 @@
 import chatbot from '@/api/chatbot';
+import { stats } from '@/api/stats';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useQuery } from '@tanstack/react-query';
@@ -11,11 +12,6 @@ const Stats = () => {
   const handleChangePlan = useCallback(() => {
     navigate('/subscription');
   }, [navigate]);
-
-  const { data: chatbots } = useQuery({
-    queryKey: ['chatbots'],
-    queryFn: () => chatbot.get(),
-  });
 
   return (
     <div className="mb-4 grid grid-cols-3 gap-4">
@@ -32,13 +28,7 @@ const Stats = () => {
         </div>
       </Card>
       <Chatbots />
-      <Card>
-        <div className="mb-2 flex items-center gap-2 text-sm font-medium text-neutral-900">
-          <MessagesSquare className="size-4 text-neutral-500" />
-          Messages
-        </div>
-        <span className="text-2xl font-bold text-neutral-900">20/1000</span>
-      </Card>
+      <MessagesCard />
     </div>
   );
 };
@@ -65,6 +55,27 @@ const Chatbots = () => {
         <Skeleton className="size-8" />
       ) : (
         <span className="text-2xl font-bold text-neutral-900">{chatbots?.length ?? 0}/1</span>
+      )}
+    </Card>
+  );
+};
+
+const MessagesCard = () => {
+  const { data: messages, isLoading } = useQuery({
+    queryKey: stats.messages.key,
+    queryFn: stats.messages.query,
+  });
+
+  return (
+    <Card>
+      <div className="mb-2 flex items-center gap-2 text-sm font-medium text-neutral-900">
+        <MessagesSquare className="size-4 text-neutral-500" />
+        Messages
+      </div>
+      {isLoading ? (
+        <Skeleton className="size-8" />
+      ) : (
+        <span className="text-2xl font-bold text-neutral-900">{messages?.count ?? 0}/1000</span>
       )}
     </Card>
   );

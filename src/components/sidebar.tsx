@@ -1,15 +1,6 @@
 import LogoLight from '@/assets/logo-light.svg?react';
 import { cn } from '@/lib/utils';
-import {
-  ChevronsUpDown,
-  Gauge,
-  House,
-  LogOut,
-  PencilLine,
-  Plus,
-  Settings2,
-  Wallet,
-} from 'lucide-react';
+import { ChevronsUpDown, Gauge, House, LogOut, PencilLine, Plus, Wallet } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ScrollArea } from './ui/scroll-area';
 import CreateNewChatbot from '@/dialogs/create-new-chatbot';
@@ -20,7 +11,6 @@ import { useAuth } from '@/providers/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import user from '@/api/user';
 import EditUserProfile from '@/dialogs/edit-user-profile';
-import { environment } from '@/environment';
 
 const NAVIGATION = [
   {

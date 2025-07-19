@@ -64,7 +64,7 @@ function Trigger<T = string>({
 }
 
 // Content
-function Content<T = string>({ children, className }: { children: ReactNode; className?: string }) {
+function Content({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <PopoverContent
       className={cn('w-[var(--radix-popover-trigger-width)] space-y-1 p-2', className)}

@@ -28,7 +28,7 @@ const initState: IChatbot = {
   updatedAt: '',
 };
 
-export const useChatbotStore = create<IChatbot & IActions>((set, get) => ({
+export const useChatbotStore = create<IChatbot & IActions>(set => ({
   ...initState,
   setChatbot: chatbot => set(prev => ({ ...prev, ...chatbot })),
   reset: () => set(initState),

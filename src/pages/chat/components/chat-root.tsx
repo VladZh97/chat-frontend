@@ -2,7 +2,7 @@ import { ArrowLeft, ArrowUp, Bot, Ellipsis } from 'lucide-react';
 import PoveredBy from '@/assets/povered-by.svg?react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import chat from '@/api/chat';
 import { useEffect, useState, useRef } from 'preact/hooks';
 import { cn } from '@/lib/utils';

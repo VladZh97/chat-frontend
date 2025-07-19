@@ -39,7 +39,7 @@ const initState: IState = {
   selectedFile: null,
 };
 
-export const useKnowledgeDialogStore = create<IState & IActions>((set, get) => ({
+export const useKnowledgeDialogStore = create<IState & IActions>(set => ({
   ...initState,
   setWebsiteUrl: url => set({ websiteUrl: url }),
   setDisableClose: disableClose => set({ disableClose }),

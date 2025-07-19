@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import AddNewKnowledgeSource from '@/dialogs/add-new-knowledge-source';
 import { cn } from '@/lib/utils';
 import { BrainCircuit, Plus } from 'lucide-react';

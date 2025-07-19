@@ -1,12 +1,11 @@
 import { Button } from '@/components/ui/button';
-import { Bot, LoaderCircle } from 'lucide-react';
+import { Bot } from 'lucide-react';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import TrainingStatusLabel from '@/components/training-status-label';
 import { CONFIG } from '@/config';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { knowledge } from '@/api/knowledge';
-import { cn } from '@/lib/utils';
 import queryClient from '@/lib/query';
 import type { IKnowledge } from '@/types/knowledge.type';
 import chatbot from '@/api/chatbot';
