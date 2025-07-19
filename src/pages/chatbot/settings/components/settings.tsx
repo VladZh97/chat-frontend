@@ -2,8 +2,12 @@ import { Label } from '@/components/ui/label';
 import Header from './header';
 import SettingsSide from './settings-side';
 import { Widget } from '@/widget';
+import { useGetChatbot } from '../../hooks';
 
 const Settings = () => {
+  const { isLoading } = useGetChatbot();
+  if (isLoading) return null;
+
   return (
     <div className="flex h-full flex-col">
       <Header />

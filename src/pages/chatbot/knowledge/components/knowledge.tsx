@@ -1,11 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
-import EmptyState from './empty-state';
 import Header from './header';
-import { knowledge } from '@/api/knowledge';
-import { useParams } from 'react-router-dom';
 import KnowledgeTable from './knowledge-table';
+import { useGetChatbot } from '../../hooks';
 
 const Knowledge = () => {
+  const { isLoading } = useGetChatbot();
+  if (isLoading) return null;
   return (
     <div className="px-8 pb-6">
       <Header />
