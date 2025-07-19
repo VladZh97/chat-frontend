@@ -3,13 +3,14 @@ import Header from './header';
 import SettingsSide from './settings-side';
 import { Widget } from '@/widget';
 import { useGetChatbot } from '../../hooks';
+import LayoutWrapper from '@/components/animation-wrapper';
 
 const Settings = () => {
   const { isLoading } = useGetChatbot();
   if (isLoading) return null;
 
   return (
-    <div className="flex h-full flex-col">
+    <LayoutWrapper className="flex h-full flex-col">
       <Header />
       <div className="grid grid-cols-2 overflow-hidden">
         <SettingsSide />
@@ -20,7 +21,7 @@ const Settings = () => {
           </div>
         </div>
       </div>
-    </div>
+    </LayoutWrapper>
   );
 };
 

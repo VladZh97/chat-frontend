@@ -6,7 +6,9 @@ const BaseLayout = () => {
   return (
     <div className="relative flex h-screen bg-neutral-900">
       <Sidebar />
-      <Board><Outlet /></Board>
+      <Board>
+        <Outlet />
+      </Board>
     </div>
   );
 };

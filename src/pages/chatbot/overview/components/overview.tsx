@@ -3,12 +3,13 @@ import ChatDetails from './chat-details';
 import Header from './header';
 import Stats from './stats';
 import { useGetChatbot } from '../../hooks';
+import LayoutWrapper from '@/components/animation-wrapper';
 
 const Overview = () => {
   const { isLoading } = useGetChatbot();
   if (isLoading) return null;
   return (
-    <div className="flex h-full flex-col">
+    <LayoutWrapper className="flex h-full flex-col">
       <Header />
       <ScrollArea className="h-[calc(100vh-101px)]">
         <div className="px-8 py-5">
@@ -18,7 +19,7 @@ const Overview = () => {
           <ChatDetails />
         </div>
       </ScrollArea>
-    </div>
+    </LayoutWrapper>
   );
 };
 

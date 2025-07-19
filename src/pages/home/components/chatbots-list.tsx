@@ -42,7 +42,15 @@ const ChatbotsList = () => {
               onClick={() => handleChatbotClick(chatbot._id)}
               className="relative flex h-40 items-center justify-center rounded-xl border border-neutral-200 bg-white shadow transition-all duration-300 group-hover:shadow-lg"
             >
-              <Bot className="size-8 text-neutral-900" />
+              {chatbot.avatarIcon ? (
+                <img
+                  src={chatbot.avatarIcon}
+                  alt={chatbot.name}
+                  className="size-8 rounded-full object-cover"
+                />
+              ) : (
+                <Bot className="size-8 text-neutral-900" />
+              )}
               <span
                 className="absolute inset-0 block size-full rounded-xl border-b-2 border-neutral-900"
                 style={{ borderColor: chatbot.accentColor }}
