@@ -8,4 +8,5 @@ export interface IAccount {
   trialEndDate?: Date;
   createdAt: Date;
   updatedAt: Date;
+  subscriptionPlanId?: string;
 }

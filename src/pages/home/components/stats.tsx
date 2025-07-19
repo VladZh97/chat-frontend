@@ -1,10 +1,7 @@
 import { stats } from '@/api/stats';
 import Counter from '@/components/counter';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useQuery } from '@tanstack/react-query';
 import { Bot, CreditCard, MessagesSquare } from 'lucide-react';
-import { motion, useMotionValue, useTransform, animate } from 'motion/react';
-import { useEffect } from 'react';
 
 const Stats = () => {
   return (
