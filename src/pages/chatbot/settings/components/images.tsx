@@ -1,4 +1,3 @@
-import ChatIcon from '@/assets/chat-icon.png';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Trash, Upload, Image, LoaderCircle } from 'lucide-react';
@@ -6,7 +5,6 @@ import Icon from '@/assets/chat.svg';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import { useUploadFile } from '@/hooks';
 import { useState } from 'preact/hooks';
-import { environment } from '@/environment';
 
 const Images = () => {
   const { uploadFileFn, loading } = useUploadFile();

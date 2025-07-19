@@ -56,9 +56,10 @@ const SubmitAction = () => {
 
       if (type === 'files') {
         const fileUrl = await uploadFileFn(selectedFile?.file as File);
+        const { pathname } = new URL(fileUrl);
         await addFileSource({
           chatbotId: chatbotId as string,
-          metadata: { filePath: fileUrl, ...selectedFile?.metadata },
+          metadata: { filePath: pathname.replace(/^\//, ''), ...selectedFile?.metadata },
         });
       }
 

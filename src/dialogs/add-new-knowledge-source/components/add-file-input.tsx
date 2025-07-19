@@ -10,7 +10,13 @@ const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 const getFileMetadata = (file: File) => {
-  const [name, extension] = file.name.split('.');
+  const lastDotIndex = file.name.lastIndexOf('.');
+  let name = file.name;
+  let extension = '';
+  if (lastDotIndex !== -1) {
+    name = file.name.substring(0, lastDotIndex);
+    extension = file.name.substring(lastDotIndex + 1);
+  }
   return {
     name,
     size: file.size,
