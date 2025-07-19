@@ -46,7 +46,9 @@ const AuthForm = ({
       await loginWithEmailLink(values.email);
       window.localStorage.setItem('emailForSignIn', values.email);
       form.reset();
-      toast('Check your email for a link to sign in.');
+      toast.info('Check your email for a link to sign in.', {
+        description: 'We sent a link to your email.',
+      });
     } catch (error) {
       console.error(error);
     } finally {
@@ -107,7 +109,7 @@ const AuthForm = ({
             ) : (
               <Mail />
             )}
-            {login ? 'Sign In with Email' : 'Sign Up with Email'}
+            Sign Up with Email
           </Button>
         </form>
       </Form>
@@ -122,14 +124,7 @@ const AuthForm = ({
         className="mb-6 w-full cursor-pointer border border-neutral-200 bg-white"
         onClick={handleLoginWithGoogle}
       >
-        {type === 'google' ? (
-          <>
-            <LoaderCircle className="animate-spin" />
-            Loading...
-          </>
-        ) : (
-          'Continue with Google'
-        )}
+        Continue with Google
       </Button>
       <p className="text-center text-sm text-neutral-500">
         By clicking continue, you agree to our <br />{' '}

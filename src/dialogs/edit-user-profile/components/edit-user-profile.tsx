@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import user from '@/api/user';
 import { useUploadFile } from '@/hooks';
 import type { IUser } from '@/types/user.type';
-import { environment } from '@/environment';
+import { CONFIG } from '@/config';
 
 interface EditUserProfileProps {
   open?: boolean;
@@ -47,8 +47,8 @@ const EditUserProfile = ({
       const target = e.target as HTMLInputElement;
       if (target.files && target.files.length > 0) {
         const file = target.files[0];
-        if (file.size > 4 * 1024 * 1024) {
-          alert('File size cannot exceed 4MB');
+        if (file.size > CONFIG.MAX_FILE_SIZE) {
+          alert(`File size cannot exceed ${CONFIG.MAX_FILE_SIZE / 1024 / 1024}MB`);
           return;
         }
         const url = await uploadFileFn(file);
@@ -59,10 +59,8 @@ const EditUserProfile = ({
   }, [loading, uploadFileFn]);
 
   useEffect(() => {
-    if (me) {
-      setUserData({ name: me.name ?? '', picture: me.picture ?? '' });
-    }
-  }, [me]);
+    if (me) setUserData({ name: me.name ?? '', picture: me.picture ?? '' });
+  }, [me, open]);
 
   const handleUpdate = useCallback(() => {
     if (!userData.name.trim() || isPending) return;

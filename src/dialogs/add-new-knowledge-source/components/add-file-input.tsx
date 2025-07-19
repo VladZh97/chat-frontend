@@ -4,10 +4,9 @@ import { FileText, Trash, Upload, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useKnowledgeDialogStoreShallow } from '../store';
+import { CONFIG } from '@/config';
 
 const FILE_ACCEPT = '.pdf, .doc, .txt, .docx';
-const MAX_FILE_SIZE_MB = 5;
-const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 const getFileMetadata = (file: File) => {
   const lastDotIndex = file.name.lastIndexOf('.');
@@ -58,7 +57,7 @@ const AddFileInput = () => {
         return;
       }
 
-      if (file.size > MAX_FILE_SIZE_BYTES) {
+      if (file.size > CONFIG.MAX_FILE_SIZE) {
         setIsFileTooBig(true);
         console.error('File size exceeds 5MB limit');
         return;
@@ -128,7 +127,7 @@ const TooBigFileContent = ({ setIsFileTooBig }: { setIsFileTooBig: (value: boole
       <AlertCircle className="mb-2 size-7 text-red-500" />
       <span className="mb-1 text-sm font-medium text-red-600">File is too big</span>
       <span className="mb-3 text-xs text-red-600">
-        Please select a file smaller than {MAX_FILE_SIZE_MB}MB
+        Please select a file smaller than {CONFIG.MAX_FILE_SIZE / 1024 / 1024}MB
       </span>
       <Button
         variant="outline"

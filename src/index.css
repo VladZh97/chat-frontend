@@ -188,3 +188,47 @@
     }
   }
 }
+
+[data-sonner-toast] [data-title] {
+  @apply text-sm !font-semibold !text-zinc-950;
+}
+
+[data-sonner-toast] [data-description] {
+  @apply text-xs !text-zinc-500;
+}
+
+[data-sonner-toast][data-type='success'] {
+  @apply !border !border-green-200 !bg-green-100 !shadow-md;
+}
+
+[data-sonner-toast][data-type='success'] [data-title] {
+  @apply !text-green-950;
+}
+
+[data-sonner-toast][data-type='success'] [data-description] {
+  @apply !text-green-900;
+}
+
+[data-sonner-toast][data-type='warning'] {
+  @apply !border !border-amber-200 !bg-amber-100 !shadow-md;
+}
+
+[data-sonner-toast][data-type='warning'] [data-title] {
+  @apply !text-amber-950;
+}
+
+[data-sonner-toast][data-type='warning'] [data-description] {
+  @apply !text-amber-900;
+}
+
+[data-sonner-toast][data-type='error'] {
+  @apply !border !border-red-200 !bg-red-100 !shadow-md;
+}
+
+[data-sonner-toast][data-type='error'] [data-title] {
+  @apply !text-red-950;
+}
+
+[data-sonner-toast][data-type='error'] [data-description] {
+  @apply !text-red-900;
+}

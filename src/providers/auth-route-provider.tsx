@@ -31,7 +31,6 @@ const AuthRouteProvider = ({ children }: ProtectedRouteProps) => {
   }, []);
 
   if (authState.loading) return null;
-  console.log(authState.authenticated);
   if (authState.authenticated) {
     const isAuthPage = ['/signup', '/login'].some(path => location.pathname.startsWith(path));
     if (isAuthPage && location.pathname !== '/') {
