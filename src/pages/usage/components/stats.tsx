@@ -1,5 +1,6 @@
 import chatbot from '@/api/chatbot';
 import { stats } from '@/api/stats';
+import Counter from '@/components/counter';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useQuery } from '@tanstack/react-query';
@@ -40,7 +41,7 @@ const Card = ({ children }: { children: React.ReactNode }) => {
 };
 
 const Chatbots = () => {
-  const { data: chatbots, isLoading } = useQuery({
+  const { data: chatbots } = useQuery({
     queryKey: ['chatbots'],
     queryFn: () => chatbot.get(),
   });
@@ -51,19 +52,16 @@ const Chatbots = () => {
         <Bot className="size-4 text-neutral-500" />
         Chatbots
       </div>
-      {isLoading ? (
-        <Skeleton className="size-8" />
-      ) : (
-        <span className="text-2xl font-bold text-neutral-900">{chatbots?.length ?? 0}/1</span>
-      )}
+      <Counter value={chatbots?.length ?? 0} className="text-2xl font-bold text-neutral-900" />
     </Card>
   );
 };
 
 const MessagesCard = () => {
-  const { data: messages, isLoading } = useQuery({
+  const { data: messages } = useQuery({
     queryKey: stats.messages.key,
     queryFn: stats.messages.query,
+    staleTime: 60_000,
   });
 
   return (
@@ -72,11 +70,7 @@ const MessagesCard = () => {
         <MessagesSquare className="size-4 text-neutral-500" />
         Messages
       </div>
-      {isLoading ? (
-        <Skeleton className="size-8" />
-      ) : (
-        <span className="text-2xl font-bold text-neutral-900">{messages?.count ?? 0}/1000</span>
-      )}
+      <Counter value={messages?.count} className="text-2xl font-bold text-neutral-900" />
     </Card>
   );
 };

@@ -1,7 +1,10 @@
 import { stats } from '@/api/stats';
+import Counter from '@/components/counter';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useQuery } from '@tanstack/react-query';
 import { Bot, CreditCard, MessagesSquare } from 'lucide-react';
+import { motion, useMotionValue, useTransform, animate } from 'motion/react';
+import { useEffect } from 'react';
 
 const Stats = () => {
   return (
@@ -32,21 +35,19 @@ const Card = ({ children }: { children: React.ReactNode }) => {
 };
 
 const ChatsCard = () => {
-  const { data: chats, isLoading: isLoadingChats } = useQuery({
+  const { data: chats } = useQuery({
     queryKey: stats.chats.key,
     queryFn: stats.chats.query,
+    staleTime: 60_000,
   });
+
   return (
     <Card>
       <div className="mb-2 flex items-center gap-2 text-sm font-medium text-neutral-900">
         <MessagesSquare className="size-4 text-neutral-500" />
         Chats
       </div>
-      {isLoadingChats ? (
-        <Skeleton className="size-8" />
-      ) : (
-        <span className="text-2xl font-bold text-neutral-900">{chats?.count}</span>
-      )}
+      <Counter value={chats?.count} className="text-2xl font-bold text-neutral-900" />
     </Card>
   );
 };
