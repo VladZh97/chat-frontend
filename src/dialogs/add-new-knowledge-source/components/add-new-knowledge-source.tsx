@@ -1,4 +1,3 @@
-import Dialog from '@/components/ui/dialog';
 import BaseIcon from '@/assets/base-icon.svg?react';
 import Tabs from './tabs';
 import AddLinkOption from './add-link-option';
@@ -7,21 +6,29 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { useKnowledgeDialogStoreShallow } from '../store';
 import AddTextSnippet from './add-text-snippet';
 import SubmitAction from './submit-action';
+import { useDialog } from '@/hooks';
+import { useEffect } from 'preact/hooks';
 
-const AddNewKnowledgeSource = ({ children }: { children: React.ReactNode }) => {
+const ID = 'add-new-knowledge-source';
+
+const AddNewKnowledgeSource = () => {
   const [parent] = useAutoAnimate();
-  const { type, setType, open, setOpen, disableClose } = useKnowledgeDialogStoreShallow(s => ({
+  const { updateDialog } = useDialog();
+  const { type, setType, disableClose } = useKnowledgeDialogStoreShallow(s => ({
     type: s.type,
     setType: s.setType,
-    open: s.open,
-    setOpen: s.setOpen,
     disableClose: s.disableClose,
   }));
 
+  useEffect(() => {
+    updateDialog(ID, {
+      disableClose,
+    });
+  }, [disableClose]);
+
   return (
-    <Dialog open={open} onOpenChange={setOpen} disableClose={disableClose}>
-      <Dialog.Trigger>{children}</Dialog.Trigger>
-      <Dialog.Content className="w-[448px] overflow-hidden">
+    <div>
+      <div className="w-[448px] overflow-hidden">
         <div className="p-6 pb-4">
           <BaseIcon className="mb-4" />
           <p className="mb-[6px] text-base font-semibold text-neutral-900">Add new source</p>
@@ -36,11 +43,12 @@ const AddNewKnowledgeSource = ({ children }: { children: React.ReactNode }) => {
           </div>
         </div>
         <div className="rounded-b-2xl border-t border-neutral-200 bg-neutral-50 p-6">
-          <SubmitAction />
+          <SubmitAction dialogId={ID} />
         </div>
-      </Dialog.Content>
-    </Dialog>
+      </div>
+    </div>
   );
 };
 
+AddNewKnowledgeSource.id = ID;
 export default AddNewKnowledgeSource;

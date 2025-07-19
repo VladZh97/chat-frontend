@@ -5,10 +5,15 @@ import Images from './images';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import ChatbotName from './chatbot-name';
 import DeleteChatbotConfirmation from '@/dialogs/delete-chatbot-confirmation';
-import { buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
+import { useDialog } from '@/hooks';
 
 const SettingsSide = () => {
+  const { showDialog } = useDialog();
+  const handleDeleteChatbot = () => {
+    showDialog(DeleteChatbotConfirmation.id, DeleteChatbotConfirmation);
+  };
   return (
     <ScrollArea className="h-[calc(100vh-101px)]">
       <div className="px-8 py-6">
@@ -18,12 +23,10 @@ const SettingsSide = () => {
         <Branding />
         <RateLimiting />
         <div className="mt-6 border-t border-neutral-200 pt-6">
-          <DeleteChatbotConfirmation>
-            <div className={buttonVariants({ variant: 'destructive' })}>
-              <Trash2 />
-              Delete chatbot
-            </div>
-          </DeleteChatbotConfirmation>
+          <Button variant="destructive" onClick={handleDeleteChatbot}>
+            <Trash2 />
+            Delete chatbot
+          </Button>
         </div>
       </div>
     </ScrollArea>

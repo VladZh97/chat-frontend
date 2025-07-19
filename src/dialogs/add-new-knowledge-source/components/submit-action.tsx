@@ -8,10 +8,11 @@ import { useKnowledgeDialogStoreShallow } from '../store';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { isValidUrl } from '@/utils/is-valid-url';
-import { useUploadFile } from '@/hooks';
+import { useDialog, useUploadFile } from '@/hooks';
 import queryClient from '@/lib/query';
 
-const SubmitAction = () => {
+const SubmitAction = ({ dialogId }: { dialogId: string }) => {
+  const { closeDialog } = useDialog();
   const { id: chatbotId } = useParams();
   const { uploadFileFn } = useUploadFile();
 
@@ -25,14 +26,13 @@ const SubmitAction = () => {
     mutationFn: (data: TText) => knowledge.text(data),
   });
 
-  const { textSnippet, type, setOpen, websiteUrl, setDisableClose, disableClose, selectedFile } =
+  const { textSnippet, type, websiteUrl, setDisableClose, disableClose, selectedFile } =
     useKnowledgeDialogStoreShallow(s => ({
       textSnippet: s.textSnippet,
       type: s.type,
       websiteUrl: s.websiteUrl,
       disableClose: s.disableClose,
       selectedFile: s.selectedFile,
-      setOpen: s.setOpen,
       setDisableClose: s.setDisableClose,
     }));
 
@@ -73,7 +73,7 @@ const SubmitAction = () => {
       toast.error('Failed to add source');
     } finally {
       setDisableClose(false);
-      setOpen(false);
+      closeDialog(dialogId);
     }
   };
 

@@ -1,9 +1,14 @@
-import { buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import AddNewKnowledgeSource from '@/dialogs/add-new-knowledge-source';
-import { cn } from '@/lib/utils';
+import { useDialog } from '@/hooks';
 import { BrainCircuit, Plus } from 'lucide-react';
 
 const EmptyState = () => {
+  const { showDialog } = useDialog();
+  const handleAddNewKnowledgeSource = () => {
+    showDialog(AddNewKnowledgeSource.id, AddNewKnowledgeSource);
+  };
+
   return (
     <div className="rounded-xl border border-neutral-200 bg-white py-10 shadow">
       <div className="flex flex-col items-center justify-center p-8">
@@ -17,12 +22,10 @@ const EmptyState = () => {
           Teach your bot using URLs, documents, or written notes. <br /> You can always re-train it
           later.
         </p>
-        <AddNewKnowledgeSource>
-          <span className={cn(buttonVariants({ variant: 'outline' }))}>
-            <Plus />
-            Add new source
-          </span>
-        </AddNewKnowledgeSource>
+        <Button variant="outline" onClick={handleAddNewKnowledgeSource}>
+          <Plus />
+          Add new source
+        </Button>
       </div>
     </div>
   );

@@ -3,7 +3,6 @@ import { useShallow } from 'zustand/react/shallow';
 
 interface IState {
   type: 'links' | 'files' | 'text-snippet';
-  open: boolean;
   disableClose: boolean;
 
   websiteUrl: string;
@@ -21,7 +20,6 @@ interface IActions {
   setWebsiteUrl: (value: string) => void;
   setTextSnippet: (value: { title: string; content: string }) => void;
   setType: (value: 'links' | 'files' | 'text-snippet') => void;
-  setOpen: (value: boolean) => void;
   setDisableClose: (value: boolean) => void;
   setSelectedFile: (file: { file: File; metadata: Record<string, unknown> } | null) => void;
   reset: () => void;
@@ -30,7 +28,6 @@ interface IActions {
 const initState: IState = {
   type: 'links',
   websiteUrl: '',
-  open: false,
   disableClose: false,
   textSnippet: {
     title: '',
@@ -46,10 +43,8 @@ export const useKnowledgeDialogStore = create<IState & IActions>(set => ({
   setTextSnippet: snippet => set({ textSnippet: snippet }),
   setSelectedFile: file => set({ selectedFile: file }),
   setType: type => {
-    const { open, ...rest } = initState;
-    set({ ...rest, type });
+    set({ ...initState, type });
   },
-  setOpen: open => set({ ...initState, open }),
   reset: () => set(initState),
 }));
 

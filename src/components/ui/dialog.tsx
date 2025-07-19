@@ -1,41 +1,52 @@
-import { cn } from '@/lib/utils';
-import { Dialog as DialogBase } from '@base-ui-components/react/dialog';
+import { useDialogStoreShallow } from '@/store/dialog.store';
+import { AnimatePresence, motion } from 'motion/react';
+import { createPortal } from 'preact/compat';
+import { useDialog } from '@/hooks';
 
-interface DialogProps {
-  children: React.ReactNode;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  disableClose?: boolean;
-}
+const Dialog = () => {
+  const dialogs = useDialogStoreShallow(state => state.dialogs);
+  const closingDialogs = useDialogStoreShallow(state => state.closingDialogs);
+  const { closeDialog } = useDialog();
 
-const Dialog = ({ children, open, onOpenChange, disableClose }: DialogProps) => {
-  // Handler to prevent close if disableClose is true
-  const handleOpenChange = (nextOpen: boolean) => {
-    if (disableClose && !nextOpen) return; // Prevent closing
-    onOpenChange?.(nextOpen);
-  };
-  return (
-    <DialogBase.Root open={open} onOpenChange={handleOpenChange}>
-      {children}
-    </DialogBase.Root>
+  if (dialogs.length === 0) return null;
+
+  return createPortal(
+    <AnimatePresence mode="wait">
+      {dialogs.map(dialog => {
+        const DialogComponent = dialog.component;
+        const isClosing = closingDialogs.has(dialog.id);
+        const canClose = !isClosing && !dialog.disableClose;
+
+        return (
+          <motion.div
+            key={dialog.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isClosing ? 0 : 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            className="fixed inset-0 z-[9999] grid place-items-center bg-neutral-900/90 dark:opacity-70"
+            onClick={() => canClose && closeDialog(dialog.id)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{
+                opacity: isClosing ? 0 : 1,
+                scale: isClosing ? 0.95 : 1,
+                y: isClosing ? 20 : 0,
+              }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+              className="rounded-2xl bg-white shadow-md dark:outline-gray-300"
+              onClick={e => e.stopPropagation()}
+            >
+              <DialogComponent {...dialog.props} />
+            </motion.div>
+          </motion.div>
+        );
+      })}
+    </AnimatePresence>,
+    document.body
   );
 };
-
-Dialog.Trigger = DialogBase.Trigger;
-Dialog.Portal = DialogBase.Portal;
-Dialog.Backdrop = DialogBase.Backdrop;
-Dialog.Content = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <DialogBase.Portal>
-    <DialogBase.Backdrop className="fixed inset-0 z-[100] bg-neutral-900/90 transition-all duration-150 data-[ending-style]:opacity-0 data-[starting-style]:opacity-0 dark:opacity-70" />
-    <DialogBase.Popup
-      className={cn(
-        'fixed top-1/2 left-1/2 z-[101] w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white shadow-md transition-all duration-150 outline-none data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:outline-gray-300',
-        className
-      )}
-    >
-      {children}
-    </DialogBase.Popup>
-  </DialogBase.Portal>
-);
 
 export default Dialog;

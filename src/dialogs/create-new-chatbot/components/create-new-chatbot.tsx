@@ -1,29 +1,26 @@
-import Dialog from '@/components/ui/dialog';
 import BaseIcon from '@/assets/base-icon.svg?react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useState, useCallback } from 'preact/hooks';
+import { useState, useCallback, useEffect } from 'preact/hooks';
 import { useMutation } from '@tanstack/react-query';
 import type { IChatbot } from '@/types/chatbot.type';
 import { useNavigate } from 'react-router-dom';
 import { LoaderCircle } from 'lucide-react';
 import chatbot from '@/api/chatbot';
 import { cn } from '@/lib/utils';
+import { useDialog } from '@/hooks';
 
-interface CreateNewChatbotProps {
-  children: React.ReactNode;
-  className?: string;
-}
+const ID = 'create-new-chatbot';
 
-const CreateNewChatbot = ({ children, className }: CreateNewChatbotProps) => {
+const CreateNewChatbot = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
-  const [open, setOpen] = useState(false);
+  const { closeDialog, updateDialog } = useDialog();
 
   const { mutate: createChatbot, isPending } = useMutation({
     mutationFn: (data: Partial<IChatbot>) => chatbot.create(data),
     onSuccess: response => {
-      setOpen(false);
+      closeDialog(ID);
       setName('');
       navigate(`/chatbot/${response._id}`);
     },
@@ -47,41 +44,40 @@ const CreateNewChatbot = ({ children, className }: CreateNewChatbotProps) => {
     [handleCreate]
   );
 
+  useEffect(() => {
+    updateDialog(ID, {
+      disableClose: isPending,
+    });
+  }, [isPending]);
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger className={className}>{children}</Dialog.Trigger>
-      <Dialog.Content className="w-[448px]">
-        <div className="p-6 pb-8">
-          <BaseIcon className="mb-4" />
-          <p className="mb-[6px] cursor-pointer text-base font-semibold text-neutral-900">
-            Create a new chatbot
-          </p>
-          <p className="mb-9 text-sm text-neutral-500">
-            Set up your chatbot’s identity and training data.
-          </p>
-          <div className="mb-6">
-            <span className="mb-2 block text-sm font-medium text-neutral-900">Chatbot name</span>
-            <Input
-              className="h-10"
-              value={name}
-              onChange={handleNameChange}
-              onKeyDown={onKeyDown}
-            />
-          </div>
+    <div className="w-[448px]">
+      <div className="p-6 pb-8">
+        <BaseIcon className="mb-4" />
+        <p className="mb-[6px] cursor-pointer text-base font-semibold text-neutral-900">
+          Create a new chatbot
+        </p>
+        <p className="mb-9 text-sm text-neutral-500">
+          Set up your chatbot’s identity and training data.
+        </p>
+        <div className="mb-6">
+          <span className="mb-2 block text-sm font-medium text-neutral-900">Chatbot name</span>
+          <Input className="h-10" value={name} onChange={handleNameChange} onKeyDown={onKeyDown} />
         </div>
-        <div className="rounded-b-2xl border-t border-neutral-200 bg-neutral-50 p-6">
-          <Button
-            className={cn('h-10 w-full', isPending && 'cursor-default')}
-            disabled={!name.trim()}
-            onClick={handleCreate}
-          >
-            {isPending && <LoaderCircle className="size-4 animate-spin" />}
-            {isPending ? 'Creating...' : 'Create chatbot'}
-          </Button>
-        </div>
-      </Dialog.Content>
-    </Dialog>
+      </div>
+      <div className="rounded-b-2xl border-t border-neutral-200 bg-neutral-50 p-6">
+        <Button
+          className={cn('h-10 w-full', isPending && 'cursor-default')}
+          disabled={!name.trim()}
+          onClick={handleCreate}
+        >
+          {isPending && <LoaderCircle className="size-4 animate-spin" />}
+          {isPending ? 'Creating...' : 'Create chatbot'}
+        </Button>
+      </div>
+    </div>
   );
 };
 
+CreateNewChatbot.id = ID;
 export default CreateNewChatbot;
