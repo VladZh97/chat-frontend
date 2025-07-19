@@ -49,7 +49,7 @@ const Sidebar = () => {
         <div className="flex h-full flex-col">
           <div className="p-4">
             <div className="p-2">
-              <LogoLight className="h-auto max-w-20" />
+              <LogoLight />
             </div>
           </div>
           <div className="p-4 pt-3">
