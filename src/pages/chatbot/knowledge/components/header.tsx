@@ -18,7 +18,7 @@ const Header = () => {
   }));
   const { isLoading: isChatbotLoading } = useQuery({
     queryKey: ['chatbot', chatbotId],
-    queryFn: () => chatbot.get(),
+    queryFn: () => chatbot.getById(chatbotId as string),
     enabled: !!chatbotId,
   });
 

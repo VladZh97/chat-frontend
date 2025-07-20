@@ -12,6 +12,24 @@ export const stats = {
     },
     key: ['stats-chats'],
   },
+  chatsOverTime: {
+    query: async (dateFrom: string, dateTo: string, chatbotId?: string) => {
+      const response = await api.get('/stats/chats-over-time', {
+        params: {
+          chatbotId,
+          dateFrom,
+          dateTo,
+        },
+      });
+      return response.data;
+    },
+    key: (dateFrom: string, dateTo: string, chatbotId?: string) => [
+      'stats-chats-over-time',
+      dateFrom,
+      dateTo,
+      chatbotId,
+    ],
+  },
   messages: {
     query: async (chatbotId?: string) => {
       const response = await api.get('/stats/messages', {
@@ -22,5 +40,23 @@ export const stats = {
       return response.data;
     },
     key: ['stats-messages'],
+  },
+  messagesOverTime: {
+    query: async (dateFrom: string, dateTo: string, chatbotId?: string) => {
+      const response = await api.get('/stats/messages-over-time', {
+        params: {
+          chatbotId,
+          dateFrom,
+          dateTo,
+        },
+      });
+      return response.data;
+    },
+    key: (dateFrom: string, dateTo: string, chatbotId?: string) => [
+      'stats-messages-over-time',
+      dateFrom,
+      dateTo,
+      chatbotId,
+    ],
   },
 };

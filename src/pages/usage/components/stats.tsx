@@ -2,7 +2,6 @@ import chatbot from '@/api/chatbot';
 import { stats } from '@/api/stats';
 import Counter from '@/components/counter';
 import { Button } from '@/components/ui/button';
-import { PLANS } from '@/config';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
 import { useQuery } from '@tanstack/react-query';
 import { Bot, CreditCard, MessagesSquare } from 'lucide-react';
@@ -51,8 +50,8 @@ const PlanCard = () => {
 
 const Chatbots = () => {
   const { data: chatbots } = useQuery({
-    queryKey: ['chatbots'],
-    queryFn: () => chatbot.get(),
+    queryKey: chatbot.get.key,
+    queryFn: () => chatbot.get.query(),
   });
 
   return (
@@ -69,7 +68,7 @@ const Chatbots = () => {
 const MessagesCard = () => {
   const { data: messages } = useQuery({
     queryKey: stats.messages.key,
-    queryFn: stats.messages.query,
+    queryFn: () => stats.messages.query(undefined),
     staleTime: 60_000,
   });
 
@@ -79,7 +78,7 @@ const MessagesCard = () => {
         <MessagesSquare className="size-4 text-neutral-500" />
         Messages
       </div>
-      <Counter value={messages?.count} className="text-2xl font-bold text-neutral-900" />
+      <Counter value={messages?.count ?? 0} className="text-2xl font-bold text-neutral-900" />
     </Card>
   );
 };

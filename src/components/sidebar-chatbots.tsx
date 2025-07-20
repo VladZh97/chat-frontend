@@ -27,8 +27,8 @@ const SidebarChatbots = () => {
   const { pathname } = useLocation();
   const { id } = useParams();
   const { data: chatbots, isLoading } = useQuery({
-    queryKey: ['chatbots'],
-    queryFn: () => chatbot.get(),
+    queryKey: chatbot.get.key,
+    queryFn: () => chatbot.get.query(),
   });
 
   const position = NAVIGATION.findIndex(item =>

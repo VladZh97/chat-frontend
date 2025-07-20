@@ -11,8 +11,8 @@ const ChatbotsList = () => {
   const navigate = useNavigate();
   const { showDialog } = useDialog();
   const { data: chatbots, isLoading } = useQuery({
-    queryKey: ['chatbots'],
-    queryFn: () => chatbot.get(),
+    queryKey: chatbot.get.key,
+    queryFn: () => chatbot.get.query(),
   });
 
   const handleChatbotClick = useCallback(

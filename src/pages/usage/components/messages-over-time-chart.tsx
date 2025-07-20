@@ -1,4 +1,4 @@
-import { CalendarDays, Calendar as CalendarIcon } from 'lucide-react';
+import { CalendarDays, Calendar as CalendarIcon, LoaderCircle } from 'lucide-react';
 import {
   type ChartConfig,
   ChartContainer,
@@ -18,62 +18,125 @@ import { useQuery } from '@tanstack/react-query';
 import chatbot from '@/api/chatbot';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { stats } from '@/api/stats';
 
-const chartData = [
-  { date: '2024-04-01', messages: 150 },
-  { date: '2024-04-02', messages: 180 },
-  { date: '2024-04-03', messages: 120 },
-  { date: '2024-04-04', messages: 260 },
-  { date: '2024-04-05', messages: 290 },
-  { date: '2024-04-06', messages: 340 },
-  { date: '2024-04-07', messages: 180 },
-  { date: '2024-04-08', messages: 320 },
-  { date: '2024-04-09', messages: 110 },
-  { date: '2024-04-10', messages: 190 },
-  { date: '2024-04-11', messages: 350 },
-  { date: '2024-04-12', messages: 210 },
-  { date: '2024-04-13', messages: 380 },
-  { date: '2024-04-14', messages: 220 },
-  { date: '2024-04-15', messages: 170 },
-];
-
-const chartConfig = {
+const CHART_CONFIG = {
   messages: {
     label: 'Messages',
   },
 } satisfies ChartConfig;
 
+// Helper function to generate date range data
+const generateDateRangeData = (
+  start: moment.Moment,
+  end: moment.Moment,
+  messagesMap?: Map<string, number>
+) => {
+  const days = end.diff(start, 'days') + 1;
+  const result = [];
+
+  for (let i = 0; i < days; i++) {
+    const date = start.clone().add(i, 'days').format('YYYY-MM-DD');
+    const messages = messagesMap
+      ? (messagesMap.get(date) ?? 0)
+      : Math.floor(Math.random() * 301) + 100;
+    result.push({ date, messages });
+  }
+
+  return result;
+};
+
+// Helper function to create messages map
+const createMessagesMap = (messagesOverTime: any[]): Map<string, number> => {
+  const messagesMap = new Map<string, number>();
+  if (Array.isArray(messagesOverTime)) {
+    for (const entry of messagesOverTime) {
+      if (entry.date) {
+        messagesMap.set(entry.date, entry.messages ?? 0);
+      }
+    }
+  }
+  return messagesMap;
+};
+
 const MessagesOverTimeChart = () => {
+  const [selectedChatbot, setSelectedChatbot] = useState<string>('all');
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: new Date(2025, 5, 9),
-    to: new Date(2025, 5, 26),
+    from: moment().subtract(6, 'days').toDate(),
+    to: moment().toDate(),
   });
 
+  const {
+    data: messagesOverTime,
+    isLoading,
+    isFetching,
+  } = useQuery({
+    queryKey: stats.messagesOverTime.key(
+      moment(dateRange?.from).format('YYYY-MM-DD'),
+      moment(dateRange?.to).format('YYYY-MM-DD'),
+      selectedChatbot === 'all' ? undefined : selectedChatbot
+    ),
+    queryFn: () =>
+      stats.messagesOverTime.query(
+        moment(dateRange?.from).format('YYYY-MM-DD'),
+        moment(dateRange?.to).format('YYYY-MM-DD'),
+        selectedChatbot === 'all' ? undefined : selectedChatbot
+      ),
+    enabled: !!dateRange?.from && !!dateRange?.to,
+  });
+
+  // Memoize the messages map to avoid recreating it on every render
+  const messagesMap = useMemo(() => createMessagesMap(messagesOverTime), [messagesOverTime]);
+
   // Check if there's data to display
-  const hasData = chartData.length > 0;
+  const hasData = messagesOverTime?.length > 0 || isLoading || isFetching;
+
+  const data = useMemo(() => {
+    if (isLoading || isFetching) return [];
+
+    if (!dateRange?.from || !dateRange?.to) return [];
+
+    const start = moment(dateRange.from).startOf('day');
+    const end = moment(dateRange.to).startOf('day');
+
+    // Generate placeholder data if no real data is available
+    if (!hasData) {
+      return generateDateRangeData(start, end);
+    }
+
+    // Generate data with real messages
+    return generateDateRangeData(start, end, messagesMap);
+  }, [hasData, messagesMap, dateRange, isLoading, isFetching]);
 
   return (
     <div className="mb-4 rounded-xl border border-neutral-200 bg-white p-6 shadow">
       <div className="flex items-center justify-between pb-6">
         <div>
           <div className="mb-1 flex items-center gap-2 text-base font-semibold text-neutral-900">
-            <CalendarIcon className="size-4 text-neutral-500" />
+            {isLoading || isFetching ? (
+              <LoaderCircle className="size-4 animate-spin" />
+            ) : (
+              <CalendarIcon className="size-4 text-neutral-500" />
+            )}
             Messages over time
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <ChatbotSelect />
+          <ChatbotSelect
+            selectedChatbot={selectedChatbot}
+            setSelectedChatbot={setSelectedChatbot}
+          />
           <DatePicker dateRange={dateRange} setDateRange={setDateRange} />
         </div>
       </div>
       <div className="relative">
         <ChartContainer
-          config={chartConfig}
+          config={CHART_CONFIG}
           className={cn('aspect-auto h-[250px] w-full', !hasData && 'opacity-30')}
         >
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={data}
             margin={{
               top: 20,
               left: 12,
@@ -131,8 +194,10 @@ const DatePicker = ({
   dateRange: DateRange | undefined;
   setDateRange: Dispatch<SetStateAction<DateRange | undefined>>;
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger>
         <div className="flex h-9 w-64 cursor-pointer items-center gap-2 rounded-md border border-neutral-200 bg-white px-4 py-2 text-sm text-neutral-900">
           <CalendarDays className="size-4" />
@@ -145,7 +210,10 @@ const DatePicker = ({
           mode="range"
           defaultMonth={dateRange?.from}
           selected={dateRange}
-          onSelect={setDateRange}
+          onSelect={d => {
+            setDateRange(d);
+            setIsOpen(false);
+          }}
           className="w-full"
         />
       </PopoverContent>
@@ -153,11 +221,16 @@ const DatePicker = ({
   );
 };
 
-const ChatbotSelect = () => {
-  const [selectedChatbot, setSelectedChatbot] = useState<string>('all');
+const ChatbotSelect = ({
+  selectedChatbot,
+  setSelectedChatbot,
+}: {
+  selectedChatbot: string;
+  setSelectedChatbot: Dispatch<SetStateAction<string>>;
+}) => {
   const { data } = useQuery({
-    queryKey: ['chatbots'],
-    queryFn: chatbot.get,
+    queryKey: chatbot.get.key,
+    queryFn: chatbot.get.query,
     select: data =>
       data.map(chatbot => ({
         label: chatbot.name,
