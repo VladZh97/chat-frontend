@@ -4,8 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 
 const useCurrentSubscription = () => {
   const { data, isLoading } = useQuery({
-    queryKey: ['account'],
-    queryFn: () => account.get(),
+    queryKey: account.get.key,
+    queryFn: () => account.get.query(),
   });
 
   if (isLoading) return { plan: {} } as { plan: typeof PLANS.BASIC };

@@ -37,7 +37,7 @@ const useLinkAuth = () => {
         await auth.create();
         await refreshAuthToken();
       } else {
-        await Promise.all([account.get(), user.get()]);
+        await Promise.all([account.get.query(), user.get.query()]);
       }
       navigate('/');
     } catch (error) {

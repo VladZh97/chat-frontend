@@ -15,15 +15,15 @@ const ID = 'edit-profile';
 const EditUserProfile = () => {
   const { closeDialog } = useDialog();
   const { data: me } = useQuery({
-    queryKey: ['user'],
-    queryFn: () => user.get(),
+    queryKey: user.get.key,
+    queryFn: () => user.get.query(),
   });
 
   const [userData, setUserData] = useState({ name: '', picture: '' });
   const { uploadFileFn, loading } = useUploadFile();
 
   const { mutate: updateUser, isPending } = useMutation({
-    mutationFn: (data: Partial<IUser>) => user.update({ _id: me._id, data }),
+    mutationFn: (data: Partial<IUser>) => user.update.mutation({ _id: me._id, data }),
     onSuccess: () => {
       closeDialog(ID);
     },

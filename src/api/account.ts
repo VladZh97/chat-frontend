@@ -3,15 +3,19 @@ import api from './api';
 import queryClient from '@/lib/query';
 
 const account = {
-  get: async (): Promise<IAccount> => {
-    const response = await api.get('/account');
-    queryClient.setQueryData(['account'], response.data);
-    return response.data;
+  get: {
+    query: async (): Promise<IAccount> => {
+      const response = await api.get('/account');
+      return response.data;
+    },
+    key: ['account'],
   },
-  update: async (data: Partial<IAccount>) => {
-    const response = await api.put('/account', data);
-    queryClient.setQueryData(['account'], response.data);
-    return response.data;
+  update: {
+    mutation: async (data: Partial<IAccount>) => {
+      const response = await api.put('/account', data);
+      queryClient.setQueryData(['account'], response.data);
+      return response.data;
+    },
   },
 };
 

@@ -92,8 +92,8 @@ export default Sidebar;
 const Profile = () => {
   const { showDialog } = useDialog();
   const { data: me } = useQuery({
-    queryKey: ['user'],
-    queryFn: () => user.get(),
+    queryKey: user.get.key,
+    queryFn: () => user.get.query(),
   });
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuth();
@@ -102,6 +102,7 @@ const Profile = () => {
     logout();
     navigate('/login');
   };
+  if (!me) return null;
   return (
     <div className="mt-auto p-2">
       <Popover open={isOpen} onOpenChange={setIsOpen}>
