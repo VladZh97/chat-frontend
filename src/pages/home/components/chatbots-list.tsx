@@ -59,7 +59,9 @@ const ChatbotsList = () => {
                 style={{ borderColor: chatbot.accentColor }}
               ></span>
             </div>
-            <span className="mt-3 block text-sm font-medium text-neutral-900">{chatbot.name}</span>
+            <span className="mt-3 block truncate text-sm font-medium text-neutral-900">
+              {chatbot.name}
+            </span>
           </div>
         ))}
         {isLoading && <Skeleton />}

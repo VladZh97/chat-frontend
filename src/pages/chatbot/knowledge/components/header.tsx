@@ -45,16 +45,19 @@ const Header = () => {
   const isTrained = knowledgeData?.every(item => item.trained);
 
   return (
-    <div className="flex h-[85px] items-center justify-between border-b border-transparent py-6">
-      <div className="ju flex items-center gap-2.5">
+    <div className="grid grid-cols-[auto_auto] items-center justify-between border-b border-transparent py-6">
+      <div className="grid grid-cols-[auto_auto] items-center gap-2.5">
         {isChatbotLoading ? (
-          <Skeleton className="h-7 w-80" />
+          <span className="animate-pulse-fast h-3 w-1/3 rounded-full bg-neutral-200"></span>
         ) : (
-          <span className="text-2xl font-medium text-neutral-900">{name} chatbot knowledge</span>
+          <span className="block truncate text-2xl font-medium text-neutral-900">
+            {name} chatbot overview
+          </span>
         )}
         <TrainingStatusLabel />
       </div>
-      <div className="flex items-center gap-4 pl-8">
+
+      <div className="ml-10 flex items-center gap-4">
         <div className="flex flex-col">
           <span className="mb-0.5 text-xs text-neutral-500">Used tokens</span>
           <span className="mb-1.5 text-xs font-semibold text-neutral-700">
