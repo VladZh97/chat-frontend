@@ -13,6 +13,7 @@ import { useState, type Dispatch } from 'preact/hooks';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import moment from 'moment';
 import type { SetStateAction } from 'preact/compat';
+import { cn } from '@/lib/utils';
 
 const chartData = [
   { date: '2024-04-01', chats: 150 },
@@ -45,6 +46,10 @@ const TotalChatsChart = () => {
   });
 
   const dateRangeDays = moment(dateRange?.to).diff(moment(dateRange?.from), 'days') + 1;
+
+  // Check if there's data to display
+  const hasData = chartData.length > 0;
+
   return (
     <div className="mb-4 rounded-xl border border-neutral-200 bg-white p-6 shadow">
       <div className="flex items-center justify-between pb-6">
@@ -59,8 +64,11 @@ const TotalChatsChart = () => {
         </div>
         <DatePicker dateRange={dateRange} setDateRange={setDateRange} />
       </div>
-      <div>
-        <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
+      <div className="relative">
+        <ChartContainer
+          config={chartConfig}
+          className={cn('aspect-auto h-[250px] w-full', !hasData && 'opacity-30')}
+        >
           <LineChart
             accessibilityLayer
             data={chartData}
@@ -89,12 +97,24 @@ const TotalChatsChart = () => {
             <Line
               dataKey="chats"
               type="natural"
-              stroke="var(--color-neutral-900)"
+              stroke={!hasData ? 'var(--color-neutral-200)' : 'var(--color-neutral-900)'}
               strokeWidth={2}
               dot={false}
             />
           </LineChart>
         </ChartContainer>
+        {!hasData && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-sm text-neutral-500">
+                <p className="font-medium text-neutral-700">No chat data available</p>
+                <p className="mt-1">
+                  Chat data will appear here once your chatbots start receiving conversations
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

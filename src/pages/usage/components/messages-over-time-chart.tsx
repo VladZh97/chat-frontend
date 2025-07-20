@@ -17,6 +17,7 @@ import Select from '@/components/ui/select';
 import { useQuery } from '@tanstack/react-query';
 import chatbot from '@/api/chatbot';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
 
 const chartData = [
   { date: '2024-04-01', messages: 150 },
@@ -48,6 +49,9 @@ const MessagesOverTimeChart = () => {
     to: new Date(2025, 5, 26),
   });
 
+  // Check if there's data to display
+  const hasData = chartData.length > 0;
+
   return (
     <div className="mb-4 rounded-xl border border-neutral-200 bg-white p-6 shadow">
       <div className="flex items-center justify-between pb-6">
@@ -62,8 +66,11 @@ const MessagesOverTimeChart = () => {
           <DatePicker dateRange={dateRange} setDateRange={setDateRange} />
         </div>
       </div>
-      <div>
-        <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
+      <div className="relative">
+        <ChartContainer
+          config={chartConfig}
+          className={cn('aspect-auto h-[250px] w-full', !hasData && 'opacity-30')}
+        >
           <BarChart
             accessibilityLayer
             data={chartData}
@@ -91,9 +98,25 @@ const MessagesOverTimeChart = () => {
             <ChartTooltip
               content={<ChartTooltipContent className="w-[150px]" nameKey="messages" />}
             />
-            <Bar dataKey="messages" fill="var(--color-neutral-900)" radius={4} />
+            <Bar
+              dataKey="messages"
+              fill={!hasData ? 'var(--color-neutral-200)' : 'var(--color-neutral-900)'}
+              radius={4}
+            />
           </BarChart>
         </ChartContainer>
+        {!hasData && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-sm text-neutral-500">
+                <p className="font-medium text-neutral-700">No message data available</p>
+                <p className="mt-1">
+                  Messages will appear here once your chatbots start receiving conversations
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
