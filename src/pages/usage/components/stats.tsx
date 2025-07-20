@@ -1,6 +1,7 @@
 import chatbot from '@/api/chatbot';
 import { stats } from '@/api/stats';
 import Counter from '@/components/counter';
+import StatCard from '@/components/stat-card';
 import { Button } from '@/components/ui/button';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
 import { useQuery } from '@tanstack/react-query';
@@ -33,18 +34,14 @@ const PlanCard = () => {
   const { plan } = useCurrentSubscription();
 
   return (
-    <Card>
-      <div className="mb-2 flex items-center gap-2 text-sm font-medium text-neutral-900">
-        <CreditCard className="size-4 text-neutral-500" />
-        Your plan
-      </div>
+    <StatCard icon={<CreditCard className="size-4 text-neutral-500" />} title="Your plan">
       <div className="flex items-center justify-between">
         <span className="text-2xl font-bold text-neutral-900">{plan.name}</span>
         <Button onClick={handleChangePlan} variant="outline">
           Change plan
         </Button>
       </div>
-    </Card>
+    </StatCard>
   );
 };
 
@@ -55,30 +52,22 @@ const Chatbots = () => {
   });
 
   return (
-    <Card>
-      <div className="mb-2 flex items-center gap-2 text-sm font-medium text-neutral-900">
-        <Bot className="size-4 text-neutral-500" />
-        Chatbots
-      </div>
-      <Counter value={chatbots?.length ?? 0} className="text-2xl font-bold text-neutral-900" />
-    </Card>
+    <StatCard icon={<Bot className="size-4 text-neutral-500" />} title="Chatbots">
+      <Counter value={chatbots?.length ?? 0} />
+    </StatCard>
   );
 };
 
 const MessagesCard = () => {
   const { data: messages } = useQuery({
-    queryKey: stats.messages.key,
+    queryKey: stats.messages.key(),
     queryFn: () => stats.messages.query(undefined),
     staleTime: 60_000,
   });
 
   return (
-    <Card>
-      <div className="mb-2 flex items-center gap-2 text-sm font-medium text-neutral-900">
-        <MessagesSquare className="size-4 text-neutral-500" />
-        Messages
-      </div>
-      <Counter value={messages?.count ?? 0} className="text-2xl font-bold text-neutral-900" />
-    </Card>
+    <StatCard icon={<MessagesSquare className="size-4 text-neutral-500" />} title="Messages">
+      <Counter value={messages?.count ?? 0} />
+    </StatCard>
   );
 };

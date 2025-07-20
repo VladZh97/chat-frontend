@@ -10,7 +10,7 @@ export const stats = {
       });
       return response.data;
     },
-    key: ['stats-chats'],
+    key: (chatbotId?: string) => ['stats-chats', chatbotId],
   },
   chatsOverTime: {
     query: async (dateFrom: string, dateTo: string, chatbotId?: string) => {
@@ -39,7 +39,7 @@ export const stats = {
       });
       return response.data;
     },
-    key: ['stats-messages'],
+    key: (chatbotId?: string) => ['stats-messages', chatbotId],
   },
   messagesOverTime: {
     query: async (dateFrom: string, dateTo: string, chatbotId?: string) => {
