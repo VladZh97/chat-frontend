@@ -245,7 +245,9 @@ const ChatbotSelect = ({
   return (
     <Select value={selectedChatbot} onValueChange={setSelectedChatbot}>
       <Select.Trigger className="h-9 w-64">
-        {selectedChatbot === 'all' ? 'All agents' : chatbotName}
+        <span className="block max-w-52 truncate">
+          {selectedChatbot === 'all' ? 'All agents' : chatbotName}
+        </span>
       </Select.Trigger>
       <Select.Content className="p-0">
         <ScrollArea>
@@ -253,7 +255,7 @@ const ChatbotSelect = ({
             <Select.Option value="all">All agents</Select.Option>
             {data?.map(chatbot => (
               <Select.Option key={chatbot.value} value={chatbot.value}>
-                {chatbot.label}
+                <span className="block max-w-48 truncate">{chatbot.label}</span>
               </Select.Option>
             ))}
           </div>
