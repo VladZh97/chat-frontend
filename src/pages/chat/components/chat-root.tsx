@@ -6,6 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import chat from '@/api/chat';
 import { useEffect, useState, useRef } from 'preact/hooks';
 import { cn } from '@/lib/utils';
+import DOMPurify from 'dompurify';
 
 const ChatRoot = () => {
   const { id } = useParams();
@@ -55,8 +56,6 @@ const ChatRoot = () => {
     }
   };
 
-  console.log(messages);
-
   return (
     <div className="flex min-h-screen flex-col">
       <div className="mx-auto flex w-full grow flex-col overflow-hidden bg-white shadow-sm">
@@ -68,7 +67,7 @@ const ChatRoot = () => {
           <Ellipsis className="size-4 cursor-pointer text-neutral-700" />
         </div>
         <ScrollArea className="h-[calc(100vh-400px) grow">
-          <div className="space-y-6 p-4">
+          <div className="space-y-6 p-4 pb-8">
             {/* Initial bot message */}
             {/* <div className="flex items-end gap-2">
               <span className="flex size-6 items-center justify-center rounded-full bg-neutral-900 text-white">
@@ -100,9 +99,10 @@ const ChatRoot = () => {
                 <div
                   className={`flex flex-col gap-1 ${message.role === 'user' ? 'items-end' : ''}`}
                 >
-                  <span
+                  <div
                     className={cn(
                       'block rounded-xl px-4 py-3 text-sm font-normal',
+                      'prose prose-sm prose-neutral',
                       message.role === 'user'
                         ? 'text-white last:rounded-br-none'
                         : 'text-neutral-900 last:rounded-bl-none'
@@ -110,9 +110,8 @@ const ChatRoot = () => {
                     style={{
                       backgroundColor: message.role === 'user' ? '#000' : '#0000001A',
                     }}
-                  >
-                    {message.content}
-                  </span>
+                    dangerouslySetInnerHTML={{ __html: message.content }}
+                  />
                 </div>
               </div>
             ))}
@@ -124,12 +123,13 @@ const ChatRoot = () => {
                   <Bot className="size-3" />
                 </span>
                 <div className="flex flex-col gap-1">
-                  <span
+                  <div
                     className="block rounded-xl px-4 py-3 text-sm font-normal text-neutral-900 last:rounded-bl-none"
                     style={{ backgroundColor: `#0000001A` }}
-                  >
-                    {currentStreamingMessage}
-                  </span>
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(currentStreamingMessage),
+                    }}
+                  />
                 </div>
               </div>
             )}
@@ -142,13 +142,13 @@ const ChatRoot = () => {
                 </span>
                 <div className="flex flex-col gap-1">
                   <span
-                    className="block rounded-xl px-4 py-3 text-sm font-normal text-neutral-900 last:rounded-bl-none"
+                    className="flex h-8 w-14 items-center justify-center rounded-xl text-sm font-normal text-neutral-900 last:rounded-bl-none"
                     style={{ backgroundColor: `#0000001A` }}
                   >
                     <div className="flex items-center gap-0.5">
-                      <div className="h-2 w-2 animate-bounce rounded-full bg-neutral-900 [animation-delay:-0.3s]"></div>
-                      <div className="h-2 w-2 animate-bounce rounded-full bg-neutral-900 [animation-delay:-0.15s]"></div>
-                      <div className="h-2 w-2 animate-bounce rounded-full bg-neutral-900"></div>
+                      <div className="size-2 animate-bounce rounded-full bg-neutral-900 [animation-delay:-0.3s]"></div>
+                      <div className="size-2 animate-bounce rounded-full bg-neutral-900 [animation-delay:-0.15s]"></div>
+                      <div className="size-2 animate-bounce rounded-full bg-neutral-900"></div>
                     </div>
                   </span>
                 </div>
