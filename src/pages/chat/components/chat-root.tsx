@@ -57,7 +57,7 @@ const ChatRoot = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex flex-col">
       <div className="mx-auto flex w-full grow flex-col overflow-hidden bg-white shadow-sm">
         <div className="relative flex items-center justify-between px-4 pt-6 pb-6">
           <ArrowLeft className="size-4 cursor-pointer text-neutral-700" />
@@ -68,22 +68,6 @@ const ChatRoot = () => {
         </div>
         <ScrollArea className="h-[calc(100vh-400px) grow">
           <div className="space-y-6 p-4 pb-8">
-            {/* Initial bot message */}
-            {/* <div className="flex items-end gap-2">
-              <span className="flex size-6 items-center justify-center rounded-full bg-neutral-900 text-white">
-                <Bot className="size-3" />
-              </span>
-              <div className="flex flex-col gap-1">
-                <span
-                  className="block rounded-xl px-4 py-3 text-sm font-normal text-neutral-900 last:rounded-bl-none"
-                  style={{ backgroundColor: `#0000001A` }}
-                >
-                  How can I help you?
-                </span>
-              </div>
-            </div> */}
-
-            {/* Display messages */}
             {messages.map((message, index) => (
               <div
                 key={index}

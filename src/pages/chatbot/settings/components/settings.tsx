@@ -14,7 +14,7 @@ const Settings = () => {
           <SettingsSide />
           <div className="flex flex-col border-l border-neutral-200 bg-neutral-100 p-8">
             <Label className="mb-5">Preview</Label>
-            <div className="flex grow items-center justify-center">
+            <div className="mx-auto flex w-full max-w-[416px] grow items-center justify-center">
               <Widget />
             </div>
           </div>
