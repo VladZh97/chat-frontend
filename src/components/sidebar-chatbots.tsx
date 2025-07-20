@@ -50,7 +50,7 @@ const SidebarChatbots = () => {
               )}
             >
               <Bot className="size-4 shrink-0" />
-              <span className="truncate">{chatbot.name}</span>
+              <span className="max-w-40 truncate">{chatbot.name}</span>
               <ChevronRight
                 className={cn('ml-auto size-4 shrink-0', id === chatbot._id && 'rotate-90')}
               />
