@@ -162,14 +162,16 @@ const TotalChatsChart = () => {
               }}
             />
             <ChartTooltip content={<ChartTooltipContent className="w-[150px]" nameKey="chats" />} />
-            <Line
-              dataKey="chats"
-              type="monotone"
-              stroke={!hasData ? 'var(--color-neutral-200)' : 'var(--color-neutral-900)'}
-              strokeWidth={2}
-              dot={false}
-              connectNulls={true}
-            />
+            {!isLoading && !isFetching && (
+              <Line
+                dataKey="chats"
+                type="monotone"
+                stroke={!hasData ? 'var(--color-neutral-200)' : 'var(--color-neutral-900)'}
+                strokeWidth={2}
+                dot={false}
+                connectNulls={true}
+              />
+            )}
           </LineChart>
         </ChartContainer>
         {!hasData && (
