@@ -3,35 +3,34 @@ import { stats } from '@/api/stats';
 import Counter from '@/components/counter';
 import StatCard from '@/components/stat-card';
 import { Button } from '@/components/ui/button';
+import type { PLAN_LIMITS, PLANS } from '@/config';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
 import { useQuery } from '@tanstack/react-query';
 import { Bot, CreditCard, MessagesSquare } from 'lucide-react';
 import { useCallback } from 'preact/hooks';
 import { useNavigate } from 'react-router-dom';
 
+type Plan = (typeof PLANS)[keyof typeof PLANS];
+type Limits = (typeof PLAN_LIMITS)[keyof typeof PLAN_LIMITS];
+
 const Stats = () => {
+  const { plan, limits } = useCurrentSubscription();
   return (
     <div className="mb-4 grid grid-cols-3 gap-4">
-      <PlanCard />
-      <Chatbots />
-      <MessagesCard />
+      <PlanCard plan={plan} />
+      <Chatbots limits={limits} />
+      <MessagesCard limits={limits} />
     </div>
   );
 };
 
 export default Stats;
 
-const Card = ({ children }: { children: React.ReactNode }) => {
-  return <div className="rounded-xl border border-stone-200 bg-white p-6 shadow">{children}</div>;
-};
-
-const PlanCard = () => {
+const PlanCard = ({ plan }: { plan: Plan }) => {
   const navigate = useNavigate();
   const handleChangePlan = useCallback(() => {
     navigate('/subscription');
   }, [navigate]);
-
-  const { plan } = useCurrentSubscription();
 
   return (
     <StatCard icon={<CreditCard className="size-4 text-stone-500" />} title="Your plan">
@@ -45,7 +44,7 @@ const PlanCard = () => {
   );
 };
 
-const Chatbots = () => {
+const Chatbots = ({ limits }: { limits: Limits }) => {
   const { data: chatbots } = useQuery({
     queryKey: chatbot.get.key,
     queryFn: () => chatbot.get.query(),
@@ -53,12 +52,12 @@ const Chatbots = () => {
 
   return (
     <StatCard icon={<Bot className="size-4 text-stone-500" />} title="Chatbots">
-      <Counter value={chatbots?.length ?? 0} />
+      <Counter value={chatbots?.length ?? 0} />/{limits.maxChatbots}
     </StatCard>
   );
 };
 
-const MessagesCard = () => {
+const MessagesCard = ({ limits }: { limits: Limits }) => {
   const { data: messages } = useQuery({
     queryKey: stats.messages.key(),
     queryFn: () => stats.messages.query(undefined),
@@ -67,7 +66,12 @@ const MessagesCard = () => {
 
   return (
     <StatCard icon={<MessagesSquare className="size-4 text-stone-500" />} title="Messages">
-      <Counter value={messages?.count ?? 0} />
+      <div className="flex w-full items-center justify-between">
+        <span>
+          <Counter value={messages?.count ?? 0} />/{limits.maxMessages}
+        </span>
+        <span className="text-sm font-normal text-stone-500">Refresh on July 31, 2025</span>
+      </div>
     </StatCard>
   );
 };

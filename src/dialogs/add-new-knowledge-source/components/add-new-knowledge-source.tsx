@@ -14,10 +14,11 @@ const ID = 'add-new-knowledge-source';
 const AddNewKnowledgeSource = () => {
   const [parent] = useAutoAnimate();
   const { updateDialog } = useDialog();
-  const { type, setType, disableClose } = useKnowledgeDialogStoreShallow(s => ({
+  const { type, setType, disableClose, reset } = useKnowledgeDialogStoreShallow(s => ({
     type: s.type,
     setType: s.setType,
     disableClose: s.disableClose,
+    reset: s.reset,
   }));
 
   useEffect(() => {
@@ -25,6 +26,12 @@ const AddNewKnowledgeSource = () => {
       disableClose,
     });
   }, [disableClose]);
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, []);
 
   return (
     <div>

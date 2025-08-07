@@ -10,21 +10,21 @@ export const PLAN_NAMES = {
 } as const;
 
 export const PLANS = {
-  FREE: {
+  [PLAN_NAMES.FREE]: {
     id: 'free',
     title: 'Free',
     description: 'For personal use.',
     price: 0,
     features: ['1 chatbot', '100 messages', 'Heyway branding'],
   },
-  PRO: {
+  [PLAN_NAMES.PRO]: {
     id: 'pro',
     title: 'Pro',
     description: 'For small businesses.',
     price: 39,
     features: ['1 chatbot', '2,000 messages', 'Remove Heyway branding', 'Full customization'],
   },
-  TEAM: {
+  [PLAN_NAMES.TEAM]: {
     id: 'team',
     title: 'Team',
     description: 'For large businesses.',
@@ -36,5 +36,23 @@ export const PLANS = {
       'Full customization',
       'Priority support',
     ],
+  },
+};
+
+export const PLAN_LIMITS = {
+  [PLAN_NAMES.FREE]: {
+    maxChatbots: 1,
+    maxMessages: 100,
+    maxFileSize: CONFIG.MAX_FILE_SIZE / 2,
+  },
+  [PLAN_NAMES.PRO]: {
+    maxChatbots: 1,
+    maxMessages: 2000,
+    maxFileSize: CONFIG.MAX_FILE_SIZE / 2,
+  },
+  [PLAN_NAMES.TEAM]: {
+    maxChatbots: 3,
+    maxMessages: 10000,
+    maxFileSize: CONFIG.MAX_FILE_SIZE / 2,
   },
 };

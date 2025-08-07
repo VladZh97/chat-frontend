@@ -8,8 +8,8 @@ const Branding = () => {
     setChatbot: s.setChatbot,
   }));
   return (
-    <div className="mb-6 flex items-center justify-between border-b border-stone-200 pb-6">
-      <Label>Remove Czat.io branding</Label>
+    <div className="mb-6 flex items-center justify-between">
+      <Label>Remove heyway.chat branding</Label>
       <Switch
         checked={removeBranding}
         onCheckedChange={value => setChatbot({ removeBranding: value })}

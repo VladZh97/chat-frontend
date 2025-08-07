@@ -1,5 +1,5 @@
 import account from '@/api/account';
-import { PLANS } from '@/config';
+import { PLAN_LIMITS, PLAN_NAMES, PLANS } from '@/config';
 import { useQuery } from '@tanstack/react-query';
 
 const useCurrentSubscription = () => {
@@ -8,9 +8,14 @@ const useCurrentSubscription = () => {
     queryFn: () => account.get.query(),
   });
 
-  if (isLoading) return { plan: {} } as { plan: typeof PLANS.FREE };
-  const plan = PLANS[data?.subscriptionPlanId as keyof typeof PLANS] || PLANS.FREE;
-  return { plan };
+  if (isLoading)
+    return {
+      plan: {},
+      limits: PLAN_LIMITS[PLAN_NAMES.FREE],
+    } as { plan: typeof PLANS.Free; limits: typeof PLAN_LIMITS.Free };
+  const plan = PLANS[data?.subscriptionPlanId as keyof typeof PLANS] || PLANS[PLAN_NAMES.FREE];
+  const limits = PLAN_LIMITS[plan.id as keyof typeof PLAN_LIMITS] || PLAN_LIMITS[PLAN_NAMES.FREE];
+  return { plan, limits };
 };
 
 export default useCurrentSubscription;

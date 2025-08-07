@@ -8,6 +8,7 @@ import DeleteChatbotConfirmation from '@/dialogs/delete-chatbot-confirmation';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import { useDialog } from '@/hooks';
+import CollectLeads from './collect-leads';
 
 const SettingsSide = () => {
   const { showDialog } = useDialog();
@@ -21,6 +22,7 @@ const SettingsSide = () => {
         <Images />
         <Colors />
         <Branding />
+        <CollectLeads />
         <RateLimiting />
         <div className="mt-6 border-t border-stone-200 pt-6">
           <Button variant="destructive" onClick={handleDeleteChatbot}>

@@ -26,6 +26,7 @@ const initState: IChatbot = {
   instructions: '',
   createdAt: '',
   updatedAt: '',
+  collectLeads: false,
 };
 
 export const useChatbotStore = create<IChatbot & IActions>(set => ({
