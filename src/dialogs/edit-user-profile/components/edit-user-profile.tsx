@@ -1,4 +1,4 @@
-import BaseIcon from '@/assets/base-icon.svg?react';
+import Icon from '@/assets/icon.svg?react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useState, useCallback, useEffect } from 'preact/hooks';
@@ -73,14 +73,14 @@ const EditUserProfile = () => {
   return (
     <div className="w-[448px]">
       <div className="p-6 pb-8">
-        <BaseIcon className="mb-4" />
-        <p className="mb-[6px] text-base font-semibold text-neutral-900">Edit profile</p>
-        <p className="text-sm text-neutral-500">Update your profile information.</p>
-        <div className="relative mx-auto mt-8 mb-4 size-20 rounded-full bg-neutral-200">
+        <Icon className="mb-4" />
+        <p className="mb-[6px] text-base font-semibold text-stone-900">Edit profile</p>
+        <p className="text-sm text-stone-500">Update your profile information.</p>
+        <div className="relative mx-auto mt-8 mb-4 size-20 rounded-full bg-stone-200">
           {userData.picture ? (
             <img src={userData.picture} alt="" className="size-full rounded-full" />
           ) : (
-            <span className="flex size-full items-center justify-center rounded-full bg-neutral-200 text-2xl font-medium text-neutral-900">
+            <span className="flex size-full items-center justify-center rounded-full bg-stone-200 text-2xl font-medium text-stone-900">
               {userData.name
                 ?.split(' ')
                 .map(n => n[0])
@@ -102,7 +102,7 @@ const EditUserProfile = () => {
         </div>
 
         <div className="mb-6">
-          <span className="mb-2 block text-sm font-medium text-neutral-900">Name</span>
+          <span className="mb-2 block text-sm font-medium text-stone-900">Name</span>
           <Input
             className="h-10"
             value={userData.name}
@@ -111,7 +111,7 @@ const EditUserProfile = () => {
           />
         </div>
       </div>
-      <div className="rounded-b-2xl border-t border-neutral-200 bg-neutral-50 p-6">
+      <div className="rounded-b-2xl border-t border-stone-200 bg-stone-50 p-6">
         <Button
           className={cn('h-10 w-full', isPending && 'cursor-default')}
           disabled={!userData.name.trim()}

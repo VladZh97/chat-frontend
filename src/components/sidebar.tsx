@@ -1,4 +1,4 @@
-import LogoLight from '@/assets/logo-light.svg?react';
+import LogoColor from '@/assets/logo-color.svg?react';
 import { cn } from '@/lib/utils';
 import { ChevronsUpDown, Gauge, House, LogOut, PencilLine, Plus, Wallet } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -45,19 +45,19 @@ const Sidebar = () => {
         <div className="flex h-full flex-col">
           <div className="p-4">
             <div className="p-2">
-              <LogoLight />
+              <LogoColor />
             </div>
           </div>
           <div className="p-4 pt-3">
-            <span className="mb-2 block p-2 text-sm text-neutral-400/70">Platform</span>
+            <span className="mb-2 block p-2 text-sm text-stone-400/70">Platform</span>
             <div className="space-y-3">
               {NAVIGATION.map(item => (
                 <Link
                   to={item.path}
                   className={cn(
-                    'flex items-center gap-2 rounded-lg border border-transparent p-2 text-sm text-neutral-400 transition-colors duration-200 hover:text-white',
+                    'flex items-center gap-2 rounded-lg border border-transparent p-2 text-sm text-stone-400 transition-colors duration-200 hover:text-stone-300',
                     pathname === item.path &&
-                      'border-neutral-700 bg-neutral-800 font-semibold text-white'
+                      'border-stone-800 bg-stone-900 font-semibold text-stone-50'
                   )}
                   key={item.path}
                 >
@@ -68,11 +68,11 @@ const Sidebar = () => {
             </div>
           </div>
           <div className="p-4">
-            <span className="mb-2 block p-2 text-sm text-neutral-400/70">Chatbots</span>
+            <span className="mb-2 block p-2 text-sm text-stone-400/70">Chatbots</span>
             <SidebarChatbots />
             <div className="mt-3">
               <div
-                className="flex cursor-pointer items-center gap-2 p-2 text-sm text-neutral-400 transition-colors duration-200 hover:text-white"
+                className="flex cursor-pointer items-center gap-2 p-2 text-sm text-stone-400 transition-colors duration-200 hover:text-stone-300"
                 onClick={handleCreateNewChatbot}
               >
                 <Plus className="size-4" />
@@ -123,10 +123,10 @@ const Profile = () => {
               />
             </div>
             <div className="grid">
-              <span className="truncate text-sm font-semibold text-neutral-400">{me?.name}</span>
-              <span className="truncate text-xs text-neutral-400/70">{me?.email}</span>
+              <span className="truncate text-sm font-semibold text-stone-400">{me?.name}</span>
+              <span className="truncate text-xs text-stone-400/70">{me?.email}</span>
             </div>
-            <div className="ml-auto flex cursor-pointer items-center justify-center text-neutral-400 transition-colors duration-200 group-hover:text-white">
+            <div className="ml-auto flex cursor-pointer items-center justify-center text-stone-400 transition-colors duration-200 group-hover:text-stone-300">
               <ChevronsUpDown className="size-4 shrink-0" />
             </div>
           </div>
