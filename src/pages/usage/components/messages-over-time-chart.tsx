@@ -163,7 +163,7 @@ const MessagesOverTimeChart = () => {
             />
             <Bar
               dataKey="messages"
-              fill={!hasData ? 'var(--color-stone-200)' : 'var(--color-stone-900)'}
+              fill={!hasData ? 'var(--color-stone-200)' : 'var(--color-orange-500)'}
               radius={4}
             />
           </BarChart>

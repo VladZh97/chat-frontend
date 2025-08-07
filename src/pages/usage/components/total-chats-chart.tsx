@@ -166,7 +166,7 @@ const TotalChatsChart = () => {
               <Line
                 dataKey="chats"
                 type="monotone"
-                stroke={!hasData ? 'var(--color-stone-200)' : 'var(--color-stone-900)'}
+                stroke={!hasData ? 'var(--color-stone-200)' : 'var(--color-orange-500)'}
                 strokeWidth={2}
                 dot={false}
                 connectNulls={true}

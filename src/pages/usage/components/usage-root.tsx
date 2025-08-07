@@ -1,6 +1,7 @@
 import Stats from './stats';
 import MessagesOverTimeChart from './messages-over-time-chart';
 import LayoutWrapper from '@/components/animation-wrapper';
+import TotalChatsChart from './total-chats-chart';
 
 const UsageRoot = () => {
   return (
@@ -9,6 +10,7 @@ const UsageRoot = () => {
       <div className="px-8 pb-8">
         <Stats />
         <MessagesOverTimeChart />
+        <TotalChatsChart />
       </div>
     </LayoutWrapper>
   );
