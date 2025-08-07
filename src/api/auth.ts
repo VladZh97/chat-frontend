@@ -13,6 +13,10 @@ const auth = {
     queryClient.setQueryData(['account'], response.data.account);
     return response.data;
   },
+  sendSignInLinkToEmail: async (email: string, url: string): Promise<void> => {
+    const response = await api.post('/auth/send-sign-in-link-to-email', { email, url });
+    return response.data;
+  },
 };
 
 export default auth;

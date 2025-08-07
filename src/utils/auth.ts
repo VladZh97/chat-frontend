@@ -7,6 +7,7 @@ import {
   type User,
 } from 'firebase/auth';
 import { auth } from '@/lib/auth';
+import authApi from '@/api/auth';
 
 /**
  * Checks if a user is currently logged in
@@ -55,11 +56,7 @@ export const loginWithEmailLink = async (email: string): Promise<void> => {
     ? window.location.pathname
     : '/login';
   try {
-    const actionCodeSettings = {
-      url: window.location.origin + path,
-      handleCodeInApp: true,
-    };
-    await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+    await authApi.sendSignInLinkToEmail(email, window.location.origin + path);
   } catch (error) {
     console.error('Login error:', error);
     throw error;

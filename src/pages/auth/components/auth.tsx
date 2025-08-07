@@ -8,7 +8,7 @@ const Auth = ({ login }: { login?: boolean }) => {
   const navigate = useNavigate();
   const { isLinkAuthLoading } = useLinkAuth();
   return (
-    <div className="grid min-h-screen w-screen grid-cols-2 bg-neutral-50 max-lg:grid-cols-1">
+    <div className="grid min-h-screen w-screen grid-cols-2 bg-stone-50 max-lg:grid-cols-1">
       <div className="p-2 max-lg:hidden">
         <div className="relative flex h-full flex-col items-center justify-between p-10">
           <div className="relative z-10 mx-auto w-full max-w-[586px]">
