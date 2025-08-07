@@ -36,7 +36,7 @@ const PlanCard = () => {
   return (
     <StatCard icon={<CreditCard className="size-4 text-stone-500" />} title="Your plan">
       <div className="flex items-center justify-between">
-        <span className="text-2xl font-bold text-stone-900">{plan.name}</span>
+        <span className="text-2xl font-bold text-stone-900">{plan.title}</span>
         <Button onClick={handleChangePlan} variant="outline">
           Change plan
         </Button>
