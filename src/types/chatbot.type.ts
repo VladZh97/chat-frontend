@@ -17,4 +17,5 @@ export interface IChatbot {
   instructions: string;
   createdAt: string;
   updatedAt: string;
+  collectLeads: boolean;
 }

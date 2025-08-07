@@ -38,7 +38,7 @@ const chatbot = {
       if (!oldData) return [];
       return oldData.filter(chatbot => chatbot._id !== id);
     });
-    queryClient.setQueryData(stats.chats.key, (oldData: IChatbot[] | undefined) => {
+    queryClient.setQueryData(stats.chats.key(), (oldData: IChatbot[] | undefined) => {
       if (!oldData) return [];
       return oldData.filter(chatbot => chatbot._id !== id);
     });

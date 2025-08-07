@@ -9,12 +9,14 @@ import { LoaderCircle } from 'lucide-react';
 import chatbot from '@/api/chatbot';
 import { cn } from '@/lib/utils';
 import { useDialog } from '@/hooks';
+import { Switch } from '@/components/ui/switch';
 
 const ID = 'create-new-chatbot';
 
 const CreateNewChatbot = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
+  const [collectLeads, setCollectLeads] = useState(false);
   const { closeDialog, updateDialog } = useDialog();
 
   const { mutate: createChatbot, isPending } = useMutation({
@@ -30,6 +32,7 @@ const CreateNewChatbot = () => {
     if (!name.trim() || isPending) return;
     createChatbot({
       name,
+      collectLeads,
     });
   }, [name, isPending, createChatbot]);
 
@@ -63,6 +66,10 @@ const CreateNewChatbot = () => {
         <div className="mb-6">
           <span className="mb-2 block text-sm font-medium text-stone-900">Chatbot name</span>
           <Input className="h-10" value={name} onChange={handleNameChange} onKeyDown={onKeyDown} />
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-stone-900">Collect leads</span>
+          <Switch checked={collectLeads} onCheckedChange={setCollectLeads} />
         </div>
       </div>
       <div className="rounded-b-2xl border-t border-stone-200 bg-stone-50 p-6">

@@ -57,7 +57,7 @@ const Sidebar = () => {
                   className={cn(
                     'flex items-center gap-2 rounded-lg border border-transparent p-2 text-sm text-stone-400 transition-colors duration-200 hover:text-stone-300',
                     pathname === item.path &&
-                      'border-stone-800 bg-stone-900 font-semibold text-stone-50'
+                      'border-stone-700 bg-stone-800 font-semibold text-stone-50'
                   )}
                   key={item.path}
                 >
