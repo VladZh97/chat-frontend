@@ -9,7 +9,6 @@ const Home = () => {
       <div className="px-8 py-6 text-2xl font-medium text-stone-950">Dashboard</div>
       <div className="px-8 pb-8">
         <Stats />
-        <TotalChatsChart />
         <ChatbotsList />
       </div>
     </LayoutWrapper>
