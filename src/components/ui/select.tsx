@@ -58,7 +58,7 @@ function Trigger<T = string>({
       onClick={() => setOpen(!open)}
     >
       <span>{children ?? String(value) ?? 'Select...'}</span>
-      <ChevronsUpDown className="size-4 text-neutral-500" />
+      <ChevronsUpDown className="size-4 text-stone-500" />
     </PopoverTrigger>
   );
 }
@@ -85,8 +85,8 @@ function Option<T = string>({ value: optionValue, children }: OptionProps<T>) {
   return (
     <span
       className={cn(
-        'flex cursor-pointer items-center justify-between rounded px-2 py-1.5 text-sm text-neutral-900 transition-colors duration-200 hover:bg-neutral-100',
-        isSelected && 'bg-neutral-100'
+        'flex cursor-pointer items-center justify-between rounded px-2 py-1.5 text-sm text-stone-900 transition-colors duration-200 hover:bg-stone-100',
+        isSelected && 'bg-stone-100'
       )}
       onClick={() => {
         setValue(optionValue);
@@ -94,7 +94,7 @@ function Option<T = string>({ value: optionValue, children }: OptionProps<T>) {
       }}
     >
       {children}
-      {isSelected && <Check className="size-4 text-neutral-900" />}
+      {isSelected && <Check className="size-4 text-stone-900" />}
     </span>
   );
 }

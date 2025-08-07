@@ -20,7 +20,7 @@ const KnowledgeTable = () => {
   if (!isLoading && !data?.length) return <EmptyState />;
 
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white p-8 shadow">
+    <div className="rounded-xl border border-stone-200 bg-white p-8 shadow">
       <KnowledgeTableHeader search={search} setSearch={setSearch} />
       {filteredData.length > 0 ? (
         <KnowledgeTableMain data={filteredData} isLoading={isLoading} />

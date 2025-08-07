@@ -12,11 +12,11 @@ const Stats = () => {
       <ChatsCard id={id} />
       <MessagesCard id={id} />
       <Card>
-        <div className="mb-2 flex items-center gap-2 text-sm font-medium text-neutral-900">
-          <CreditCard className="size-4 text-neutral-500" />
+        <div className="mb-2 flex items-center gap-2 text-sm font-medium text-stone-900">
+          <CreditCard className="size-4 text-stone-500" />
           Used credits
         </div>
-        <span className="text-2xl font-bold text-neutral-900">0/1000</span>
+        <span className="text-2xl font-bold text-stone-900">0/1000</span>
       </Card>
     </div>
   );
@@ -25,7 +25,7 @@ const Stats = () => {
 export default Stats;
 
 const Card = ({ children }: { children: React.ReactNode }) => {
-  return <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow">{children}</div>;
+  return <div className="rounded-xl border border-stone-200 bg-white p-6 shadow">{children}</div>;
 };
 
 const ChatsCard = ({ id }: { id: string | undefined }) => {
@@ -36,7 +36,7 @@ const ChatsCard = ({ id }: { id: string | undefined }) => {
   });
 
   return (
-    <StatCard icon={<MessagesSquare className="size-4 text-neutral-500" />} title="Chats">
+    <StatCard icon={<MessagesSquare className="size-4 text-stone-500" />} title="Chats">
       <Counter value={chats?.count} />
     </StatCard>
   );
@@ -50,7 +50,7 @@ const MessagesCard = ({ id }: { id: string | undefined }) => {
   });
 
   return (
-    <StatCard icon={<MessageSquareText className="size-4 text-neutral-500" />} title="Messages">
+    <StatCard icon={<MessageSquareText className="size-4 text-stone-500" />} title="Messages">
       <Counter value={messages?.count ?? 0} />
     </StatCard>
   );

@@ -5,13 +5,13 @@ import type { IKnowledge } from '@/types/knowledge.type';
 
 const KnowledgeTableMain = ({ data, isLoading }: { data?: IKnowledge[]; isLoading: boolean }) => {
   return (
-    <div className="overflow-hidden rounded-md border border-neutral-200">
-      <div className="flex items-center border-b border-neutral-200 bg-white">
-        <div className="flex h-10 w-22 items-center gap-2 px-2 text-xs text-neutral-500">
-          Type <ChevronsUpDown className="size-4 text-neutral-500" />
+    <div className="overflow-hidden rounded-md border border-stone-200">
+      <div className="flex items-center border-b border-stone-200 bg-white">
+        <div className="flex h-10 w-22 items-center gap-2 px-2 text-xs text-stone-500">
+          Type <ChevronsUpDown className="size-4 text-stone-500" />
         </div>
-        <div className="flex h-10 items-center gap-2 px-2 text-xs text-neutral-500">
-          Title <ChevronsUpDown className="size-4 text-neutral-500" />
+        <div className="flex h-10 items-center gap-2 px-2 text-xs text-stone-500">
+          Title <ChevronsUpDown className="size-4 text-stone-500" />
         </div>
       </div>
       {isLoading

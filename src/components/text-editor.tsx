@@ -88,13 +88,13 @@ const MenuBar = () => {
   };
 
   return (
-    <div className="flex h-11 items-center gap-2 rounded-t-lg border-b border-neutral-200 px-3 py-1.5 shadow">
+    <div className="flex h-11 items-center gap-2 rounded-t-lg border-b border-stone-200 px-3 py-1.5 shadow">
       {/* Heading Dropdown */}
       <div className="flex items-center gap-1">
         <Popover>
-          <PopoverTrigger className="flex h-8 w-[150px] cursor-pointer items-center justify-between gap-1 rounded-md border border-neutral-200 px-2 py-1.5 text-sm font-normal text-neutral-900 shadow-sm">
+          <PopoverTrigger className="flex h-8 w-[150px] cursor-pointer items-center justify-between gap-1 rounded-md border border-stone-200 px-2 py-1.5 text-sm font-normal text-stone-900 shadow-sm">
             {getCurrentHeadingLabel()}
-            <ChevronsUpDown className="size-4 text-neutral-500" />
+            <ChevronsUpDown className="size-4 text-stone-500" />
           </PopoverTrigger>
           <PopoverContent
             side="bottom"
@@ -106,12 +106,12 @@ const MenuBar = () => {
                 key={opt.label}
                 onClick={() => opt.action(editor)}
                 className={cn(
-                  'flex cursor-pointer items-center justify-between rounded px-2 py-1.5 text-sm text-neutral-500 transition-colors duration-200 hover:bg-neutral-100',
-                  opt.isActive(editor) && 'bg-neutral-100'
+                  'flex cursor-pointer items-center justify-between rounded px-2 py-1.5 text-sm text-stone-500 transition-colors duration-200 hover:bg-stone-100',
+                  opt.isActive(editor) && 'bg-stone-100'
                 )}
               >
                 {opt.label}
-                {opt.isActive(editor) && <Check className="size-4 text-neutral-900" />}
+                {opt.isActive(editor) && <Check className="size-4 text-stone-900" />}
               </span>
             ))}
           </PopoverContent>
@@ -123,12 +123,12 @@ const MenuBar = () => {
           <span
             key={name}
             className={cn(
-              'flex size-8 cursor-pointer items-center justify-center rounded-md hover:bg-neutral-100',
-              editor.isActive(name) && 'bg-neutral-200 hover:bg-neutral-200'
+              'flex size-8 cursor-pointer items-center justify-center rounded-md hover:bg-stone-100',
+              editor.isActive(name) && 'bg-stone-200 hover:bg-stone-200'
             )}
             onClick={() => action(editor)}
           >
-            <Icon className="size-4 text-neutral-900" />
+            <Icon className="size-4 text-stone-900" />
           </span>
         ))}
       </div>
@@ -138,12 +138,12 @@ const MenuBar = () => {
           <span
             key={name}
             className={cn(
-              'flex size-8 cursor-pointer items-center justify-center rounded-md hover:bg-neutral-100',
-              editor.isActive(name) && 'bg-neutral-200 hover:bg-neutral-200'
+              'flex size-8 cursor-pointer items-center justify-center rounded-md hover:bg-stone-100',
+              editor.isActive(name) && 'bg-stone-200 hover:bg-stone-200'
             )}
             onClick={() => action(editor)}
           >
-            <Icon className="size-4 text-neutral-900" />
+            <Icon className="size-4 text-stone-900" />
           </span>
         ))}
       </div>
@@ -158,7 +158,7 @@ export const TextEditor = ({
   content?: string;
   setContent: (content: string) => void;
 }) => (
-  <div className="tiptap rounded-lg border border-neutral-200 bg-white shadow-sm outline-none">
+  <div className="tiptap rounded-lg border border-stone-200 bg-white shadow-sm outline-none">
     <EditorProvider
       slotBefore={<MenuBar />}
       extensions={[

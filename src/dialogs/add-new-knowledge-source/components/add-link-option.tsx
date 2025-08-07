@@ -9,7 +9,7 @@ const AddLinkOption = () => {
   }));
   return (
     <div className="pt-1 pb-8">
-      <span className="mb-2 block text-sm font-medium text-neutral-900">URL</span>
+      <span className="mb-2 block text-sm font-medium text-stone-900">URL</span>
       <Input
         className="h-10"
         placeholder="https://"
@@ -22,7 +22,7 @@ const AddLinkOption = () => {
       />
       {/* <div className="mt-6 flex items-center gap-2">
         <Switch />
-        <span className="text-sm font-medium text-neutral-900">Crawl links</span>
+        <span className="text-sm font-medium text-stone-900">Crawl links</span>
       </div> */}
     </div>
   );

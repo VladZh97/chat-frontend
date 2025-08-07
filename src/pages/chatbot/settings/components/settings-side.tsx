@@ -22,7 +22,7 @@ const SettingsSide = () => {
         <Colors />
         <Branding />
         <RateLimiting />
-        <div className="mt-6 border-t border-neutral-200 pt-6">
+        <div className="mt-6 border-t border-stone-200 pt-6">
           <Button variant="destructive" onClick={handleDeleteChatbot}>
             <Trash2 />
             Delete chatbot

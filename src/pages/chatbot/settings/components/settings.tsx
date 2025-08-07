@@ -12,7 +12,7 @@ const Settings = () => {
         <Header />
         <div className="grid grid-cols-2 overflow-hidden">
           <SettingsSide />
-          <div className="flex flex-col border-l border-neutral-200 bg-neutral-100 p-8">
+          <div className="flex flex-col border-l border-stone-200 bg-stone-100 p-8">
             <Label className="mb-5">Preview</Label>
             <div className="mx-auto flex w-full max-w-[416px] grow items-center justify-center">
               <Widget />

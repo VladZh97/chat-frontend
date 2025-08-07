@@ -23,7 +23,7 @@ const Tabs = ({
   setType: (type: 'links' | 'files' | 'text-snippet') => void;
 }) => {
   return (
-    <div className="mb-5 h-10 rounded-lg bg-neutral-100 p-1">
+    <div className="mb-5 h-10 rounded-lg bg-stone-100 p-1">
       <div className="relative h-full">
         <div className="relative z-10 grid h-full grid-cols-3">
           {OPTIONS.map(option => (
@@ -31,8 +31,8 @@ const Tabs = ({
               key={option.value}
               onClick={() => setType(option.value)}
               className={cn(
-                'flex cursor-pointer items-center justify-center text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900',
-                type === option.value && 'text-neutral-900'
+                'flex cursor-pointer items-center justify-center text-sm font-medium text-stone-500 transition-colors hover:text-stone-900',
+                type === option.value && 'text-stone-900'
               )}
             >
               {option.label}

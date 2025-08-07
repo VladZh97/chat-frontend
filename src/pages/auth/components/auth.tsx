@@ -41,7 +41,7 @@ const Auth = ({ login }: { login?: boolean }) => {
             onClick={() => {
               navigate(login ? '/signup' : '/login');
             }}
-            className="cursor-pointer px-4 py-2 text-sm text-neutral-950 transition-opacity hover:opacity-70"
+            className="cursor-pointer px-4 py-2 text-sm text-stone-950 transition-opacity hover:opacity-70"
           >
             {login ? 'Sign up' : 'Login'}
           </a>

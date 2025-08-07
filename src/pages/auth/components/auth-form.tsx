@@ -78,10 +78,10 @@ const AuthForm = ({
   return (
     <div className="mx-auto flex w-full max-w-[350px] flex-col items-center">
       <img src={Icon} alt="icon" className="mb-6 size-8" width="32" height="32" />
-      <h1 className="mb-2 text-2xl font-semibold text-neutral-950">
+      <h1 className="mb-2 text-2xl font-semibold text-stone-950">
         {login ? 'Login to your account' : 'Create an account'}
       </h1>
-      <p className="mb-6 text-sm text-neutral-500">
+      <p className="mb-6 text-sm text-stone-500">
         {login
           ? 'Enter your email below to login to your account'
           : 'Enter your email below to create your account'}
@@ -114,19 +114,19 @@ const AuthForm = ({
         </form>
       </Form>
       <span className="relative flex w-full items-center justify-center gap-2 py-6">
-        <span className="relative z-10 bg-neutral-50 px-3 text-sm text-neutral-500 uppercase">
+        <span className="relative z-10 bg-stone-50 px-3 text-sm text-stone-500 uppercase">
           OR CONTINUE WITH
         </span>
-        <span className="absolute top-1/2 h-px w-full -translate-y-1/2 bg-neutral-200"></span>
+        <span className="absolute top-1/2 h-px w-full -translate-y-1/2 bg-stone-200"></span>
       </span>
       <Button
         variant="secondary"
-        className="mb-6 w-full cursor-pointer border border-neutral-200 bg-white"
+        className="mb-6 w-full cursor-pointer border border-stone-200 bg-white"
         onClick={handleLoginWithGoogle}
       >
         Continue with Google
       </Button>
-      <p className="text-center text-sm text-neutral-500">
+      <p className="text-center text-sm text-stone-500">
         By clicking continue, you agree to our <br />{' '}
         <a
           href="https://heyway.chat/terms-and-conditions"

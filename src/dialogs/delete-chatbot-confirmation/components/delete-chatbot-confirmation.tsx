@@ -41,12 +41,12 @@ const DeleteChatbotConfirmation = () => {
   return (
     <div className="w-[448px]">
       <div className="p-6 pb-8">
-        <p className="mb-[6px] cursor-pointer text-base font-semibold text-neutral-900">
+        <p className="mb-[6px] cursor-pointer text-base font-semibold text-stone-900">
           Are you sure you want to delete this chatbot?
         </p>
-        <p className="text-sm text-neutral-500">This action cannot be undone.</p>
+        <p className="text-sm text-stone-500">This action cannot be undone.</p>
       </div>
-      <div className="flex items-center justify-end gap-2 rounded-b-2xl border-t border-neutral-200 bg-neutral-50 p-4">
+      <div className="flex items-center justify-end gap-2 rounded-b-2xl border-t border-stone-200 bg-stone-50 p-4">
         <Button variant="outline" onClick={() => closeDialog(ID)}>
           No, cancel
         </Button>

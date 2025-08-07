@@ -10,7 +10,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       position="bottom-center"
       duration={3000}
       icons={{
-        info: <Info className="size-6 text-neutral-500" />,
+        info: <Info className="size-6 text-stone-500" />,
         success: <CircleCheckBig className="size-6 text-green-600" />,
         warning: <TriangleAlert className="size-6 text-amber-500" />,
         error: <CircleAlert className="size-6 text-red-600" />,

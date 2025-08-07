@@ -78,23 +78,23 @@ const AddFileInput = () => {
   return (
     <div
       className={cn(
-        'flex h-[168px] cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-neutral-200 bg-neutral-50 p-3',
+        'flex h-[168px] cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-stone-200 bg-stone-50 p-3',
         selectedFile && 'cursor-default',
         isFileTooBig && 'border-red-300 bg-red-50'
       )}
       onClick={handleFileSelect}
     >
       {selectedFile ? (
-        <div className="flex h-14 w-full items-center justify-between rounded-lg border border-neutral-200 bg-neutral-100 px-3 shadow-sm">
+        <div className="flex h-14 w-full items-center justify-between rounded-lg border border-stone-200 bg-stone-100 px-3 shadow-sm">
           <div className="flex items-center gap-2">
-            <FileText className="size-4 shrink-0 text-neutral-900" />
-            <span className="grid grid-cols-[auto_auto] text-sm font-normal text-neutral-900">
+            <FileText className="size-4 shrink-0 text-stone-900" />
+            <span className="grid grid-cols-[auto_auto] text-sm font-normal text-stone-900">
               <span className="truncate">{selectedFile.metadata.name as string}</span>
               <span>.{selectedFile.metadata.extension as string}</span>
             </span>
           </div>
           <div className="ml-10 flex items-center gap-2">
-            <span className="flex items-center justify-center rounded-md bg-neutral-200 px-1.5 py-0.5 text-xs font-normal text-neutral-500 uppercase">
+            <span className="flex items-center justify-center rounded-md bg-stone-200 px-1.5 py-0.5 text-xs font-normal text-stone-500 uppercase">
               {fileSizeMB}MB
             </span>
             <Button
@@ -147,10 +147,10 @@ const UploadFileContent = () => {
   return (
     <>
       <Upload />
-      <span className="my-[10px] text-sm font-normal text-neutral-700">
+      <span className="my-[10px] text-sm font-normal text-stone-700">
         <strong className="font-semibold">Click to upload</strong> or drag and drop
       </span>
-      <span className="text-xs font-medium text-neutral-500">PDF, DOC, TXT (max 5MB)</span>
+      <span className="text-xs font-medium text-stone-500">PDF, DOC, TXT (max 5MB)</span>
     </>
   );
 };

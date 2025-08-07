@@ -22,7 +22,7 @@ const Stats = () => {
 export default Stats;
 
 const Card = ({ children }: { children: React.ReactNode }) => {
-  return <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow">{children}</div>;
+  return <div className="rounded-xl border border-stone-200 bg-white p-6 shadow">{children}</div>;
 };
 
 const PlanCard = () => {
@@ -34,9 +34,9 @@ const PlanCard = () => {
   const { plan } = useCurrentSubscription();
 
   return (
-    <StatCard icon={<CreditCard className="size-4 text-neutral-500" />} title="Your plan">
+    <StatCard icon={<CreditCard className="size-4 text-stone-500" />} title="Your plan">
       <div className="flex items-center justify-between">
-        <span className="text-2xl font-bold text-neutral-900">{plan.name}</span>
+        <span className="text-2xl font-bold text-stone-900">{plan.name}</span>
         <Button onClick={handleChangePlan} variant="outline">
           Change plan
         </Button>
@@ -52,7 +52,7 @@ const Chatbots = () => {
   });
 
   return (
-    <StatCard icon={<Bot className="size-4 text-neutral-500" />} title="Chatbots">
+    <StatCard icon={<Bot className="size-4 text-stone-500" />} title="Chatbots">
       <Counter value={chatbots?.length ?? 0} />
     </StatCard>
   );
@@ -66,7 +66,7 @@ const MessagesCard = () => {
   });
 
   return (
-    <StatCard icon={<MessagesSquare className="size-4 text-neutral-500" />} title="Messages">
+    <StatCard icon={<MessagesSquare className="size-4 text-stone-500" />} title="Messages">
       <Counter value={messages?.count ?? 0} />
     </StatCard>
   );

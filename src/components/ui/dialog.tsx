@@ -24,7 +24,7 @@ const Dialog = () => {
             animate={{ opacity: isClosing ? 0 : 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: 'easeInOut' }}
-            className="fixed inset-0 z-[9999] grid place-items-center bg-neutral-900/90 dark:opacity-70"
+            className="fixed inset-0 z-[9999] grid place-items-center bg-stone-900/90 dark:opacity-70"
             onClick={() => canClose && closeDialog(dialog.id)}
           >
             <motion.div

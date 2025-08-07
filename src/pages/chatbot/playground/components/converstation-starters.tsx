@@ -30,7 +30,7 @@ const ConverstationStarters = () => {
   };
 
   return (
-    <div className="mb-6 border-b border-neutral-200 pb-6">
+    <div className="mb-6 border-b border-stone-200 pb-6">
       <Label className="mb-2">Converstation starters</Label>
       <div className="space-y-3">
         {conversationStarters.map(starter => (
@@ -40,7 +40,7 @@ const ConverstationStarters = () => {
           >
             <span className="truncate">{starter.value}</span>
             <span
-              className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer text-neutral-500 transition-colors hover:text-neutral-700"
+              className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer text-stone-500 transition-colors hover:text-stone-700"
               onClick={() => handleRemoveStarter(starter.id)}
             >
               <X className="size-4" />

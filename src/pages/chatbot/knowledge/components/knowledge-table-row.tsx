@@ -44,14 +44,14 @@ const KnowledgeTableRow = ({ data }: { data: IKnowledge }) => {
   };
 
   return (
-    <div className="flex h-12 items-center border-b border-neutral-200 bg-white last:border-b-0">
-      <div className="flex h-10 w-22 shrink-0 items-center gap-2 px-2 text-xs text-neutral-500">
-        <span className="flex h-6 items-center gap-1 rounded-md border border-neutral-200 px-2 py-0.5 text-xs font-medium text-neutral-900">
-          <IconComponent className="size-4 text-neutral-500" />
+    <div className="flex h-12 items-center border-b border-stone-200 bg-white last:border-b-0">
+      <div className="flex h-10 w-22 shrink-0 items-center gap-2 px-2 text-xs text-stone-500">
+        <span className="flex h-6 items-center gap-1 rounded-md border border-stone-200 px-2 py-0.5 text-xs font-medium text-stone-900">
+          <IconComponent className="size-4 text-stone-500" />
           {typeConfig.label}
         </span>
       </div>
-      <div className="grid h-10 items-center text-sm text-neutral-900">
+      <div className="grid h-10 items-center text-sm text-stone-900">
         <span className="truncate">
           {data.type === 'website' && data.metadata.url}
           {data.type === 'file' && `${data.metadata.name}.${data.metadata.extension}`}
@@ -62,11 +62,11 @@ const KnowledgeTableRow = ({ data }: { data: IKnowledge }) => {
         <Popover open={isOpen || isPending} onOpenChange={setIsOpen}>
           <PopoverTrigger
             className={cn(
-              'flex size-8 cursor-pointer items-center justify-center rounded-md transition-colors duration-200 hover:bg-neutral-200',
-              (isOpen || isPending) && 'bg-neutral-200'
+              'flex size-8 cursor-pointer items-center justify-center rounded-md transition-colors duration-200 hover:bg-stone-200',
+              (isOpen || isPending) && 'bg-stone-200'
             )}
           >
-            <Ellipsis className="size-4 text-neutral-900" />
+            <Ellipsis className="size-4 text-stone-900" />
           </PopoverTrigger>
           <PopoverContent
             align="center"
@@ -75,7 +75,7 @@ const KnowledgeTableRow = ({ data }: { data: IKnowledge }) => {
           >
             {data.type === 'text' && (
               <div
-                className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-neutral-900 hover:bg-neutral-100"
+                className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-stone-900 hover:bg-stone-100"
                 //   onClick={() => setIsEditProfileOpen(true)}
               >
                 <PencilLine className="size-4" />

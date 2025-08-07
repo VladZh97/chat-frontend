@@ -6,7 +6,7 @@ const CurrentPlanCard = () => {
   return (
     <Card className="block p-0">
       <div className="flex items-center gap-2 px-6 pt-6 pb-5 text-base font-semibold">
-        <CreditCard className="size-4 text-neutral-500" />
+        <CreditCard className="size-4 text-stone-500" />
         Current plan
       </div>
       <div className="px-6 pb-8">

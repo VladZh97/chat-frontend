@@ -10,7 +10,7 @@ const AddTextSnippet = () => {
   return (
     <div>
       <div className="mb-6 flex flex-col gap-2">
-        <span className="text-sm font-medium text-neutral-900">Title</span>
+        <span className="text-sm font-medium text-stone-900">Title</span>
         <Input
           className="w-full"
           value={textSnippet.title}
@@ -23,7 +23,7 @@ const AddTextSnippet = () => {
         />
       </div>
       <div className="flex flex-col gap-2">
-        <span className="block text-sm font-medium text-neutral-900">Content</span>
+        <span className="block text-sm font-medium text-stone-900">Content</span>
         <TextEditor
           content={textSnippet.content}
           setContent={content => setTextSnippet({ title: textSnippet.title, content })}

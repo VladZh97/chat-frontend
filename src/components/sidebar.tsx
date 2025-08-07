@@ -40,7 +40,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex h-full w-[272px] shrink-0 flex-col overflow-hidden bg-neutral-900">
+    <div className="flex h-full w-[272px] shrink-0 flex-col overflow-hidden bg-stone-900">
       <ScrollArea className="h-full [&>div>div]:h-full">
         <div className="flex h-full flex-col">
           <div className="p-4">
@@ -108,8 +108,8 @@ const Profile = () => {
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger
           className={cn(
-            'group cursor-pointer rounded-md transition-colors duration-200 hover:bg-neutral-800',
-            isOpen && 'bg-neutral-800'
+            'group cursor-pointer rounded-md transition-colors duration-200 hover:bg-stone-800',
+            isOpen && 'bg-stone-800'
           )}
         >
           <div className="flex items-center gap-2 p-2">
@@ -137,7 +137,7 @@ const Profile = () => {
           className="w-48 space-y-1 rounded-lg bg-white p-2 shadow-lg"
         >
           <div
-            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-neutral-900 hover:bg-neutral-100"
+            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-stone-900 hover:bg-stone-100"
             onClick={() => {
               setIsOpen(false);
               showDialog(EditUserProfile.id, EditUserProfile);

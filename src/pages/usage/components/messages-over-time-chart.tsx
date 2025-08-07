@@ -109,14 +109,14 @@ const MessagesOverTimeChart = () => {
   }, [hasData, messagesMap, dateRange, isLoading, isFetching]);
 
   return (
-    <div className="mb-4 rounded-xl border border-neutral-200 bg-white p-6 shadow">
+    <div className="mb-4 rounded-xl border border-stone-200 bg-white p-6 shadow">
       <div className="flex items-center justify-between pb-6">
         <div>
-          <div className="mb-1 flex items-center gap-2 text-base font-semibold text-neutral-900">
+          <div className="mb-1 flex items-center gap-2 text-base font-semibold text-stone-900">
             {isLoading || isFetching ? (
               <LoaderCircle className="size-4 animate-spin" />
             ) : (
-              <CalendarIcon className="size-4 text-neutral-500" />
+              <CalendarIcon className="size-4 text-stone-500" />
             )}
             Messages over time
           </div>
@@ -163,7 +163,7 @@ const MessagesOverTimeChart = () => {
             />
             <Bar
               dataKey="messages"
-              fill={!hasData ? 'var(--color-neutral-200)' : 'var(--color-neutral-900)'}
+              fill={!hasData ? 'var(--color-stone-200)' : 'var(--color-stone-900)'}
               radius={4}
             />
           </BarChart>
@@ -171,8 +171,8 @@ const MessagesOverTimeChart = () => {
         {!hasData && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <div className="text-sm text-neutral-500">
-                <p className="font-medium text-neutral-700">No message data available</p>
+              <div className="text-sm text-stone-500">
+                <p className="font-medium text-stone-700">No message data available</p>
                 <p className="mt-1">
                   Messages will appear here once your chatbots start receiving conversations
                 </p>
@@ -199,7 +199,7 @@ const DatePicker = ({
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger>
-        <div className="flex h-9 w-64 cursor-pointer items-center gap-2 rounded-md border border-neutral-200 bg-white px-4 py-2 text-sm text-neutral-900">
+        <div className="flex h-9 w-64 cursor-pointer items-center gap-2 rounded-md border border-stone-200 bg-white px-4 py-2 text-sm text-stone-900">
           <CalendarDays className="size-4" />
           {moment(dateRange?.from).format('MMM D, YYYY')} -{' '}
           {moment(dateRange?.to).format('MMM D, YYYY')}

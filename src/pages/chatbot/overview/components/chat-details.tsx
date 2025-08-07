@@ -4,16 +4,16 @@ import { TABLE_SIZES } from '../constants';
 
 const ChatDetails = () => {
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow">
+    <div className="rounded-xl border border-stone-200 bg-white p-6 shadow">
       <div className="pb-6">
-        <div className="mb-1 flex items-center gap-2 text-base font-semibold text-neutral-900">
-          <MessageSquareText className="size-4 text-neutral-500" />
+        <div className="mb-1 flex items-center gap-2 text-base font-semibold text-stone-900">
+          <MessageSquareText className="size-4 text-stone-500" />
           Chats details
         </div>
-        <span className="text-sm text-neutral-700">Showing recent chats and its details</span>
+        <span className="text-sm text-stone-700">Showing recent chats and its details</span>
       </div>
-      <div className="divide-y divide-neutral-200 rounded-md border border-neutral-200 bg-white shadow-sm">
-        <div className="flex h-10 items-center text-sm font-medium text-neutral-500">
+      <div className="divide-y divide-stone-200 rounded-md border border-stone-200 bg-white shadow-sm">
+        <div className="flex h-10 items-center text-sm font-medium text-stone-500">
           <span className={cn(TABLE_SIZES.STATUS, 'px-3')}>Status</span>
           <span className={cn(TABLE_SIZES.INITIAL_MESSAGE, 'px-3')}>Initial message</span>
           <span className={cn(TABLE_SIZES.MESSAGES, 'px-3')}>Messages</span>
@@ -37,12 +37,12 @@ export default ChatDetails;
 //   return (
 //     <div
 //       className={cn(
-//         'flex h-[54px] items-center text-sm font-medium text-neutral-500 transition-colors hover:bg-neutral-50',
-//         isOpen && 'bg-neutral-50'
+//         'flex h-[54px] items-center text-sm font-medium text-stone-500 transition-colors hover:bg-stone-50',
+//         isOpen && 'bg-stone-50'
 //       )}
 //     >
 //       <span className={cn(TABLE_SIZES.STATUS, 'px-3')}>
-//         <span className="inline-flex h-[22px] items-center justify-center rounded-md bg-neutral-100 px-2.5 text-xs font-semibold text-neutral-700">
+//         <span className="inline-flex h-[22px] items-center justify-center rounded-md bg-stone-100 px-2.5 text-xs font-semibold text-stone-700">
 //           Finished
 //         </span>
 //         {/* <span className="inline-flex h-[22px] items-center justify-center rounded-md bg-green-200 px-2.5 text-xs font-semibold text-green-800">
@@ -61,15 +61,15 @@ export default ChatDetails;
 //           <PopoverTrigger>
 //             <span
 //               className={cn(
-//                 'flex size-8 cursor-pointer items-center justify-center rounded-md text-neutral-900 transition-colors hover:bg-neutral-200',
-//                 isOpen && 'bg-neutral-200'
+//                 'flex size-8 cursor-pointer items-center justify-center rounded-md text-stone-900 transition-colors hover:bg-stone-200',
+//                 isOpen && 'bg-stone-200'
 //               )}
 //             >
 //               <Ellipsis className="size-4" />
 //             </span>
 //           </PopoverTrigger>
 //           <PopoverContent className="w-48 space-y-1 rounded-lg bg-white p-2 shadow-lg">
-//             <div className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-neutral-900 hover:bg-neutral-100">
+//             <div className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-stone-900 hover:bg-stone-100">
 //               <MessageSquareMore className="size-4" />
 //               Chat details
 //             </div>

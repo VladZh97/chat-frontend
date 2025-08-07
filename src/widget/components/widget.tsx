@@ -68,11 +68,11 @@ const Widget = () => {
     <div className="flex w-full flex-col">
       <div className="mx-auto flex w-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm">
         <div className="relative flex items-center justify-between px-4 pt-6 pb-6">
-          <ArrowLeft className="size-4 cursor-pointer text-neutral-700" />
-          <span className="absolute left-1/2 -translate-x-1/2 text-lg font-medium text-neutral-900">
+          <ArrowLeft className="size-4 cursor-pointer text-stone-700" />
+          <span className="absolute left-1/2 -translate-x-1/2 text-lg font-medium text-stone-900">
             New chat
           </span>
-          <Ellipsis className="size-4 cursor-pointer text-neutral-700" />
+          <Ellipsis className="size-4 cursor-pointer text-stone-700" />
         </div>
         <ScrollArea className="h-[calc(100vh-400px)] max-h-[500px] grow">
           <div className="space-y-6 p-4 pb-8">
@@ -84,7 +84,7 @@ const Widget = () => {
                 }`}
               >
                 {message.role === 'bot' && (
-                  <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white">
+                  <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white">
                     <Bot className="size-3" />
                   </span>
                 )}
@@ -97,7 +97,7 @@ const Widget = () => {
                       'prose prose-sm prose-neutral',
                       message.role === 'user'
                         ? 'text-white last:rounded-br-none'
-                        : 'text-neutral-900 last:rounded-bl-none'
+                        : 'text-stone-900 last:rounded-bl-none'
                     )}
                     style={{
                       backgroundColor: message.role === 'user' ? '#000' : '#0000001A',
@@ -111,12 +111,12 @@ const Widget = () => {
             {/* Display streaming message */}
             {isStreaming && currentStreamingMessage && (
               <div className="flex items-end gap-2">
-                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white">
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white">
                   <Bot className="size-3" />
                 </span>
                 <div className="flex flex-col gap-1">
                   <div
-                    className="block rounded-xl px-4 py-3 text-sm font-normal text-neutral-900 last:rounded-bl-none"
+                    className="block rounded-xl px-4 py-3 text-sm font-normal text-stone-900 last:rounded-bl-none"
                     style={{ backgroundColor: `#0000001A` }}
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(currentStreamingMessage),
@@ -129,18 +129,18 @@ const Widget = () => {
             {/* Display loading indicator when streaming but no message yet */}
             {isStreaming && !currentStreamingMessage && (
               <div className="flex items-end gap-2">
-                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white">
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white">
                   <Bot className="size-3" />
                 </span>
                 <div className="flex flex-col gap-1">
                   <span
-                    className="flex h-8 w-14 items-center justify-center rounded-xl text-sm font-normal text-neutral-900 last:rounded-bl-none"
+                    className="flex h-8 w-14 items-center justify-center rounded-xl text-sm font-normal text-stone-900 last:rounded-bl-none"
                     style={{ backgroundColor: `#0000001A` }}
                   >
                     <div className="flex items-center gap-0.5">
-                      <div className="size-2 animate-bounce rounded-full bg-neutral-900 [animation-delay:-0.3s]"></div>
-                      <div className="size-2 animate-bounce rounded-full bg-neutral-900 [animation-delay:-0.15s]"></div>
-                      <div className="size-2 animate-bounce rounded-full bg-neutral-900"></div>
+                      <div className="size-2 animate-bounce rounded-full bg-stone-900 [animation-delay:-0.3s]"></div>
+                      <div className="size-2 animate-bounce rounded-full bg-stone-900 [animation-delay:-0.15s]"></div>
+                      <div className="size-2 animate-bounce rounded-full bg-stone-900"></div>
                     </div>
                   </span>
                 </div>
@@ -150,7 +150,7 @@ const Widget = () => {
           {!hasUserMessage && <ChatStarters handleStartConversation={handleStartConversation} />}
         </ScrollArea>
 
-        <div className="mt-auto flex items-center gap-2 border-t border-neutral-200 p-4">
+        <div className="mt-auto flex items-center gap-2 border-t border-stone-200 p-4">
           <input
             type="text"
             value={inputValue}
@@ -162,7 +162,7 @@ const Widget = () => {
               }
             }}
             placeholder="Type your message here..."
-            className="grow text-base font-normal text-neutral-900 outline-none placeholder:text-neutral-900/40"
+            className="grow text-base font-normal text-stone-900 outline-none placeholder:text-stone-900/40"
             disabled={isStreaming}
           />
           <div
@@ -179,7 +179,7 @@ const Widget = () => {
           </div>
         </div>
         {/* {!removeBranding && ( */}
-        <div className="flex h-8 items-center justify-center gap-2 border-t border-neutral-200 bg-neutral-100 text-xs text-neutral-500">
+        <div className="flex h-8 items-center justify-center gap-2 border-t border-stone-200 bg-stone-100 text-xs text-stone-500">
           Povered by
           <PoveredBy />
         </div>
@@ -199,13 +199,13 @@ const ChatStarters = ({
   return (
     <div className="absolute right-0 bottom-0 left-0 mt-auto flex flex-wrap items-center justify-end gap-2 px-4 py-6">
       <div
-        className="cursor-pointer rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow transition-colors hover:bg-neutral-50"
+        className="cursor-pointer rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-900 shadow transition-colors hover:bg-stone-50"
         onClick={() => handleStartConversation('What is the weather in Tokyo?')}
       >
         What is the weather in Tokyo?
       </div>
       <div
-        className="cursor-pointer rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow transition-colors hover:bg-neutral-50"
+        className="cursor-pointer rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-900 shadow transition-colors hover:bg-stone-50"
         onClick={() => handleStartConversation('Conversation starter #2')}
       >
         Conversation starter #2

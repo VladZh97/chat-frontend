@@ -6,8 +6,8 @@ import { Skeleton } from './ui/skeleton';
 
 const NotTrainedBadge = () => {
   return (
-    <span className="flex h-7 items-center justify-center gap-2 rounded-md bg-neutral-200 px-2 py-1.5 text-sm font-semibold text-neutral-500">
-      <X className="size-4 text-neutral-500" />
+    <span className="flex h-7 items-center justify-center gap-2 rounded-md bg-stone-200 px-2 py-1.5 text-sm font-semibold text-stone-500">
+      <X className="size-4 text-stone-500" />
       Not trained
     </span>
   );

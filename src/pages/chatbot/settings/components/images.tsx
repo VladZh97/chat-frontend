@@ -46,7 +46,7 @@ const Images = () => {
 
   return (
     <div className="mb-6 grid grid-cols-2 gap-4">
-      <div className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+      <div className="flex items-center gap-3 rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
         {avatarIcon ? (
           <img
             src={avatarIcon}
@@ -54,8 +54,8 @@ const Images = () => {
             className="size-12 overflow-hidden rounded-full object-cover"
           />
         ) : (
-          <span className="flex size-12 items-center justify-center rounded-full border border-neutral-200 bg-neutral-100">
-            <Image className="size-5 text-neutral-700" />
+          <span className="flex size-12 items-center justify-center rounded-full border border-stone-200 bg-stone-100">
+            <Image className="size-5 text-stone-700" />
           </span>
         )}
         <div>
@@ -87,7 +87,7 @@ const Images = () => {
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+      <div className="flex items-center gap-3 rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
         <div
           className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#0A0A0A1A]"
           style={{ backgroundColor: backgroundColor }}
