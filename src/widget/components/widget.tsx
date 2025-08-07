@@ -4,11 +4,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import chat from '@/api/chat';
-import { useEffect, useState, useRef } from 'preact/hooks';
+import { useEffect, useState, useRef, useMemo } from 'preact/hooks';
 import { cn } from '@/lib/utils';
 import DOMPurify from 'dompurify';
 
-const ChatRoot = () => {
+const Widget = () => {
   const { id } = useParams();
   const [messages, setMessages] = useState<Array<{ role: 'user' | 'bot'; content: string }>>([
     { role: 'bot', content: 'How can I help you?' },
@@ -54,6 +54,14 @@ const ChatRoot = () => {
       setIsStreaming(false);
       setCurrentStreamingMessage('');
     }
+  };
+
+  const hasUserMessage = useMemo(() => {
+    return messages.some(message => message.role === 'user');
+  }, [messages.length]);
+
+  const handleStartConversation = (starter: string) => {
+    handleSendMessage(starter);
   };
 
   return (
@@ -139,6 +147,7 @@ const ChatRoot = () => {
               </div>
             )}
           </div>
+          {!hasUserMessage && <ChatStarters handleStartConversation={handleStartConversation} />}
         </ScrollArea>
 
         <div className="mt-auto flex items-center gap-2 border-t border-neutral-200 p-4">
@@ -180,4 +189,27 @@ const ChatRoot = () => {
   );
 };
 
-export default ChatRoot;
+export default Widget;
+
+const ChatStarters = ({
+  handleStartConversation,
+}: {
+  handleStartConversation: (starter: string) => void;
+}) => {
+  return (
+    <div className="absolute right-0 bottom-0 left-0 mt-auto flex flex-wrap items-center justify-end gap-2 px-4 py-6">
+      <div
+        className="cursor-pointer rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow transition-colors hover:bg-neutral-50"
+        onClick={() => handleStartConversation('What is the weather in Tokyo?')}
+      >
+        What is the weather in Tokyo?
+      </div>
+      <div
+        className="cursor-pointer rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow transition-colors hover:bg-neutral-50"
+        onClick={() => handleStartConversation('Conversation starter #2')}
+      >
+        Conversation starter #2
+      </div>
+    </div>
+  );
+};

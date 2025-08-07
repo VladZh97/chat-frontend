@@ -45,9 +45,6 @@ const KnowledgeTableRow = ({ data }: { data: IKnowledge }) => {
 
   return (
     <div className="flex h-12 items-center border-b border-neutral-200 bg-white last:border-b-0">
-      <div className="flex size-10 shrink-0 items-center justify-center">
-        <Checkbox className="cursor-pointer" />
-      </div>
       <div className="flex h-10 w-22 shrink-0 items-center gap-2 px-2 text-xs text-neutral-500">
         <span className="flex h-6 items-center gap-1 rounded-md border border-neutral-200 px-2 py-0.5 text-xs font-medium text-neutral-900">
           <IconComponent className="size-4 text-neutral-500" />

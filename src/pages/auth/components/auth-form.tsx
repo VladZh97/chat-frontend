@@ -128,11 +128,19 @@ const AuthForm = ({
       </Button>
       <p className="text-center text-sm text-neutral-500">
         By clicking continue, you agree to our <br />{' '}
-        <a href="" className="underline transition-opacity hover:opacity-70">
+        <a
+          href="https://heyway.chat/terms-and-conditions"
+          target="_blank"
+          className="underline transition-opacity hover:opacity-70"
+        >
           Terms of Service
         </a>{' '}
         and{' '}
-        <a href="" className="underline transition-opacity hover:opacity-70">
+        <a
+          href="https://heyway.chat/privacy-policy"
+          target="_blank"
+          className="underline transition-opacity hover:opacity-70"
+        >
           Privacy Policy
         </a>
         .
