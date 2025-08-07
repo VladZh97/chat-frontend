@@ -1,7 +1,7 @@
 import Icon from '@/assets/icon.svg?react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useState, useCallback, useEffect } from 'preact/hooks';
+import { useState, useCallback, useEffect, useMemo } from 'preact/hooks';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Camera, LoaderCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -70,6 +70,12 @@ const EditUserProfile = () => {
     [handleUpdate]
   );
 
+  const isDisabled = useMemo(() => {
+    return (
+      !userData.name.trim() || (userData.picture === me?.picture && userData.name === me?.name)
+    );
+  }, [userData.name, userData.picture, me?.picture, me?.name]);
+
   return (
     <div className="w-[448px]">
       <div className="p-6 pb-8">
@@ -114,7 +120,7 @@ const EditUserProfile = () => {
       <div className="rounded-b-2xl border-t border-stone-200 bg-stone-50 p-6">
         <Button
           className={cn('h-10 w-full', isPending && 'cursor-default')}
-          disabled={!userData.name.trim()}
+          disabled={isDisabled}
           onClick={handleUpdate}
         >
           {isPending && <LoaderCircle className="size-4 animate-spin" />}
