@@ -8,8 +8,8 @@ const useCurrentSubscription = () => {
     queryFn: () => account.get.query(),
   });
 
-  if (isLoading) return { plan: {} } as { plan: typeof PLANS.BASIC };
-  const plan = PLANS[data?.subscriptionPlanId as keyof typeof PLANS] || PLANS.BASIC;
+  if (isLoading) return { plan: {} } as { plan: typeof PLANS.FREE };
+  const plan = PLANS[data?.subscriptionPlanId as keyof typeof PLANS] || PLANS.FREE;
   return { plan };
 };
 

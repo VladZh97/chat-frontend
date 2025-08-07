@@ -4,7 +4,7 @@ export const CONFIG = {
 };
 
 export const PLAN_NAMES = {
-  BASIC: 'Basic',
+  FREE: 'Free',
   PRO: 'Pro',
   TEAM: 'Team',
 } as const;

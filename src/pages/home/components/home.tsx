@@ -1,4 +1,3 @@
-import TotalChatsChart from './total-chats-chart';
 import Stats from './stats';
 import ChatbotsList from './chatbots-list';
 import LayoutWrapper from '@/components/animation-wrapper';
