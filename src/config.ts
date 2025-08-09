@@ -57,13 +57,13 @@ export const PLAN_LIMITS = {
   },
 };
 
-export const PAYMENT_LINKS = {
+export const SUBSCRIPTION_IDS = {
   [PLAN_NAMES.PRO]: {
-    monthly: 'https://buy.stripe.com/test_3cIcN71Bn3Oeb8a3qjdjO00',
-    yearly: 'https://buy.stripe.com/test_7sYbJ34NzgB03FIgd5djO01',
+    monthly: 'price_1RuEmKQsWw8FGM7mICiKO0QG',
+    yearly: 'price_1RuEmKQsWw8FGM7mICiKO0QG',
   },
   [PLAN_NAMES.TEAM]: {
-    monthly: 'https://buy.stripe.com/test_6oUcN76VHacCb8abWPdjO02',
-    yearly: 'https://buy.stripe.com/test_28EeVfa7T70q3FI6CvdjO03',
+    monthly: 'price_1RuEnpQsWw8FGM7mWmnTAhxk',
+    yearly: 'price_1RuEoFQsWw8FGM7mNPp2APHF',
   },
 };
