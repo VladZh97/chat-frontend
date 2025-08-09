@@ -82,6 +82,22 @@ const PlansTable = () => {
     }
   };
 
+  const openBillingPortal = async (plan: PaidPlanKey) => {
+    if (loadingPlan) return;
+    try {
+      setLoadingPlan(plan);
+      const { url } = await pricing.createPortalSession({
+        returnUrl: `${window.location.origin}/subscription`,
+      });
+      window.location.href = url;
+    } catch (e) {
+      console.error(e);
+      alert('Failed to open billing portal. Please try again.');
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
+
   const upgradeTo = async (plan: PaidPlanKey) => {
     if (loadingPlan) return;
     const currentId = getCurrentPlanId();
@@ -90,42 +106,43 @@ const PlansTable = () => {
       await startCheckout(plan);
       return;
     }
+    return openBillingPortal(plan);
     // Existing subscription -> compute immediate vs scheduled
-    try {
-      setLoadingPlan(plan);
-      const target = SUBSCRIPTIONS.find(
-        subscription => subscription.title === plan && subscription.period === activePlan
-      );
-      const priceId = target?.id;
-      if (!priceId) throw new Error('Price not configured for selected plan');
+    // try {
+    //   setLoadingPlan(plan);
+    //   const target = SUBSCRIPTIONS.find(
+    //     subscription => subscription.title === plan && subscription.period === activePlan
+    //   );
+    //   const priceId = target?.id;
+    //   if (!priceId) throw new Error('Price not configured for selected plan');
 
-      let immediateUpdate = false;
-      if (PLAN_ORDER[plan] > PLAN_ORDER[currentId]) {
-        // higher tier
-        immediateUpdate = true;
-      } else if (PLAN_ORDER[plan] < PLAN_ORDER[currentId]) {
-        // lower tier
-        immediateUpdate = false;
-      } else if (currentSubscription?.period) {
-        // same tier: compare periods (yearly > monthly)
-        const currentRank = PERIOD_ORDER[currentSubscription.period as 'monthly' | 'yearly'];
-        const targetRank = PERIOD_ORDER[target!.period as 'monthly' | 'yearly'];
-        immediateUpdate = targetRank > currentRank;
-      }
+    //   let immediateUpdate = false;
+    //   if (PLAN_ORDER[plan] > PLAN_ORDER[currentId]) {
+    //     // higher tier
+    //     immediateUpdate = true;
+    //   } else if (PLAN_ORDER[plan] < PLAN_ORDER[currentId]) {
+    //     // lower tier
+    //     immediateUpdate = false;
+    //   } else if (currentSubscription?.period) {
+    //     // same tier: compare periods (yearly > monthly)
+    //     const currentRank = PERIOD_ORDER[currentSubscription.period as 'monthly' | 'yearly'];
+    //     const targetRank = PERIOD_ORDER[target!.period as 'monthly' | 'yearly'];
+    //     immediateUpdate = targetRank > currentRank;
+    //   }
 
-      await pricing.updateSubscription({ priceId, immediateUpdate });
-      alert(
-        immediateUpdate
-          ? 'Your subscription has been upgraded.'
-          : 'Your subscription change will take effect at the next billing period.'
-      );
-      // Optionally: refetch account data here
-    } catch (error) {
-      console.error(error);
-      alert('Failed to change subscription. Please try again.');
-    } finally {
-      setLoadingPlan(null);
-    }
+    //   await pricing.updateSubscription({ priceId, immediateUpdate });
+    //   alert(
+    //     immediateUpdate
+    //       ? 'Your subscription has been upgraded.'
+    //       : 'Your subscription change will take effect at the next billing period.'
+    //   );
+    //   // Optionally: refetch account data here
+    // } catch (error) {
+    //   console.error(error);
+    //   alert('Failed to change subscription. Please try again.');
+    // } finally {
+    //   setLoadingPlan(null);
+    // }
   };
 
   const getButtonText = (planId: 'Free' | 'Pro' | 'Team') => {

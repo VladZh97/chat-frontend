@@ -65,24 +65,26 @@ const CurrentPlanCard = () => {
             <span>{renewalDate}</span>
           </p>
         </div>
-        <div className="mt-6 grid grid-cols-3 gap-2.5">
-          <Button
-            onClick={() => {
-              const scrollArea = document.querySelector(
-                '#board-scroll-area [data-slot="scroll-area-viewport"]'
-              );
-              scrollArea?.scrollTo({ top: scrollArea.scrollHeight, behavior: 'smooth' });
-            }}
-          >
-            Change plan
-          </Button>
-          <Button variant="outline" isLoading={isPortalLoading} onClick={openBillingPortal}>
-            Edit Billing
-          </Button>
-          <Button variant="outline" isLoading={isPortalLoading} onClick={openBillingPortal}>
-            View Invoices
-          </Button>
-        </div>
+        {plan?.title !== 'Free' && (
+          <div className="mt-6 grid grid-cols-3 gap-2.5">
+            <Button
+              onClick={() => {
+                const scrollArea = document.querySelector(
+                  '#board-scroll-area [data-slot="scroll-area-viewport"]'
+                );
+                scrollArea?.scrollTo({ top: scrollArea.scrollHeight, behavior: 'smooth' });
+              }}
+            >
+              Change plan
+            </Button>
+            <Button variant="outline" isLoading={isPortalLoading} onClick={openBillingPortal}>
+              Edit Billing
+            </Button>
+            <Button variant="outline" isLoading={isPortalLoading} onClick={openBillingPortal}>
+              View Invoices
+            </Button>
+          </div>
+        )}
       </div>
     </Card>
   );
