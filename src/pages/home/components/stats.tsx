@@ -5,6 +5,7 @@ import type { PLANS } from '@/config';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
 import { useQuery } from '@tanstack/react-query';
 import { MessageSquareText, MessagesSquare, ThumbsUp } from 'lucide-react';
+import useRefreshOnLabel from '@/hooks/use-refresh-on-label';
 
 const Stats = () => {
   const { plan } = useCurrentSubscription();
@@ -52,13 +53,15 @@ const MessagesCard = ({ limits }: { limits: (typeof PLANS)[keyof typeof PLANS]['
     queryFn: () => stats.messages.query(undefined),
     staleTime: 60_000,
   });
+  const { label: refreshOnLabel } = useRefreshOnLabel();
+
   return (
     <StatCard icon={<MessageSquareText className="size-4 text-stone-500" />} title="Messages">
       <div className="flex items-center justify-between">
         <span>
-          <Counter value={messages?.count ?? 0} />/{limits.maxMessages}
+          <Counter value={messages?.count ?? 0} />/{(limits.maxMessages ?? 0).toLocaleString()}
         </span>
-        <span className="text-xs font-normal text-stone-500">Refresh on July 31, 2025</span>
+        <span className="text-xs font-normal text-stone-500">{refreshOnLabel}</span>
       </div>
     </StatCard>
   );

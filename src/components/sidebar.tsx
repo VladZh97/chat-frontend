@@ -108,8 +108,8 @@ const Profile = () => {
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger
           className={cn(
-            'group cursor-pointer rounded-md transition-colors duration-200 hover:bg-stone-800',
-            isOpen && 'bg-stone-800'
+            'group cursor-pointer rounded-lg border border-transparent transition-colors duration-200 hover:border-stone-700 hover:bg-stone-800',
+            isOpen && 'border-stone-700 bg-stone-800'
           )}
         >
           <div className="flex items-center gap-2 p-2">
@@ -134,10 +134,10 @@ const Profile = () => {
         <PopoverContent
           align="end"
           side="top"
-          className="w-48 space-y-1 rounded-lg bg-white p-2 shadow-lg"
+          className="w-48 space-y-1 rounded-lg border border-stone-700 bg-stone-800 p-2 shadow-lg"
         >
           <div
-            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-stone-900 hover:bg-stone-100"
+            className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm text-white hover:bg-stone-700"
             onClick={() => {
               setIsOpen(false);
               showDialog(EditUserProfile.id, EditUserProfile);
@@ -147,7 +147,7 @@ const Profile = () => {
             Edit profile
           </div>
           <div
-            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-red-600 hover:bg-red-50"
+            className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm text-red-400 hover:bg-red-500/10"
             onClick={handleLogout}
           >
             <LogOut className="size-4" />

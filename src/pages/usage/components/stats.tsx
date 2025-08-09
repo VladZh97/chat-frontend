@@ -4,6 +4,7 @@ import Counter from '@/components/counter';
 import StatCard from '@/components/stat-card';
 import { Button } from '@/components/ui/button';
 import type { PLANS } from '@/config';
+import { useRefreshOnLabel } from '@/hooks';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
 import { useQuery } from '@tanstack/react-query';
 import { Bot, CreditCard, MessagesSquare } from 'lucide-react';
@@ -57,6 +58,8 @@ const Chatbots = ({ limits }: { limits: (typeof PLANS)[keyof typeof PLANS]['limi
 };
 
 const MessagesCard = ({ limits }: { limits: (typeof PLANS)[keyof typeof PLANS]['limits'] }) => {
+  const { label: refreshOnLabel } = useRefreshOnLabel();
+
   const { data: messages } = useQuery({
     queryKey: stats.messages.key(),
     queryFn: () => stats.messages.query(undefined),
@@ -67,9 +70,9 @@ const MessagesCard = ({ limits }: { limits: (typeof PLANS)[keyof typeof PLANS]['
     <StatCard icon={<MessagesSquare className="size-4 text-stone-500" />} title="Messages">
       <div className="flex w-full items-center justify-between">
         <span>
-          <Counter value={messages?.count ?? 0} />/{limits.maxMessages}
+          <Counter value={messages?.count ?? 0} />/{(limits.maxMessages ?? 0).toLocaleString()}
         </span>
-        <span className="text-sm font-normal text-stone-500">Refresh on July 31, 2025</span>
+        <span className="text-sm font-normal text-stone-500">{refreshOnLabel}</span>
       </div>
     </StatCard>
   );
