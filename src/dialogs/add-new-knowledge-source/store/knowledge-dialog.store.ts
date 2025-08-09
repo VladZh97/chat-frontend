@@ -14,6 +14,7 @@ interface IState {
     file: File;
     metadata: Record<string, unknown>;
   } | null;
+  hiddenTabs: boolean;
 }
 
 interface IActions {
@@ -22,6 +23,7 @@ interface IActions {
   setType: (value: 'links' | 'files' | 'text-snippet') => void;
   setDisableClose: (value: boolean) => void;
   setSelectedFile: (file: { file: File; metadata: Record<string, unknown> } | null) => void;
+  editTextSnippet: (value: { title: string; content: string }) => void;
   reset: () => void;
 }
 
@@ -34,6 +36,7 @@ const initState: IState = {
     content: '',
   },
   selectedFile: null,
+  hiddenTabs: false,
 };
 
 export const useKnowledgeDialogStore = create<IState & IActions>(set => ({
@@ -42,6 +45,7 @@ export const useKnowledgeDialogStore = create<IState & IActions>(set => ({
   setDisableClose: disableClose => set({ disableClose }),
   setTextSnippet: snippet => set({ textSnippet: snippet }),
   setSelectedFile: file => set({ selectedFile: file }),
+  editTextSnippet: snippet => set({ textSnippet: snippet, hiddenTabs: true, type: 'text-snippet' }),
   setType: type => {
     set({ ...initState, type });
   },

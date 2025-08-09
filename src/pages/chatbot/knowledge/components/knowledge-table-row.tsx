@@ -1,6 +1,8 @@
 import { knowledge } from '@/api/knowledge';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import AddNewKnowledgeSource from '@/dialogs/add-new-knowledge-source';
+import { useKnowledgeDialogStoreShallow } from '@/dialogs/add-new-knowledge-source/store';
+import { useDialog } from '@/hooks';
 import queryClient from '@/lib/query';
 import { cn } from '@/lib/utils';
 import type { IKnowledge } from '@/types/knowledge.type';
@@ -19,6 +21,10 @@ const TYPE_CONFIG = {
 const KnowledgeTableRow = ({ data }: { data: IKnowledge }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { id: chatbotId } = useParams();
+  const { showDialog } = useDialog();
+  const { editTextSnippet } = useKnowledgeDialogStoreShallow(s => ({
+    editTextSnippet: s.editTextSnippet,
+  }));
 
   const typeConfig = TYPE_CONFIG[data.type] || TYPE_CONFIG.text;
   const IconComponent = typeConfig.icon;
@@ -41,6 +47,14 @@ const KnowledgeTableRow = ({ data }: { data: IKnowledge }) => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleEdit = () => {
+    showDialog(AddNewKnowledgeSource.id, AddNewKnowledgeSource, { knowledgeId: data._id });
+    editTextSnippet({
+      title: data.metadata.title as string,
+      content: data.metadata.text as string,
+    });
   };
 
   return (
@@ -76,7 +90,7 @@ const KnowledgeTableRow = ({ data }: { data: IKnowledge }) => {
             {data.type === 'text' && (
               <div
                 className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-stone-900 hover:bg-stone-100"
-                //   onClick={() => setIsEditProfileOpen(true)}
+                onClick={handleEdit}
               >
                 <PencilLine className="size-4" />
                 Edit source

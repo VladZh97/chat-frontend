@@ -30,7 +30,7 @@ const initialState: DialogState = {
   closingDialogs: new Set(),
 };
 
-export const useDialogStore = create<DialogStore>((set, get) => ({
+export const useDialogStore = create<DialogStore>(set => ({
   ...initialState,
 
   openDialog: dialog => {

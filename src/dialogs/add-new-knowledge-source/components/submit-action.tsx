@@ -11,7 +11,7 @@ import { isValidUrl } from '@/utils/is-valid-url';
 import { useDialog, useUploadFile } from '@/hooks';
 import queryClient from '@/lib/query';
 
-const SubmitAction = ({ dialogId }: { dialogId: string }) => {
+const SubmitAction = ({ dialogId, knowledgeId }: { dialogId: string; knowledgeId?: string }) => {
   const { closeDialog } = useDialog();
   const { id: chatbotId } = useParams();
   const { uploadFileFn } = useUploadFile();
@@ -24,6 +24,10 @@ const SubmitAction = ({ dialogId }: { dialogId: string }) => {
   });
   const { mutateAsync: addRawTextSource } = useMutation({
     mutationFn: (data: TText) => knowledge.text(data),
+  });
+
+  const { mutateAsync: updateTextSource } = useMutation({
+    mutationFn: (data: { id: string; title: string; text: string }) => knowledge.updateText(data),
   });
 
   const { textSnippet, type, websiteUrl, setDisableClose, disableClose, selectedFile } =
@@ -40,6 +44,15 @@ const SubmitAction = ({ dialogId }: { dialogId: string }) => {
     setDisableClose(true);
     try {
       setDisableClose(true);
+
+      if (type === 'text-snippet' && knowledgeId) {
+        await updateTextSource({
+          id: knowledgeId,
+          title: textSnippet.title,
+          text: textSnippet.content,
+        });
+      }
+
       if (type === 'links') {
         const parsedUrl = websiteUrl.match(/^https?:\/\//) ? websiteUrl : `https://${websiteUrl}`;
         await addWebsiteSource({
@@ -47,7 +60,8 @@ const SubmitAction = ({ dialogId }: { dialogId: string }) => {
           metadata: { url: parsedUrl },
         });
       }
-      if (type === 'text-snippet') {
+
+      if (type === 'text-snippet' && !knowledgeId) {
         await addRawTextSource({
           chatbotId: chatbotId as string,
           metadata: { text: textSnippet.content, title: textSnippet.title },
@@ -68,7 +82,7 @@ const SubmitAction = ({ dialogId }: { dialogId: string }) => {
         queryClient.invalidateQueries({ queryKey: ['tokens-usage', chatbotId] }),
       ]);
 
-      toast.success('Source added successfully');
+      toast.success(knowledgeId ? 'Source updated successfully' : 'Source added successfully');
     } catch (error) {
       toast.error('Failed to add source');
     } finally {
@@ -92,7 +106,13 @@ const SubmitAction = ({ dialogId }: { dialogId: string }) => {
       onClick={handleSubmit}
     >
       {disableClose && <LoaderCircle className="size-4 animate-spin" />}
-      {disableClose ? 'Adding source...' : 'Add source'}
+      {knowledgeId
+        ? disableClose
+          ? 'Updating source...'
+          : 'Update source'
+        : disableClose
+          ? 'Adding source...'
+          : 'Add source'}
     </Button>
   );
 };

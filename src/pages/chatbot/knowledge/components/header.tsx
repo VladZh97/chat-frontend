@@ -9,7 +9,6 @@ import { knowledge } from '@/api/knowledge';
 import queryClient from '@/lib/query';
 import type { IKnowledge } from '@/types/knowledge.type';
 import chatbot from '@/api/chatbot';
-import { Skeleton } from '@/components/ui/skeleton';
 
 const Header = () => {
   const { id: chatbotId } = useParams();

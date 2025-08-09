@@ -11,14 +11,15 @@ import { useEffect } from 'preact/hooks';
 
 const ID = 'add-new-knowledge-source';
 
-const AddNewKnowledgeSource = () => {
+const AddNewKnowledgeSource = ({ knowledgeId }: { knowledgeId?: string }) => {
   const [parent] = useAutoAnimate();
   const { updateDialog } = useDialog();
-  const { type, setType, disableClose, reset } = useKnowledgeDialogStoreShallow(s => ({
+  const { type, setType, disableClose, reset, hiddenTabs } = useKnowledgeDialogStoreShallow(s => ({
     type: s.type,
     setType: s.setType,
     disableClose: s.disableClose,
     reset: s.reset,
+    hiddenTabs: s.hiddenTabs,
   }));
 
   useEffect(() => {
@@ -42,7 +43,7 @@ const AddNewKnowledgeSource = () => {
           <p className="mb-9 text-sm text-stone-500">
             Add sources your chatbot will use to answer questions
           </p>
-          <Tabs type={type} setType={setType} />
+          {!hiddenTabs && <Tabs type={type} setType={setType} />}
           <div ref={parent}>
             {type === 'links' && <AddLinkOption />}
             {type === 'files' && <AddFileInput />}
@@ -50,7 +51,7 @@ const AddNewKnowledgeSource = () => {
           </div>
         </div>
         <div className="rounded-b-2xl border-t border-stone-200 bg-stone-50 p-6">
-          <SubmitAction dialogId={ID} />
+          <SubmitAction dialogId={ID} knowledgeId={knowledgeId} />
         </div>
       </div>
     </div>

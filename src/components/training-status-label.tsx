@@ -38,10 +38,11 @@ const TrainingStatusLabel = () => {
     queryFn: () => knowledge.list(chatbotId as string),
   });
 
-  const [isPending] = useMutationState({
+  const pendingMutations = useMutationState({
     filters: { mutationKey: ['train-chatbot', chatbotId] },
     select: mutation => mutation.state.status === 'pending',
   });
+  const isPending = pendingMutations.some(Boolean);
 
   const isTrained = knowledgeData?.every(item => item.trained);
 
@@ -49,8 +50,8 @@ const TrainingStatusLabel = () => {
 
   if (!knowledgeData?.length) return null;
 
-  if (isTrained) return <TrainedBadge />;
   if (isPending) return <TrainingBadge />;
+  if (isTrained) return <TrainedBadge />;
   return <NotTrainedBadge />;
 };
 
