@@ -56,3 +56,14 @@ export const PLAN_LIMITS = {
     maxFileSize: CONFIG.MAX_FILE_SIZE / 2,
   },
 };
+
+export const PAYMENT_LINKS = {
+  [PLAN_NAMES.PRO]: {
+    monthly: 'https://buy.stripe.com/test_3cIcN71Bn3Oeb8a3qjdjO00',
+    yearly: 'https://buy.stripe.com/test_7sYbJ34NzgB03FIgd5djO01',
+  },
+  [PLAN_NAMES.TEAM]: {
+    monthly: 'https://buy.stripe.com/test_6oUcN76VHacCb8abWPdjO02',
+    yearly: 'https://buy.stripe.com/test_28EeVfa7T70q3FI6CvdjO03',
+  },
+};

@@ -24,14 +24,13 @@ const Stats = () => {
 export default Stats;
 
 const AnswersQualityCard = () => {
-  const { data: chatbots } = useQuery({
-    queryKey: chatbot.get.key,
-    queryFn: () => chatbot.get.query(),
+  const { data: answersQuality, isLoading } = useQuery({
+    queryKey: stats.answersQuality.key(),
+    queryFn: () => stats.answersQuality.query(),
   });
   return (
     <StatCard icon={<ThumbsUp className="size-4 text-stone-500" />} title="Answers quality">
-      <Counter value={chatbots?.length || 0} />
-      /5
+      {isLoading || !answersQuality?.score ? '-/-' : `${answersQuality?.score}/5`}
     </StatCard>
   );
 };

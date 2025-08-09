@@ -61,11 +61,13 @@ const ChatbotsList = () => {
         {isLoading && <Skeleton />}
         {!isLoading && !chatbots?.length && (
           <div
-            className="flex h-40 cursor-pointer flex-col items-center justify-center rounded-xl border border-stone-200 bg-white text-sm text-stone-500 shadow transition-all duration-300 hover:shadow-lg"
+            className="relative flex cursor-pointer flex-col items-center justify-center rounded-xl border border-stone-200 bg-white pt-[54.44%] text-sm text-stone-500 shadow transition-all duration-300 hover:shadow-lg"
             onClick={handleCreateNewChatbot}
           >
-            <Plus className="mb-4 size-8 text-stone-500" />
-            Add your first chatbot
+            <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center">
+              <Plus className="mb-4 size-8 text-stone-500" />
+              Add your first chatbot
+            </div>
           </div>
         )}
       </div>
@@ -101,12 +103,12 @@ const ChatbotPreview = () => {
           <span className="text-[9px] font-medium text-stone-900">New chat</span>
           <Ellipsis className="size-2.5 text-stone-700" />
         </div>
-        <div className="mb-3 flex h-[8%] items-end gap-1">
+        <div className="mb-3 flex items-end gap-1">
           <span className="size-3 overflow-hidden rounded-full bg-[var(--accent-color)]"></span>
-          <span className="block h-full w-1/2 rounded-md bg-[var(--accent-color)]/10"></span>
+          <span className="block h-6 w-[89px] rounded-md bg-[var(--accent-color)]/10"></span>
         </div>
-        <div className="flex h-[8%] justify-end">
-          <span className="block h-full w-1/2 rounded-md rounded-br-none bg-[var(--accent-color)] shadow-sm"></span>
+        <div className="flex justify-end">
+          <span className="block h-6 w-[100px] rounded-md rounded-br-none bg-[var(--accent-color)] shadow-sm"></span>
         </div>
       </div>
     </div>

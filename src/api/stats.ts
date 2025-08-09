@@ -59,4 +59,11 @@ export const stats = {
       chatbotId,
     ],
   },
+  answersQuality: {
+    query: async () => {
+      const response = await api.get('/stats/answer-quality');
+      return response.data;
+    },
+    key: () => ['answer-quality'],
+  },
 };
