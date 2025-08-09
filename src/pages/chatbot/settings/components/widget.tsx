@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 const Widget = () => {
   return (
-    <div className="flex h-[600px] w-[416px] flex-col rounded-3xl bg-white pb-2 shadow-xl">
+    <div className="flex h-[560px] w-[416px] flex-col rounded-3xl bg-white pb-2 shadow-xl">
       <Header />
       <Main />
       <Footer />
