@@ -10,7 +10,11 @@ const Counter = ({ value = 0, className }: { value: number; className?: string }
     return () => controls.stop();
   }, [value]);
 
-  return <motion.span className={className}>{rounded}</motion.span>;
+  return (
+    <motion.span className={className}>
+      {useTransform(rounded, val => val.toLocaleString())}
+    </motion.span>
+  );
 };
 
 export default Counter;

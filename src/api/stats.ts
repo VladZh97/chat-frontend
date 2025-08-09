@@ -66,4 +66,15 @@ export const stats = {
     },
     key: () => ['answer-quality'],
   },
+  uniqueUsers: {
+    query: async (chatbotId?: string) => {
+      const response = await api.get('/stats/unique-users', {
+        params: {
+          chatbotId,
+        },
+      });
+      return response.data;
+    },
+    key: (chatbotId?: string) => ['stats-unique-users', chatbotId],
+  },
 };

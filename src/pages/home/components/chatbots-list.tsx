@@ -8,10 +8,12 @@ import { useCallback, useMemo } from 'preact/hooks';
 import { useDialog } from '@/hooks';
 import { cn } from '@/lib/utils';
 import type { CSSProperties } from 'preact/compat';
+import useCurrentSubscription from '@/hooks/use-current-subscription';
 
 const ChatbotsList = () => {
   const navigate = useNavigate();
   const { showDialog } = useDialog();
+  const { plan } = useCurrentSubscription();
   const { data: chatbots, isLoading } = useQuery({
     queryKey: chatbot.get.key,
     queryFn: () => chatbot.get.query(),
@@ -25,6 +27,10 @@ const ChatbotsList = () => {
   );
 
   const handleCreateNewChatbot = useCallback(() => {
+    if (chatbots && chatbots.length >= (plan?.limits?.maxChatbots ?? 0)) {
+      navigate('/subscription');
+      return;
+    }
     showDialog(CreateNewChatbot.id, CreateNewChatbot);
   }, [showDialog]);
 

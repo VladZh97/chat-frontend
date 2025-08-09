@@ -14,7 +14,7 @@ const Stats = () => {
     <div className="mb-4 grid grid-cols-3 gap-4">
       <ChatsCard />
       <AnswersQualityCard />
-      <MessagesCard limits={plan.limits} />
+      <MessagesCard limits={plan?.limits ?? {}} />
     </div>
   );
 };

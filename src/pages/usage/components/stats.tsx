@@ -18,8 +18,8 @@ const Stats = () => {
   return (
     <div className="mb-4 grid grid-cols-3 gap-4">
       <PlanCard plan={plan} />
-      <Chatbots limits={plan.limits} />
-      <MessagesCard limits={plan.limits} />
+      <Chatbots limits={plan?.limits ?? {}} />
+      <MessagesCard limits={plan?.limits ?? {}} />
     </div>
   );
 };

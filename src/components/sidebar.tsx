@@ -12,6 +12,8 @@ import { useQuery } from '@tanstack/react-query';
 import user from '@/api/user';
 import EditUserProfile from '@/dialogs/edit-user-profile';
 import { useDialog } from '@/hooks';
+import useCurrentSubscription from '@/hooks/use-current-subscription';
+import chatbot from '@/api/chatbot';
 
 const NAVIGATION = [
   {
@@ -34,8 +36,18 @@ const NAVIGATION = [
 const Sidebar = () => {
   const { pathname } = useLocation();
   const { showDialog } = useDialog();
+  const { plan } = useCurrentSubscription();
+  const navigate = useNavigate();
+  const { data: chatbots } = useQuery({
+    queryKey: chatbot.get.key,
+    queryFn: () => chatbot.get.query(),
+  });
 
   const handleCreateNewChatbot = () => {
+    if (chatbots && chatbots.length >= (plan?.limits?.maxChatbots ?? 0)) {
+      navigate('/subscription');
+      return;
+    }
     showDialog(CreateNewChatbot.id, CreateNewChatbot);
   };
 
@@ -103,6 +115,12 @@ const Profile = () => {
     navigate('/login');
   };
   if (!me) return null;
+
+  const initials = me?.name
+    ?.split(' ')
+    .map((name: string) => name[0])
+    .join('');
+
   return (
     <div className="mt-auto p-2">
       <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -114,13 +132,19 @@ const Profile = () => {
         >
           <div className="flex items-center gap-2 p-2">
             <div className="flex shrink-0 items-center gap-2">
-              <img
-                src={me?.picture}
-                alt="avatar"
-                className="size-8 overflow-hidden rounded-lg"
-                width="32"
-                height="32"
-              />
+              {me?.picture ? (
+                <img
+                  src={me?.picture}
+                  alt="avatar"
+                  className="size-8 overflow-hidden rounded-lg"
+                  width="32"
+                  height="32"
+                />
+              ) : (
+                <div className="flex size-8 items-center justify-center rounded-lg bg-stone-600 text-sm font-semibold text-stone-400">
+                  {initials}
+                </div>
+              )}
             </div>
             <div className="grid">
               <span className="truncate text-sm font-semibold text-stone-400">{me?.name}</span>
