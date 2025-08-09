@@ -16,7 +16,7 @@ const Settings = () => {
           <ScrollArea className="h-[calc(100vh-101px)]">
             <div className="flex min-h-[calc(100vh-101px)] flex-col border-l border-stone-200 bg-stone-100 p-8">
               <Label className="mb-5">Preview</Label>
-              <div className="mx-auto flex w-full max-w-[416px] grow items-center justify-center">
+              <div className="mx-auto grid w-full max-w-[416px] grow place-items-center">
                 <Widget />
               </div>
             </div>
