@@ -19,6 +19,10 @@ const ChatbotsList = () => {
     queryFn: () => chatbot.get.query(),
   });
 
+  const shouldUpgrade = useMemo(() => {
+    return chatbots && chatbots.length >= (plan?.limits?.maxChatbots ?? 0);
+  }, [chatbots, plan?.limits?.maxChatbots]);
+
   const handleChatbotClick = useCallback(
     (id: string) => {
       navigate(`/chatbot/${id}`);
@@ -27,10 +31,7 @@ const ChatbotsList = () => {
   );
 
   const handleCreateNewChatbot = useCallback(() => {
-    if (chatbots && chatbots.length >= (plan?.limits?.maxChatbots ?? 0)) {
-      navigate('/subscription');
-      return;
-    }
+    if (shouldUpgrade) return navigate('/subscription');
     showDialog(CreateNewChatbot.id, CreateNewChatbot);
   }, [showDialog]);
 
@@ -103,7 +104,7 @@ const Skeleton = () => {
 const ChatbotPreview = () => {
   return (
     <div className="absolute top-4 left-1/2 h-[200%] w-full -translate-x-1/2 px-12">
-      <div className="mx-auto h-full w-full max-w-[224px] rounded-xl bg-white px-2 py-3 shadow">
+      <div className="mx-auto h-full w-full max-w-[224px] rounded-xl bg-white px-4 py-3 shadow">
         <div className="mb-4 flex items-center justify-between">
           <ArrowLeft className="size-2.5 text-stone-700" />
           <span className="text-[9px] font-medium text-stone-900">New chat</span>
