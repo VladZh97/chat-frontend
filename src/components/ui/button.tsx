@@ -38,14 +38,15 @@ const Button = React.forwardRef<
   React.ComponentProps<'button'> &
     VariantProps<typeof buttonVariants> & {
       asChild?: boolean;
+      isLoading?: boolean;
     }
->(({ className, variant, size, asChild = false, ...props }, ref) => {
+>(({ className, variant, size, asChild = false, isLoading = false, ...props }, ref) => {
   if (asChild) {
     const { ref: _ref, ...rest } = props;
     return (
       <Slot
         data-slot="button"
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size, className }), isLoading && 'cursor-default')}
         {...rest}
       />
     );
@@ -53,7 +54,7 @@ const Button = React.forwardRef<
   return (
     <button
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, className }), isLoading && 'cursor-default')}
       ref={ref}
       {...props}
     />

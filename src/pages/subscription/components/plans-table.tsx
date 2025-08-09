@@ -1,11 +1,40 @@
 import { Button } from '@/components/ui/button';
-import { PLAN_NAMES, PLANS } from '@/config';
+import { PLAN_NAMES, PLANS, SUBSCRIPTION_IDS } from '@/config';
 import { cn } from '@/lib/utils';
-import { SquareCheckBig } from 'lucide-react';
+import { Loader2, SquareCheckBig } from 'lucide-react';
 import { useState } from 'preact/hooks';
+import pricing from '@/api/pricing';
 
 const PlansTable = () => {
-  const [activePlan, setActivePlan] = useState('monthly');
+  const [activePlan, setActivePlan] = useState<'monthly' | 'yearly'>('monthly');
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  type PaidPlanKey = typeof PLAN_NAMES.PRO | typeof PLAN_NAMES.TEAM;
+
+  const startCheckout = async (plan: PaidPlanKey) => {
+    try {
+      if (loadingPlan) return;
+      setLoadingPlan(plan);
+      const billingCycle: 'monthly' | 'yearly' = activePlan === 'yearly' ? 'yearly' : 'monthly';
+      const priceId = SUBSCRIPTION_IDS[plan]?.[billingCycle];
+      if (!priceId) throw new Error('Price not configured for selected plan');
+
+      const successUrl = `${window.location.origin}/subscription`;
+      const cancelUrl = `${window.location.origin}/subscription`;
+
+      const { url } = await pricing.createCheckoutSession({
+        priceId,
+        successUrl,
+        cancelUrl,
+      });
+      window.location.href = url;
+    } catch (error) {
+      console.error(error);
+      alert('Failed to start checkout. Please try again.');
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
 
   return (
     <div className="px-8 pt-8 pb-6">
@@ -108,7 +137,14 @@ const PlansTable = () => {
               </span>
               /month
             </p>
-            <Button className="mt-6 h-12 w-full text-base font-semibold">Upgrade Now</Button>
+            <Button
+              className="mt-6 h-12 w-full text-base font-semibold"
+              isLoading={loadingPlan === PLAN_NAMES.PRO}
+              onClick={() => startCheckout(PLAN_NAMES.PRO)}
+            >
+              {loadingPlan !== PLAN_NAMES.PRO && <Loader2 className="size-4 animate-spin" />}
+              Upgrade Now
+            </Button>
           </div>
           <div className="p-10 max-xl:p-8 max-lg:p-6">
             <ul className="space-y-4">
@@ -143,7 +179,14 @@ const PlansTable = () => {
               </span>
               /month
             </p>
-            <Button className="mt-6 h-12 w-full text-base font-semibold">Upgrade Now</Button>
+            <Button
+              className="mt-6 h-12 w-full text-base font-semibold"
+              isLoading={loadingPlan === PLAN_NAMES.TEAM}
+              onClick={() => startCheckout(PLAN_NAMES.TEAM)}
+            >
+              {loadingPlan === PLAN_NAMES.TEAM && <Loader2 className="size-4 animate-spin" />}
+              Upgrade Now
+            </Button>
           </div>
           <div className="p-10 max-xl:p-8 max-lg:p-6">
             <ul className="space-y-4">
