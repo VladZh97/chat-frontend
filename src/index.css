@@ -127,6 +127,12 @@
   isolation: isolate;
 }
 
+.prose {
+  @apply text-sm text-stone-700;
+  @apply prose-h1:text-xl prose-h1:font-medium prose-h2:text-lg prose-h2:font-medium prose-h3:text-base prose-h3:font-medium;
+  @apply prose-ul:list-disc prose-ol:list-decimal marker:text-stone-900;
+}
+
 /* Basic editor styles */
 .tiptap {
   :first-child {

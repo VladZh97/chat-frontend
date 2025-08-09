@@ -20,7 +20,7 @@ const Widget = () => {
 
   return (
     <div className="flex h-full max-h-[600px] w-[416px] flex-col rounded-3xl bg-white pb-2 shadow-xl">
-      <Header />
+      <Header messages={messages} />
       <Main messages={messages} setMessages={handleSendMessage} isPending={isPending} />
       <Footer
         inputValue={inputValue}
@@ -33,11 +33,15 @@ const Widget = () => {
 
 export default Widget;
 
-const Header = () => {
+const Header = ({ messages }: { messages: { role: 'user' | 'bot'; content: string }[] }) => {
+  const firstMessage = messages[0];
+
   return (
     <div className="flex items-center justify-between p-6">
       <ArrowLeft className="size-5 text-stone-700" />
-      <span className="text-sm font-semibold text-stone-900">New chat</span>
+      <span className="max-w-[calc(100%-100px)] truncate text-sm font-semibold text-stone-900">
+        {!firstMessage ? 'New chat' : firstMessage.content}
+      </span>
       <Ellipsis className="size-5 text-stone-700" />
     </div>
   );
@@ -135,8 +139,8 @@ const BotMessage = ({ message }: { message: string }) => {
       >
         {avatar && <img src={avatar} alt="avatar" className="size-full object-cover" />}
       </div>
-      <p
-        className="rounded-2xl rounded-bl-none bg-[var(--accent-color)]/10 px-4 py-3 text-sm font-normal text-stone-900"
+      <div
+        className="prose rounded-2xl rounded-bl-none bg-[var(--accent-color)]/10 px-4 py-3 text-sm font-normal text-stone-900"
         dangerouslySetInnerHTML={{ __html: message }}
       />
     </div>
