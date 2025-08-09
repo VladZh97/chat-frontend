@@ -12,7 +12,13 @@ const Board = ({ children }: { children: React.ReactNode }) => {
     <div className="w-[calc(100%-272px)] p-2">
       <div className="h-full overflow-hidden rounded-xl bg-stone-50 shadow-md">
         <AnimatePresence mode="wait">
-          {isOmitScrollArea ? children : <ScrollArea className="h-full">{children}</ScrollArea>}
+          {isOmitScrollArea ? (
+            children
+          ) : (
+            <ScrollArea className="h-full" id="board-scroll-area">
+              {children}
+            </ScrollArea>
+          )}
         </AnimatePresence>
       </div>
     </div>

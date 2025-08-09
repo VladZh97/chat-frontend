@@ -1,22 +1,19 @@
-import chatbot from '@/api/chatbot';
 import { stats } from '@/api/stats';
 import Counter from '@/components/counter';
 import StatCard from '@/components/stat-card';
-import type { PLAN_LIMITS } from '@/config';
+import type { PLANS } from '@/config';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
 import { useQuery } from '@tanstack/react-query';
 import { MessageSquareText, MessagesSquare, ThumbsUp } from 'lucide-react';
 
-type Limits = (typeof PLAN_LIMITS)[keyof typeof PLAN_LIMITS];
-
 const Stats = () => {
-  const { limits } = useCurrentSubscription();
+  const { plan } = useCurrentSubscription();
 
   return (
     <div className="mb-4 grid grid-cols-3 gap-4">
       <ChatsCard />
       <AnswersQualityCard />
-      <MessagesCard limits={limits} />
+      <MessagesCard limits={plan.limits} />
     </div>
   );
 };
@@ -49,7 +46,7 @@ const ChatsCard = () => {
   );
 };
 
-const MessagesCard = ({ limits }: { limits: Limits }) => {
+const MessagesCard = ({ limits }: { limits: (typeof PLANS)[keyof typeof PLANS]['limits'] }) => {
   const { data: messages } = useQuery({
     queryKey: stats.messages.key(),
     queryFn: () => stats.messages.query(undefined),
