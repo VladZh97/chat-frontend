@@ -76,37 +76,46 @@ const Widget = () => {
         </div>
         <ScrollArea className="h-[calc(100vh-400px)] max-h-[500px] grow">
           <div className="space-y-6 p-4 pb-8">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex items-end gap-2 ${
-                  message.role === 'user' ? 'flex-row-reverse' : ''
-                }`}
-              >
-                {message.role === 'bot' && (
-                  <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white">
-                    <Bot className="size-3" />
-                  </span>
-                )}
+            {useMemo(() => {
+              const groups: Array<{ role: 'user' | 'bot'; messages: string[] }> = [];
+              for (const m of messages) {
+                const last = groups[groups.length - 1];
+                if (last && last.role === m.role) last.messages.push(m.content);
+                else groups.push({ role: m.role, messages: [m.content] });
+              }
+              return groups.map((group, groupIndex) => (
                 <div
-                  className={`flex flex-col gap-1 ${message.role === 'user' ? 'items-end' : ''}`}
+                  key={groupIndex}
+                  className={`flex items-start gap-2 ${group.role === 'user' ? 'flex-row-reverse' : ''}`}
                 >
+                  {group.role === 'bot' && (
+                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white">
+                      <Bot className="size-3" />
+                    </span>
+                  )}
                   <div
-                    className={cn(
-                      'block rounded-xl px-4 py-3 text-sm font-normal',
-                      'prose prose-sm prose-neutral',
-                      message.role === 'user'
-                        ? 'text-white last:rounded-br-none'
-                        : 'text-stone-900 last:rounded-bl-none'
-                    )}
-                    style={{
-                      backgroundColor: message.role === 'user' ? '#000' : '#0000001A',
-                    }}
-                    dangerouslySetInnerHTML={{ __html: message.content }}
-                  />
+                    className={`flex flex-col gap-1 ${group.role === 'user' ? 'items-end' : ''}`}
+                  >
+                    {group.messages.map((content, idx) => (
+                      <div
+                        key={idx}
+                        className={cn(
+                          'block rounded-xl px-4 py-3 text-sm font-normal',
+                          'prose prose-sm prose-neutral',
+                          group.role === 'user'
+                            ? 'text-white last:rounded-br-none'
+                            : 'text-stone-900 last:rounded-bl-none'
+                        )}
+                        style={{
+                          backgroundColor: group.role === 'user' ? '#000' : '#0000001A',
+                        }}
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ));
+            }, [messages])}
 
             {/* Display streaming message */}
             {isStreaming && currentStreamingMessage && (

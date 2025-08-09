@@ -43,6 +43,20 @@ const chatbot = {
       return oldData.filter(chatbot => chatbot._id !== id);
     });
   },
+  playground: {
+    sendMessage: async (
+      chatbotId: string,
+      messages: { role: 'user' | 'bot'; content: string }[],
+      instructions: string
+    ) => {
+      const { data } = await api.post('/chatbot/playground/send-message', {
+        messages,
+        chatbotId,
+        instructions,
+      });
+      return data;
+    },
+  },
 };
 
 export default chatbot;

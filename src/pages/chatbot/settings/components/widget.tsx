@@ -2,6 +2,7 @@ import { ArrowLeft, ArrowUp, Ellipsis, Smile } from 'lucide-react';
 import PoveredBy from '@/assets/povered-by.svg?react';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import { cn } from '@/lib/utils';
+// Removed unused imports
 
 const Widget = () => {
   return (
@@ -100,6 +101,7 @@ const InputContainer = () => {
         <div className="group cursor-pointer">
           <Smile className="size-5 text-stone-400 transition-colors group-hover:text-stone-900" />
         </div>
+
         <span
           className="flex size-8 cursor-pointer items-center justify-center rounded-full text-white"
           style={{ backgroundColor: accentColor }}
