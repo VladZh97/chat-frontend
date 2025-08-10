@@ -43,7 +43,7 @@ const ChatsCard = () => {
   return (
     <StatCard icon={<MessagesSquare className="size-4 text-stone-500" />} title="Chats">
       <span className={cn('opacity-100 transition-opacity duration-300', isLoading && 'opacity-0')}>
-        {chats?.count}
+        {(chats?.count ?? 0).toLocaleString()}
       </span>
     </StatCard>
   );
@@ -63,7 +63,7 @@ const MessagesCard = ({ limits }: { limits: (typeof PLANS)[keyof typeof PLANS]['
         <span
           className={cn('opacity-100 transition-opacity duration-300', isLoading && 'opacity-0')}
         >
-          {messages?.count ?? 0}/{limits.maxMessages ?? 0}
+          {(messages?.count ?? 0).toLocaleString()}/{limits.maxMessages?.toLocaleString()}
         </span>
         <span className="text-xs font-normal text-stone-500">{refreshOnLabel}</span>
       </div>
