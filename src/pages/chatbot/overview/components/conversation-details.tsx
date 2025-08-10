@@ -1,14 +1,25 @@
 import { messages } from '@/api/messages';
 import { Button } from '@/components/ui/button';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
-import { useQuery } from '@tanstack/react-query';
-import { Calendar, Download, Mail, MessageSquareText, RefreshCw, Trash, X } from 'lucide-react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  Calendar,
+  Download,
+  Loader2,
+  Mail,
+  MessageSquareText,
+  RefreshCw,
+  Trash,
+  X,
+} from 'lucide-react';
 import { createPortal, useMemo } from 'preact/compat';
 import type { TConversation } from '../../types';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { TMessage } from '@/types/message.type';
 import moment from 'moment';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
+import queryClient from '@/lib/query';
 
 export const ConversationDetails = ({
   selectedConversation,
@@ -22,6 +33,24 @@ export const ConversationDetails = ({
   const { data, refetch, isLoading, isRefetching } = useQuery({
     queryKey: messages.getMessages.key(chatbotId, selectedConversation.conversationId),
     queryFn: () => messages.getMessages.query(chatbotId, selectedConversation.conversationId),
+  });
+
+  const { mutate: deleteConversation, isPending: isDeleting } = useMutation({
+    mutationFn: () =>
+      messages.deleteConversation.query(chatbotId, selectedConversation.conversationId),
+    onSuccess: () => {
+      toast.success('Conversation deleted successfully');
+      setSelectedConversation(null);
+      queryClient.setQueryData(messages.getConversations.key(chatbotId), (old: TConversation[]) =>
+        old.filter(c => c.conversationId !== selectedConversation.conversationId)
+      );
+      queryClient.invalidateQueries({
+        queryKey: messages.getMessages.key(chatbotId, selectedConversation.conversationId),
+      });
+    },
+    onError: () => {
+      toast.error('Failed to delete conversation');
+    },
   });
 
   const messagesWithInitial = useMemo(() => {
@@ -125,8 +154,15 @@ export const ConversationDetails = ({
       </ScrollArea>
 
       <div className="flex gap-2 pt-2">
-        <Button variant="destructive" className="mr-auto">
-          <Trash className="size-4" />
+        <Button
+          variant="destructive"
+          className={cn('mr-auto', isDeleting && 'cursor-default')}
+          onClick={() => {
+            if (isDeleting) return;
+            deleteConversation();
+          }}
+        >
+          {isDeleting ? <Loader2 className="size-4 animate-spin" /> : <Trash className="size-4" />}
           Delete conversation
         </Button>
         <Button variant="outline" onClick={() => refetch()}>
