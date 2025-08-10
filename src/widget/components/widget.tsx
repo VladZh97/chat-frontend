@@ -192,7 +192,7 @@ const Widget = () => {
         </div>
         {/* {!removeBranding && ( */}
         <div className="flex h-8 items-center justify-center gap-2 border-t border-stone-200 bg-stone-100 text-xs text-stone-500">
-          Povered by
+          Powered by
           <PoveredBy />
         </div>
         {/* )} */}

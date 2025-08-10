@@ -324,7 +324,7 @@ const PoweredBy = () => {
   if (removeBranding) return null;
   return (
     <div className="mt-2 flex h-8 items-center justify-center gap-1.5 text-xs text-stone-500">
-      Povered by
+      Powered by
       <PoveredBy />
     </div>
   );
