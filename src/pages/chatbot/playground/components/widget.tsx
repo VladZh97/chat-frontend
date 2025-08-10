@@ -23,7 +23,7 @@ const Widget = () => {
     usePlayground();
 
   return (
-    <div className="flex h-full max-h-[600px] w-[416px] flex-col rounded-3xl bg-white pb-2 shadow-xl">
+    <div className="flex h-full max-h-[600px] w-[416px] grow flex-col rounded-3xl bg-white pb-2 shadow-xl">
       <Header messages={messages} />
       <Main
         messages={messages}

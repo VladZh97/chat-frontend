@@ -14,9 +14,9 @@ const Playground = () => {
         <div className="grid grid-cols-2 overflow-hidden">
           <SettingsSide />
           <ScrollArea className="h-[calc(100vh-101px)]">
-            <div className="flex h-[calc(100vh-101px)] flex-col border-l border-stone-200 bg-stone-100 p-8">
+            <div className="flex h-auto min-h-[calc(100vh-101px)] flex-col border-l border-stone-200 bg-stone-100 p-8">
               <Label className="mb-5">Preview</Label>
-              <div className="mx-auto flex w-full max-w-[416px] grow items-center justify-center">
+              <div className="mx-auto grid w-full max-w-[416px] grow items-center">
                 <Widget />
               </div>
             </div>
