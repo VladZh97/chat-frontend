@@ -8,7 +8,7 @@ import { getAuth } from 'firebase/auth';
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: 'AIzaSyDOV3G563pGb9Njn5nZpn4lIkhkA40Z6oo',
-  authDomain: 'chat-ea80f.firebaseapp.com',
+  authDomain: 'auth.heyway.chat',
   projectId: 'chat-ea80f',
   storageBucket: 'chat-ea80f.firebasestorage.app',
   messagingSenderId: '828639820308',
