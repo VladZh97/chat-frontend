@@ -22,9 +22,11 @@ export interface ChatMessageResponse {
   [key: string]: any;
 }
 
-export interface ChatStreamResponse {
-  type: string;
-  chunk: string;
+export interface ChatStreamEvent {
+  type: 'connected' | 'chunk' | 'complete' | 'error' | string;
+  content?: string;
+  fullResponse?: string;
+  message?: string;
 }
 
 // Constants
@@ -65,7 +67,7 @@ const chat = {
   sendMessageStream: async (
     chatbotId: string,
     message: string,
-    onChunk: (chunk: ChatStreamResponse) => void
+    onEvent: (evt: ChatStreamEvent) => void
   ): Promise<void> => {
     try {
       const conversationId = getConversationId();
@@ -115,10 +117,9 @@ const chat = {
             if (line.startsWith(':')) continue; // Skip SSE comments/keep-alive
             if (line.startsWith('data: ')) {
               const data = line.slice(6);
-              if (data === '[DONE]') return;
               try {
-                const chunk: ChatStreamResponse = JSON.parse(data);
-                onChunk(chunk);
+                const evt: ChatStreamEvent = JSON.parse(data);
+                onEvent(evt);
               } catch (error) {
                 console.error('Failed to parse stream chunk:', error);
               }

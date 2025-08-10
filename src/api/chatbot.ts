@@ -3,6 +3,8 @@ import api from './api';
 import queryClient from '@/lib/query';
 import { useChatbotStore } from '@/store/chatbot.store';
 import { stats } from './stats';
+import type { ChatStreamEvent } from './chat';
+import { auth } from '@/lib/auth';
 
 const chatbot = {
   create: async (data: Partial<IChatbot>) => {
@@ -43,19 +45,57 @@ const chatbot = {
       return oldData.filter(chatbot => chatbot._id !== id);
     });
   },
-  playground: {
-    sendMessage: async (
-      chatbotId: string,
-      messages: { role: 'user' | 'bot'; content: string }[],
-      instructions: string
-    ) => {
-      const { data } = await api.post('/chatbot/playground/send-message', {
-        messages,
-        chatbotId,
-        instructions,
-      });
-      return data;
-    },
+  // Playground streaming (editor view) – sends messages array and instructions, no auth
+  sendPlaygroundMessageStream: async (
+    chatbotId: string,
+    messages: { role: 'user' | 'bot'; content: string }[],
+    instructions: string,
+    onEvent: (evt: ChatStreamEvent) => void
+  ): Promise<void> => {
+    const authToken = await auth.currentUser?.getIdToken();
+    const response = await fetch(`${api.defaults.baseURL}/chatbot/playground/send-message`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'text/event-stream',
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ chatbotId, messages, instructions, stream: true }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    if (!response.body) {
+      throw new Error('No response body available');
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        if (line.trim() === '') continue;
+        if (line.startsWith(':')) continue;
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6);
+          try {
+            const evt: ChatStreamEvent = JSON.parse(data);
+            onEvent(evt);
+          } catch (error) {
+            console.error('Failed to parse stream event:', error);
+          }
+        }
+      }
+    }
   },
 };
 

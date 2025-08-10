@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 import { useEffect, useRef, useState, type Dispatch } from 'preact/hooks';
 import { useMemo } from 'preact/hooks';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import DOMPurify from 'isomorphic-dompurify';
+
 import {
   EmojiPicker,
   EmojiPickerContent,
@@ -14,14 +16,21 @@ import {
 import type { SetStateAction } from 'preact/compat';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { usePlayground } from '../../hooks';
+import React from 'preact/compat';
 
 const Widget = () => {
-  const { messages, inputValue, setInputValue, handleSendMessage, isPending } = usePlayground();
+  const { messages, inputValue, setInputValue, handleSendMessage, isStreaming, streamingHtml } =
+    usePlayground();
 
   return (
     <div className="flex h-full max-h-[600px] w-[416px] flex-col rounded-3xl bg-white pb-2 shadow-xl">
       <Header messages={messages} />
-      <Main messages={messages} setMessages={handleSendMessage} isPending={isPending} />
+      <Main
+        messages={messages}
+        setMessages={handleSendMessage}
+        isStreaming={isStreaming}
+        streamingHtml={streamingHtml}
+      />
       <Footer
         inputValue={inputValue}
         setInputValue={setInputValue}
@@ -50,11 +59,13 @@ const Header = ({ messages }: { messages: { role: 'user' | 'bot'; content: strin
 const Main = ({
   messages,
   setMessages,
-  isPending,
+  isStreaming,
+  streamingHtml,
 }: {
   messages: { role: 'user' | 'bot'; content: string }[];
   setMessages: (message: { role: 'user' | 'bot'; content: string }) => void;
-  isPending: boolean;
+  isStreaming: boolean;
+  streamingHtml: string;
 }) => {
   const { initialMessage, removeBranding } = useChatbotStoreShallow(s => ({
     initialMessage: s.initialMessage,
@@ -96,7 +107,7 @@ const Main = ({
         });
       }
     }
-  }, [groupedMessages.length, isPending]);
+  }, [groupedMessages.length, isStreaming, streamingHtml]);
 
   return (
     <ScrollArea className={cn('h-[calc(100%-164px)]', removeBranding && 'h-[calc(100%-132px)]')}>
@@ -109,7 +120,8 @@ const Main = ({
                 : group.messages.map((msg, idx) => <UserMessage key={idx} message={msg} />)}
             </div>
           ))}
-          {isPending && <BotMessageLoading />}
+          {isStreaming &&
+            (streamingHtml ? <BotMessage message={streamingHtml} /> : <BotMessageLoading />)}
         </div>
         <StarterMessages
           hasMessages={messages.length > 0}
@@ -316,5 +328,110 @@ const StarterMessages = ({
         </span>
       ))}
     </div>
+  );
+};
+
+interface AnimatedHtmlProps {
+  html: string;
+  className?: string;
+  wordInterval?: number; // milliseconds between words
+  baseDelay?: number; // initial delay before starting
+}
+
+type CSSVars = React.CSSProperties & Record<string, string>;
+
+const AnimatedHtml: React.FC<AnimatedHtmlProps> = ({
+  html,
+  className,
+  wordInterval = 20,
+  baseDelay = 0,
+}) => {
+  const containerRef = useRef<HTMLElement | null>(null);
+
+  const processed = useMemo(() => {
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      let i = 0;
+
+      const textNodes: Text[] = [];
+      const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT);
+      let node: Node | null;
+      while ((node = walker.nextNode())) {
+        const t = node as Text;
+        if (t.nodeValue && t.nodeValue.trim().length > 0) {
+          textNodes.push(t);
+        }
+      }
+
+      textNodes.forEach(t => {
+        const text = t.nodeValue || '';
+        const parts = text.split(/(\s+)/);
+        const frag = doc.createDocumentFragment();
+        parts.forEach(part => {
+          if (part.trim().length === 0) {
+            frag.appendChild(doc.createTextNode(part));
+          } else {
+            const span = doc.createElement('span');
+            span.className = 'animated-word';
+            span.setAttribute('style', `--i: ${i};`);
+            span.textContent = part;
+            frag.appendChild(span);
+            i++;
+          }
+        });
+        t.replaceWith(frag);
+      });
+
+      return DOMPurify.sanitize(doc.body.innerHTML);
+    } catch (e) {
+      return DOMPurify.sanitize(html);
+    }
+  }, [html]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const reduceMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const spans = Array.from(container.querySelectorAll<HTMLSpanElement>('.animated-word'));
+    const timers: number[] = [];
+
+    if (reduceMotion) {
+      spans.forEach(span => span.classList.add('is-visible'));
+      return () => {};
+    }
+
+    spans.forEach((span, index) => {
+      const id = window.setTimeout(
+        () => {
+          span.classList.add('is-visible');
+        },
+        baseDelay + index * wordInterval
+      );
+      timers.push(id);
+    });
+
+    return () => {
+      timers.forEach(id => window.clearTimeout(id));
+    };
+  }, [processed, wordInterval, baseDelay]);
+
+  const styleVars = {
+    '--stagger': `${wordInterval}ms`,
+    '--base-delay': `${baseDelay}ms`,
+  } as CSSVars;
+
+  return (
+    <div
+      ref={el => (containerRef.current = el)}
+      className={cn('space-y-3 leading-relaxed', className)}
+      style={styleVars}
+      dangerouslySetInnerHTML={{ __html: processed }}
+    />
   );
 };

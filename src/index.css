@@ -239,3 +239,55 @@
 [data-sonner-toast][data-type='error'] [data-description] {
   @apply !text-red-900;
 }
+
+@layer utilities {
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(2px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animated-word {
+    display: none; /* do not affect layout until revealed */
+    opacity: 0;
+  }
+
+  .animated-word.is-visible {
+    display: inline;
+    animation-name: fade-in;
+    animation-duration: 0.2s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    animation-fill-mode: forwards;
+    animation-delay: 0ms; /* timing handled by JS reveal */
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animated-word {
+      display: inline;
+      opacity: 1;
+    }
+    .animated-word.is-visible {
+      animation: none;
+    }
+  }
+
+  /* Hide list markers visually (preserve indentation) until first word becomes visible */
+  .prose li:has(.animated-word):not(:has(.animated-word.is-visible))::marker {
+    opacity: 0;
+  }
+
+  /* Smoothly fade markers in when content starts animating */
+  .prose li::marker {
+    transition: opacity 0.2s ease;
+  }
+
+  /* Prevent list items from reserving height until content starts revealing */
+  .prose li:has(.animated-word):not(:has(.animated-word.is-visible)) {
+    display: none;
+  }
+}

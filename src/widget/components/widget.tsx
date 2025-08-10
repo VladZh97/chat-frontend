@@ -3,7 +3,7 @@ import PoveredBy from '@/assets/povered-by.svg?react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import chat from '@/api/chat';
+import chat, { type ChatStreamEvent } from '@/api/chat';
 import { useEffect, useState, useRef, useMemo } from 'preact/hooks';
 import { cn } from '@/lib/utils';
 import DOMPurify from 'dompurify';
@@ -38,10 +38,13 @@ const Widget = () => {
     streamingMessageRef.current = '';
 
     try {
-      await chat.sendMessageStream(id as string, message, chunk => {
-        const newContent = streamingMessageRef.current + chunk.chunk;
-        streamingMessageRef.current = newContent;
-        setCurrentStreamingMessage(newContent);
+      await chat.sendMessageStream(id as string, message, (evt: ChatStreamEvent) => {
+        if (evt.type === 'chunk') {
+          const part = evt.content ?? '';
+          const newContent = streamingMessageRef.current + part;
+          streamingMessageRef.current = newContent;
+          setCurrentStreamingMessage(newContent);
+        }
       });
 
       // Add the complete assistant message

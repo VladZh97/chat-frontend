@@ -35,6 +35,7 @@
     "dompurify": "^3.2.6",
     "firebase": "^11.9.1",
     "frimousse": "^0.3.0",
+    "isomorphic-dompurify": "^2.26.0",
     "lucide-react": "^0.515.0",
     "moment": "^2.30.1",
     "motion": "^12.23.6",

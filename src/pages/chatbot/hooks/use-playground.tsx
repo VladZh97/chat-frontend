@@ -1,20 +1,19 @@
-import { useEffect, useState } from 'preact/hooks';
-import { useMutation } from '@tanstack/react-query';
-import chatbot from '@/api/chatbot';
+import { useEffect, useRef, useState } from 'preact/hooks';
+import type { ChatStreamEvent } from '@/api/chat';
 import { useParams } from 'react-router-dom';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
+import chatbot from '@/api/chatbot';
 
 export const usePlayground = () => {
   const [messages, setMessages] = useState<{ role: 'user' | 'bot'; content: string }[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [streamingHtml, setStreamingHtml] = useState('');
+  const streamingHtmlRef = useRef('');
   const { id: chatbotId } = useParams();
   const { promptValue } = useChatbotStoreShallow(s => ({
     promptValue: s.promptValue,
   }));
-  const { mutateAsync: sendMessage, isPending } = useMutation({
-    mutationFn: (payload: { messages: { role: 'user' | 'bot'; content: string }[] }) =>
-      chatbot.playground.sendMessage(chatbotId!, payload.messages, promptValue),
-  });
 
   useEffect(() => {
     setMessages([]);
@@ -27,13 +26,41 @@ export const usePlayground = () => {
     role: 'user' | 'bot';
     content: string;
   }) => {
-    if (isPending || !content.trim()) return;
+    if (isStreaming || !content.trim()) return;
     const updatedMessages = [...messages, { role, content }];
     setMessages(updatedMessages);
     setInputValue('');
-    const { response } = await sendMessage({ messages: updatedMessages });
-    setMessages(prev => [...prev, { role: 'bot', content: response }]);
+    setStreamingHtml('');
+    streamingHtmlRef.current = '';
+    setIsStreaming(true);
+
+    try {
+      await chatbot.sendPlaygroundMessageStream(
+        chatbotId!,
+        updatedMessages,
+        promptValue,
+        (evt: ChatStreamEvent) => {
+          if (evt.type === 'connected') return;
+          if (evt.type === 'chunk') {
+            setStreamingHtml(prev => {
+              const next = prev + (evt.content ?? '');
+              streamingHtmlRef.current = next;
+              return next;
+            });
+            return;
+          }
+          if (evt.type === 'complete') {
+            const finalContent = evt.fullResponse ?? streamingHtmlRef.current;
+            setMessages(prev => [...prev, { role: 'bot', content: finalContent }]);
+            setStreamingHtml('');
+            streamingHtmlRef.current = '';
+          }
+        }
+      );
+    } finally {
+      setIsStreaming(false);
+    }
   };
 
-  return { messages, inputValue, setInputValue, handleSendMessage, isPending };
+  return { messages, inputValue, setInputValue, handleSendMessage, isStreaming, streamingHtml };
 };
