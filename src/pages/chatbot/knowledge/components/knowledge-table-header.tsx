@@ -19,13 +19,13 @@ const KnowledgeTableHeader = ({
     <div className="mb-4 flex items-center justify-between">
       <Input
         placeholder="Search sources..."
-        className="h-8 max-w-[300px]"
+        className="h-9 max-w-[300px]"
         value={search}
         onChange={e => setSearch((e.target as HTMLInputElement).value)}
       />
       <Button variant="outline" onClick={handleAddNewKnowledgeSource}>
         <Plus />
-        Add new source
+        Add content
       </Button>
     </div>
   );

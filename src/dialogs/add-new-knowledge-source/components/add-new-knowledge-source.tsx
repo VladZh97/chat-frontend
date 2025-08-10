@@ -39,7 +39,7 @@ const AddNewKnowledgeSource = ({ knowledgeId }: { knowledgeId?: string }) => {
       <div className="w-[448px] overflow-hidden">
         <div className="p-6 pb-4">
           <Icon className="mb-4" />
-          <p className="mb-[6px] text-base font-semibold text-stone-900">Add new source</p>
+          <p className="mb-[6px] text-base font-semibold text-stone-900">Add content</p>
           <p className="mb-9 text-sm text-stone-500">
             Add sources your chatbot will use to answer questions
           </p>

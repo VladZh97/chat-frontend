@@ -1,12 +1,12 @@
 import LogoColor from '@/assets/logo-color.svg?react';
 import { cn } from '@/lib/utils';
-import { ChevronsUpDown, Gauge, House, LogOut, PencilLine, Plus, Wallet } from 'lucide-react';
+import { ChevronsUpDown, Gauge, Gem, House, LogOut, PencilLine, Plus, Wallet } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ScrollArea } from './ui/scroll-area';
 import CreateNewChatbot from '@/dialogs/create-new-chatbot';
 import SidebarChatbots from './sidebar-chatbots';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import { useAuth } from '@/providers/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import user from '@/api/user';
@@ -43,8 +43,12 @@ const Sidebar = () => {
     queryFn: () => chatbot.get.query(),
   });
 
+  const shouldUpgrade = useMemo(() => {
+    return chatbots && chatbots.length >= (plan?.limits?.maxChatbots ?? 0);
+  }, [chatbots, plan?.limits?.maxChatbots]);
+
   const handleCreateNewChatbot = () => {
-    if (chatbots && chatbots.length >= (plan?.limits?.maxChatbots ?? 0)) {
+    if (shouldUpgrade) {
       navigate('/subscription');
       return;
     }
@@ -89,6 +93,11 @@ const Sidebar = () => {
               >
                 <Plus className="size-4" />
                 Create new
+                {shouldUpgrade && (
+                  <div className="ml-auto flex size-7 items-center justify-center rounded-lg border border-stone-700 bg-stone-800">
+                    <Gem className="size-4 text-stone-300" />
+                  </div>
+                )}
               </div>
             </div>
           </div>

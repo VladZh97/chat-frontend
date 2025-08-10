@@ -24,7 +24,7 @@ const EmptyState = () => {
         </p>
         <Button variant="outline" onClick={handleAddNewKnowledgeSource}>
           <Plus />
-          Add new source
+          Add content
         </Button>
       </div>
     </div>

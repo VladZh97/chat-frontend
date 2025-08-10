@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import CreateNewChatbot from '@/dialogs/create-new-chatbot';
-import { ArrowLeft, Bot, Ellipsis, Plus } from 'lucide-react';
+import { ArrowLeft, Bot, Ellipsis, Gem, Plus } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import chatbot from '@/api/chatbot';
 import { useNavigate } from 'react-router-dom';
@@ -33,7 +33,7 @@ const ChatbotsList = () => {
   const handleCreateNewChatbot = useCallback(() => {
     if (shouldUpgrade) return navigate('/subscription');
     showDialog(CreateNewChatbot.id, CreateNewChatbot);
-  }, [showDialog]);
+  }, [showDialog, shouldUpgrade, navigate]);
 
   return (
     <div className="rounded-xl border border-stone-200 bg-white p-6 shadow">
@@ -43,8 +43,8 @@ const ChatbotsList = () => {
           Chatbots
         </div>
         <Button variant="outline" onClick={handleCreateNewChatbot}>
-          <Plus className="size-4" />
-          Add new
+          {shouldUpgrade ? <Gem className="size-4" /> : <Plus className="size-4" />}
+          {shouldUpgrade ? 'Upgrade to add new' : 'Add new'}
         </Button>
       </div>
       <div className="grid grid-cols-3 gap-x-2 gap-y-4">
