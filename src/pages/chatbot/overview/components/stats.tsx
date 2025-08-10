@@ -1,8 +1,8 @@
 import { stats } from '@/api/stats';
-import Counter from '@/components/counter';
 import StatCard from '@/components/stat-card';
 import type { PLANS } from '@/config';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
+import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { MessageSquareText, MessagesSquare, Users } from 'lucide-react';
 import { useParams } from 'react-router-dom';
@@ -22,7 +22,7 @@ const Stats = () => {
 export default Stats;
 
 const ChatsCard = ({ id }: { id: string | undefined }) => {
-  const { data: chats } = useQuery({
+  const { data: chats, isLoading } = useQuery({
     queryKey: stats.chats.key(id),
     queryFn: () => stats.chats.query(id),
     staleTime: 60_000,
@@ -30,20 +30,24 @@ const ChatsCard = ({ id }: { id: string | undefined }) => {
 
   return (
     <StatCard icon={<MessagesSquare className="size-4 text-stone-500" />} title="Chats">
-      <Counter value={chats?.count} />
+      <span className={cn('opacity-100 transition-opacity duration-300', isLoading && 'opacity-0')}>
+        {chats?.count}
+      </span>
     </StatCard>
   );
 };
 
 const UniqueUsersCard = ({ id }: { id: string | undefined }) => {
-  const { data: uniqueUsers } = useQuery({
+  const { data: uniqueUsers, isLoading } = useQuery({
     queryKey: stats.uniqueUsers.key(id),
     queryFn: () => stats.uniqueUsers.query(id),
   });
 
   return (
     <StatCard icon={<Users className="size-4 text-stone-500" />} title="Unique users">
-      <Counter value={uniqueUsers?.count} />
+      <span className={cn('opacity-100 transition-opacity duration-300', isLoading && 'opacity-0')}>
+        {uniqueUsers?.count}
+      </span>
     </StatCard>
   );
 };
@@ -55,7 +59,7 @@ const MessagesCard = ({
   id: string | undefined;
   limits: (typeof PLANS)[keyof typeof PLANS]['limits'];
 }) => {
-  const { data: messages } = useQuery({
+  const { data: messages, isLoading } = useQuery({
     queryKey: stats.messages.key(id),
     queryFn: () => stats.messages.query(id),
     staleTime: 60_000,
@@ -63,7 +67,9 @@ const MessagesCard = ({
 
   return (
     <StatCard icon={<MessageSquareText className="size-4 text-stone-500" />} title="Messages">
-      <Counter value={messages?.count ?? 0} />/{(limits.maxMessages ?? 0).toLocaleString()}
+      <span className={cn('opacity-100 transition-opacity duration-300', isLoading && 'opacity-0')}>
+        {messages?.count ?? 0}/{limits.maxMessages ?? 0}
+      </span>
     </StatCard>
   );
 };

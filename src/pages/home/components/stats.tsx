@@ -1,11 +1,11 @@
 import { stats } from '@/api/stats';
-import Counter from '@/components/counter';
 import StatCard from '@/components/stat-card';
 import type { PLANS } from '@/config';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
 import { useQuery } from '@tanstack/react-query';
 import { MessageSquareText, MessagesSquare, ThumbsUp } from 'lucide-react';
 import useRefreshOnLabel from '@/hooks/use-refresh-on-label';
+import { cn } from '@/lib/utils';
 
 const Stats = () => {
   const { plan } = useCurrentSubscription();
@@ -34,7 +34,7 @@ const AnswersQualityCard = () => {
 };
 
 const ChatsCard = () => {
-  const { data: chats } = useQuery({
+  const { data: chats, isLoading } = useQuery({
     queryKey: stats.chats.key(),
     queryFn: () => stats.chats.query(undefined),
     staleTime: 60_000,
@@ -42,13 +42,15 @@ const ChatsCard = () => {
 
   return (
     <StatCard icon={<MessagesSquare className="size-4 text-stone-500" />} title="Chats">
-      <Counter value={chats?.count} />
+      <span className={cn('opacity-100 transition-opacity duration-300', isLoading && 'opacity-0')}>
+        {chats?.count}
+      </span>
     </StatCard>
   );
 };
 
 const MessagesCard = ({ limits }: { limits: (typeof PLANS)[keyof typeof PLANS]['limits'] }) => {
-  const { data: messages } = useQuery({
+  const { data: messages, isLoading } = useQuery({
     queryKey: stats.messages.key(),
     queryFn: () => stats.messages.query(undefined),
     staleTime: 60_000,
@@ -58,8 +60,10 @@ const MessagesCard = ({ limits }: { limits: (typeof PLANS)[keyof typeof PLANS]['
   return (
     <StatCard icon={<MessageSquareText className="size-4 text-stone-500" />} title="Messages">
       <div className="flex items-center justify-between">
-        <span>
-          <Counter value={messages?.count ?? 0} />/{(limits.maxMessages ?? 0).toLocaleString()}
+        <span
+          className={cn('opacity-100 transition-opacity duration-300', isLoading && 'opacity-0')}
+        >
+          {messages?.count ?? 0}/{limits.maxMessages ?? 0}
         </span>
         <span className="text-xs font-normal text-stone-500">{refreshOnLabel}</span>
       </div>
