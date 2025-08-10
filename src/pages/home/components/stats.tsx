@@ -21,41 +21,40 @@ const Stats = () => {
 
 export default Stats;
 
-const AnswersQualityCard = () => {
-  const { data: answersQuality, isLoading } = useQuery({
-    queryKey: stats.answersQuality.key(),
-    queryFn: () => stats.answersQuality.query(),
-  });
-  return (
-    <StatCard icon={<ThumbsUp className="size-4 text-stone-500" />} title="Answers quality">
-      {isLoading || !answersQuality?.score ? '-/-' : `${answersQuality?.score}/5`}
-    </StatCard>
-  );
-};
-
 const ChatsCard = () => {
-  const { data: chats, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: stats.chats.key(),
-    queryFn: () => stats.chats.query(undefined),
-    staleTime: 60_000,
+    queryFn: () => stats.chats.query(),
   });
 
   return (
     <StatCard icon={<MessagesSquare className="size-4 text-stone-500" />} title="Chats">
       <span className={cn('opacity-100 transition-opacity duration-300', isLoading && 'opacity-0')}>
-        {(chats?.count ?? 0).toLocaleString()}
+        {(data?.count ?? 0).toLocaleString()}
       </span>
     </StatCard>
   );
 };
 
-const MessagesCard = ({ limits }: { limits: (typeof PLANS)[keyof typeof PLANS]['limits'] }) => {
-  const { data: messages, isLoading } = useQuery({
-    queryKey: stats.messages.key(),
-    queryFn: () => stats.messages.query(undefined),
-    staleTime: 60_000,
+const AnswersQualityCard = () => {
+  const { data, isLoading } = useQuery({
+    queryKey: stats.answersQuality.key(),
+    queryFn: () => stats.answersQuality.query(),
   });
+
+  return (
+    <StatCard icon={<ThumbsUp className="size-4 text-stone-500" />} title="Answers quality">
+      {isLoading || !data?.score ? '-/-' : `${data?.score}/5`}
+    </StatCard>
+  );
+};
+
+const MessagesCard = ({ limits }: { limits: (typeof PLANS)[keyof typeof PLANS]['limits'] }) => {
   const { label: refreshOnLabel } = useRefreshOnLabel();
+  const { data, isLoading } = useQuery({
+    queryKey: stats.messages.key(),
+    queryFn: () => stats.messages.query(),
+  });
 
   return (
     <StatCard icon={<MessageSquareText className="size-4 text-stone-500" />} title="Messages">
@@ -63,7 +62,7 @@ const MessagesCard = ({ limits }: { limits: (typeof PLANS)[keyof typeof PLANS]['
         <span
           className={cn('opacity-100 transition-opacity duration-300', isLoading && 'opacity-0')}
         >
-          {(messages?.count ?? 0).toLocaleString()}/{limits.maxMessages?.toLocaleString()}
+          {(data?.count ?? 0).toLocaleString()}/{limits.maxMessages?.toLocaleString()}
         </span>
         <span className="text-xs font-normal text-stone-500">{refreshOnLabel}</span>
       </div>
