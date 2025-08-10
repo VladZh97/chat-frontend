@@ -1,4 +1,13 @@
-import { ArrowLeft, ArrowUp, Ellipsis, Smile } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowUp,
+  Copy,
+  Ellipsis,
+  RefreshCw,
+  Smile,
+  ThumbsDown,
+  ThumbsUp,
+} from 'lucide-react';
 import PoveredBy from '@/assets/povered-by.svg?react';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import { cn } from '@/lib/utils';
@@ -151,10 +160,26 @@ const BotMessage = ({ message }: { message: string }) => {
       >
         {avatar && <img src={avatar} alt="avatar" className="size-full object-cover" />}
       </div>
-      <div
-        className="prose rounded-2xl rounded-bl-none bg-[var(--accent-color)]/10 px-4 py-3 text-sm font-normal text-stone-900"
-        dangerouslySetInnerHTML={{ __html: message }}
-      />
+      <div className="flex flex-col">
+        <div
+          className="prose rounded-2xl rounded-bl-none bg-[var(--accent-color)]/10 px-4 py-3 text-sm font-normal text-stone-900"
+          dangerouslySetInnerHTML={{ __html: message }}
+        />
+        <div className="mt-2 flex items-center gap-2">
+          <span className="group cursor-pointer">
+            <RefreshCw className="size-[14px] text-stone-500 transition-colors group-hover:text-stone-900" />
+          </span>
+          <span className="group cursor-pointer">
+            <Copy className="size-[14px] text-stone-500 transition-colors group-hover:text-stone-900" />
+          </span>
+          <span className="group cursor-pointer">
+            <ThumbsUp className="size-[14px] text-stone-500 transition-colors group-hover:text-stone-900" />
+          </span>
+          <span className="group cursor-pointer">
+            <ThumbsDown className="size-[14px] text-stone-500 transition-colors group-hover:text-stone-900" />
+          </span>
+        </div>
+      </div>
     </div>
   );
 };
