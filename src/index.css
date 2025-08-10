@@ -275,19 +275,23 @@
       animation: none;
     }
   }
+}
 
-  /* Hide list markers visually (preserve indentation) until first word becomes visible */
-  .prose li:has(.animated-word):not(:has(.animated-word.is-visible))::marker {
-    opacity: 0;
-  }
+/* Hide list markers visually (preserve indentation) until first word becomes visible */
+.prose li:has(.animated-word):not(:has(.animated-word.is-visible))::marker {
+  opacity: 0;
+}
 
-  /* Smoothly fade markers in when content starts animating */
-  .prose li::marker {
-    transition: opacity 0.2s ease;
-  }
+/* Smoothly fade markers in when content starts animating */
+.prose li::marker {
+  transition: opacity 0.2s ease;
+}
 
-  /* Prevent list items from reserving height until content starts revealing */
-  .prose li:has(.animated-word):not(:has(.animated-word.is-visible)) {
-    display: none;
-  }
+/* Prevent list items from reserving height until content starts revealing */
+.prose li:has(.animated-word):not(:has(.animated-word.is-visible)) {
+  display: none;
+}
+
+.prose {
+  @apply text-stone-950;
 }

@@ -22,7 +22,7 @@ import queryClient from '@/lib/query';
 const ChatDetails = () => {
   const { id } = useParams();
   const [selectedConversation, setSelectedConversation] = useState<TConversation | null>(null);
-  const { data: conversations } = useQuery({
+  const { data: conversations, isLoading } = useQuery({
     queryKey: messages.getConversations.key(id!),
     queryFn: () => messages.getConversations.query(id!),
   });
@@ -46,15 +46,17 @@ const ChatDetails = () => {
           <span className={cn(TABLE_SIZES.DATE, 'px-3')}>Date</span>
           <span className={cn(TABLE_SIZES.ACTIONS, 'px-3')}></span>
         </div>
-        {conversations?.map((conversation: TConversation) => (
-          <Row
-            key={conversation.conversationId}
-            conversation={conversation}
-            onSelectConversation={handleSelectConversation}
-            chatbotId={id!}
-          />
-        ))}
-        {conversations?.length === 0 && <EmptyState />}
+        {!isLoading &&
+          conversations?.map((conversation: TConversation) => (
+            <Row
+              key={conversation.conversationId}
+              conversation={conversation}
+              onSelectConversation={handleSelectConversation}
+              chatbotId={id!}
+            />
+          ))}
+        {isLoading && Array.from({ length: 5 }).map((_, index) => <SkeletonRow key={index} />)}
+        {!isLoading && conversations?.length === 0 && <EmptyState />}
       </div>
       {selectedConversation && (
         <ConversationDetails
@@ -167,6 +169,30 @@ const Row = ({
             </div>
           </PopoverContent>
         </Popover>
+      </span>
+    </div>
+  );
+};
+
+const SkeletonRow = () => {
+  return (
+    <div className="flex h-[54px] items-center text-sm font-medium text-stone-500 transition-colors last:rounded-b-md">
+      <span className={cn(TABLE_SIZES.STATUS, 'px-3')}>
+        <div className="h-[22px] w-16 animate-pulse rounded-md bg-stone-100" />
+      </span>
+      <div className={cn(TABLE_SIZES.INITIAL_MESSAGE, 'px-3')}>
+        <span className="block h-3 w-48 animate-pulse rounded-md bg-stone-100"></span>
+      </div>
+      <span className={cn(TABLE_SIZES.MESSAGES, 'px-3')}>
+        <span className="block h-4 w-2 animate-pulse rounded-md bg-stone-100"></span>
+      </span>
+      <span className={cn(TABLE_SIZES.DATE, 'px-3')}>
+        <span className="block h-3 w-44 animate-pulse rounded-md bg-stone-100"></span>
+      </span>
+      <span className={cn(TABLE_SIZES.ACTIONS, 'px-3')}>
+        <span className="flex size-8 cursor-pointer items-center justify-center rounded-md text-stone-900 transition-colors hover:bg-stone-200">
+          <Ellipsis className="size-4 animate-pulse text-stone-500" />
+        </span>
       </span>
     </div>
   );
