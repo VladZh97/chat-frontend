@@ -14,14 +14,14 @@ const ChatbotsList = () => {
   const navigate = useNavigate();
   const { showDialog } = useDialog();
   const { plan } = useCurrentSubscription();
-  const { data: chatbots, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: chatbot.get.key,
     queryFn: () => chatbot.get.query(),
   });
 
   const shouldUpgrade = useMemo(() => {
-    return chatbots && chatbots.length >= (plan?.limits?.maxChatbots ?? 0);
-  }, [chatbots, plan?.limits?.maxChatbots]);
+    return data && data.length >= (plan?.limits?.maxChatbots ?? 0);
+  }, [data, plan?.limits?.maxChatbots]);
 
   const handleChatbotClick = useCallback(
     (id: string) => {
@@ -36,7 +36,7 @@ const ChatbotsList = () => {
   }, [showDialog, shouldUpgrade, navigate]);
 
   return (
-    <div className="rounded-xl border border-stone-200 bg-white p-6 shadow">
+    <div className="shadow-card rounded-xl bg-white p-6">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2 text-base font-semibold text-stone-900">
           <Bot className="size-4 text-stone-500" />
@@ -48,7 +48,7 @@ const ChatbotsList = () => {
         </Button>
       </div>
       <div className="grid grid-cols-3 gap-x-2 gap-y-4">
-        {chatbots?.map(chatbot => (
+        {data?.map(chatbot => (
           <div className="group cursor-pointer">
             <div
               style={{ '--accent-color': chatbot.accentColor || '#FF6900' } as CSSProperties}
@@ -66,7 +66,7 @@ const ChatbotsList = () => {
           </div>
         ))}
         {isLoading && <Skeleton />}
-        {!isLoading && !chatbots?.length && (
+        {!isLoading && !data?.length && (
           <div
             className="relative flex cursor-pointer flex-col items-center justify-center rounded-xl border border-stone-200 bg-white pt-[54.44%] text-sm text-stone-500 shadow transition-all duration-300 hover:shadow-lg"
             onClick={handleCreateNewChatbot}

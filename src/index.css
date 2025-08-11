@@ -42,6 +42,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   --animate-pulse-fast: pulse 0.8s infinite;
+  --shadow-card: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
 }
 
 :root {

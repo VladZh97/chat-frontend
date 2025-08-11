@@ -8,7 +8,7 @@ const StatCard = ({
   children: React.ReactNode;
 }) => {
   return (
-    <div className="rounded-xl border border-stone-200 bg-white p-6 shadow">
+    <div className="shadow-card rounded-xl bg-white p-6">
       <div className="mb-2 flex items-center gap-2 text-sm font-medium text-stone-900">
         {icon}
         {title}
