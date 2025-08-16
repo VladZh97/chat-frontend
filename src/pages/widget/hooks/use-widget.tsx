@@ -1,25 +1,148 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-// import type { ChatStreamEvent } from '@/api/widget';
 import { useParams } from 'react-router-dom';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
-import chatbot from '@/api/chatbot';
+import { useWidgetStoreShallow } from '../store/widget.store';
+import { useAnonymousAuth } from '@/hooks/use-anonymous-auth';
+import { WidgetStorage, type IWidgetMessage } from '@/utils/widget-storage';
+import widgetApiService from '@/api/widget';
 
 export const useWidget = () => {
-  const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingHtml, setStreamingHtml] = useState('');
   const streamingHtmlRef = useRef('');
   const pendingRef = useRef('');
   const fullAccumulatedRef = useRef('');
+  const previousPromptValueRef = useRef<string | undefined>(undefined);
   const { id: chatbotId } = useParams();
+
   const { promptValue } = useChatbotStoreShallow(s => ({
     promptValue: s.promptValue,
   }));
 
+  const {
+    messages,
+    visitorId,
+    conversationId,
+    isAuthenticated,
+    isAuthLoading,
+    isSessionRestored,
+    addMessage,
+    setMessages,
+    setConversationId,
+    restoreSession,
+    setSessionRestored,
+    setAuthState,
+    setVisitorId,
+  } = useWidgetStoreShallow(s => ({
+    messages: s.messages,
+    visitorId: s.visitorId,
+    conversationId: s.conversationId,
+    isAuthenticated: s.isAuthenticated,
+    isAuthLoading: s.isAuthLoading,
+    isSessionRestored: s.isSessionRestored,
+    addMessage: s.addMessage,
+    setMessages: s.setMessages,
+    setConversationId: s.setConversationId,
+    restoreSession: s.restoreSession,
+    setSessionRestored: s.setSessionRestored,
+    setAuthState: s.setAuthState,
+    setVisitorId: s.setVisitorId,
+  }));
+
+  const {
+    isAuthenticated: authIsAuthenticated,
+    isLoading: authIsLoading,
+    visitorId: authVisitorId,
+    accessToken,
+    error: authError,
+    handleApiError,
+  } = useAnonymousAuth(chatbotId!);
+
+  // Sync auth state with widget store
   useEffect(() => {
-    setMessages([]);
-  }, [promptValue]);
+    setAuthState({
+      isAuthenticated: authIsAuthenticated,
+      isAuthLoading: authIsLoading,
+      authError,
+    });
+    if (authVisitorId) {
+      setVisitorId(authVisitorId);
+    }
+  }, [authIsAuthenticated, authIsLoading, authError, authVisitorId, setAuthState, setVisitorId]);
+
+  // Restore session on authentication
+  useEffect(() => {
+    if (authIsAuthenticated && authVisitorId && chatbotId && !isSessionRestored) {
+      const storedSession = WidgetStorage.getConversation(chatbotId, authVisitorId);
+      if (storedSession) {
+        restoreSession(storedSession);
+      } else {
+        setSessionRestored(true);
+      }
+    }
+  }, [
+    authIsAuthenticated,
+    authVisitorId,
+    chatbotId,
+    isSessionRestored,
+    restoreSession,
+    setSessionRestored,
+  ]);
+
+  // Create conversation if needed
+  useEffect(() => {
+    if (
+      authIsAuthenticated &&
+      authVisitorId &&
+      !conversationId &&
+      accessToken &&
+      isSessionRestored
+    ) {
+      createConversation();
+    }
+  }, [authIsAuthenticated, authVisitorId, conversationId, accessToken, isSessionRestored]);
+
+  const createConversation = async () => {
+    if (!chatbotId || !authVisitorId || !accessToken) return;
+
+    try {
+      const result = await widgetApiService.createConversation(
+        chatbotId,
+        authVisitorId,
+        accessToken
+      );
+      setConversationId(result.conversationId);
+    } catch (error) {
+      console.error('Failed to create conversation:', error);
+      const retry = await handleApiError(error);
+      if (retry) {
+        // Retry after auth refresh
+        setTimeout(createConversation, 1000);
+      }
+    }
+  };
+
+  // Clear messages when prompt actually changes (not on initial load)
+  useEffect(() => {
+    const previousPromptValue = previousPromptValueRef.current;
+
+    // Only clear if there's an actual change in prompt value
+    // Skip initial load when previous is undefined and current becomes defined
+    if (
+      promptValue !== undefined &&
+      previousPromptValue !== undefined &&
+      previousPromptValue !== promptValue
+    ) {
+      setMessages([]);
+      if (chatbotId && visitorId) {
+        WidgetStorage.clearConversation(chatbotId, visitorId);
+      }
+    }
+
+    // Update the ref to track current value
+    previousPromptValueRef.current = promptValue;
+  }, [promptValue, setMessages, chatbotId, visitorId]);
 
   const handleSendMessage = async ({
     role,
@@ -28,9 +151,21 @@ export const useWidget = () => {
     role: 'user' | 'assistant';
     content: string;
   }) => {
-    if (isStreaming || !content.trim()) return;
-    const updatedMessages = [...messages, { role, content }];
-    setMessages(updatedMessages);
+    if (isStreaming || !content.trim() || !isAuthenticated || !conversationId || !accessToken)
+      return;
+
+    const userMessage: IWidgetMessage = {
+      role,
+      content,
+      timestamp: Date.now(),
+    };
+
+    // Add user message to store and localStorage
+    addMessage(userMessage);
+    if (chatbotId && visitorId) {
+      WidgetStorage.addMessage(chatbotId, visitorId, userMessage);
+    }
+
     setInputValue('');
     setStreamingHtml('');
     streamingHtmlRef.current = '';
@@ -39,18 +174,26 @@ export const useWidget = () => {
     setIsStreaming(true);
 
     try {
-      await chatbot.sendPlaygroundMessageStream(
-        chatbotId!,
-        updatedMessages,
-        promptValue,
-        (evt: any) => {
+      // Convert messages for API
+      const messageHistory = messages.concat(userMessage).map(msg => ({
+        role: msg.role,
+        content: msg.content,
+      }));
+
+      await widgetApiService.sendMessageStream(
+        {
+          chatbotId: chatbotId!,
+          visitorId: visitorId!,
+          conversationId: conversationId!,
+          message: content,
+          messageHistory,
+        },
+        accessToken,
+        (evt) => {
           if (evt.type === 'connected') return;
           if (evt.type === 'chunk') {
             const incoming = evt.content ?? '';
-            // Always accumulate the raw content for a reliable final fallback
             fullAccumulatedRef.current += incoming;
-
-            // Append to pending buffer and flush only at safe HTML boundaries
             pendingRef.current += incoming;
 
             const safeIndex = findSafeFlushIndex(pendingRef.current);
@@ -68,12 +211,23 @@ export const useWidget = () => {
             return;
           }
           if (evt.type === 'complete') {
-            // Prefer server-provided full response; otherwise combine displayed + any remainder
             const finalContent =
               evt.fullResponse ??
               streamingHtmlRef.current + pendingRef.current ??
               fullAccumulatedRef.current;
-            setMessages(prev => [...prev, { role: 'assistant', content: finalContent }]);
+
+            const assistantMessage: IWidgetMessage = {
+              role: 'assistant',
+              content: finalContent,
+              timestamp: Date.now(),
+            };
+
+            // Add assistant message to store and localStorage
+            addMessage(assistantMessage);
+            if (chatbotId && visitorId) {
+              WidgetStorage.addMessage(chatbotId, visitorId, assistantMessage);
+            }
+
             setStreamingHtml('');
             streamingHtmlRef.current = '';
             pendingRef.current = '';
@@ -81,12 +235,29 @@ export const useWidget = () => {
           }
         }
       );
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      const retry = await handleApiError(error);
+      if (retry && accessToken) {
+        // Retry sending the message after auth refresh
+        setTimeout(() => handleSendMessage({ role, content }), 1000);
+      }
     } finally {
       setIsStreaming(false);
     }
   };
 
-  return { messages, inputValue, setInputValue, handleSendMessage, isStreaming, streamingHtml };
+  return {
+    messages,
+    inputValue,
+    setInputValue,
+    handleSendMessage,
+    isStreaming,
+    streamingHtml,
+    isAuthenticated,
+    isAuthLoading,
+    visitorId,
+  };
 };
 
 // Returns the last index in the input that is safe to render (i.e., not splitting inside a tag, comment, or entity).

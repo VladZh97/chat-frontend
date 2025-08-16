@@ -5,8 +5,51 @@ import { WidgetMain } from './widget-main';
 
 const Widget = () => {
   useGetConfig();
-  const { setInputValue, handleSendMessage, isStreaming, streamingHtml, messages, inputValue } =
-    useWidget();
+  const {
+    setInputValue,
+    handleSendMessage,
+    isStreaming,
+    streamingHtml,
+    messages,
+    inputValue,
+    isAuthenticated,
+    isAuthLoading,
+  } = useWidget();
+
+  // Show loading state while authenticating
+  if (isAuthLoading) {
+    return (
+      <div className="flex h-screen w-full grow flex-col rounded-3xl bg-white pb-2">
+        <Header />
+        <div className="flex flex-1 items-center justify-center">
+          <div className="flex flex-col items-center space-y-2">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
+            <p className="text-sm text-gray-600">Connecting...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if authentication failed
+  if (!isAuthenticated) {
+    return (
+      <div className="flex h-screen w-full grow flex-col rounded-3xl bg-white pb-2">
+        <Header />
+        <div className="flex flex-1 items-center justify-center">
+          <div className="flex flex-col items-center space-y-2">
+            <p className="text-sm text-red-600">Unable to connect to chat</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="text-xs text-blue-600 hover:underline"
+            >
+              Try again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen w-full grow flex-col rounded-3xl bg-white pb-2">
