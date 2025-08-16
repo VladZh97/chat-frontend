@@ -25,6 +25,8 @@ import type { SetStateAction } from 'preact/compat';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import React from 'preact/compat';
 import { useChat, useGetConfig } from '../hooks';
+import { Options } from './options';
+import { CloseWidget } from './close-widget';
 
 const Chat = () => {
   const { messages, inputValue, setInputValue, handleSendMessage, isStreaming, streamingHtml } =
@@ -59,7 +61,10 @@ const Header = ({ messages }: { messages: { role: 'user' | 'bot'; content: strin
       <span className="max-w-[calc(100%-100px)] truncate text-sm font-semibold text-stone-900">
         {!firstMessage ? 'New chat' : firstMessage.content}
       </span>
-      <Ellipsis className="size-5 text-stone-700" />
+      <div className="flex items-center gap-2">
+        <Options />
+        <CloseWidget />
+      </div>
     </div>
   );
 };
