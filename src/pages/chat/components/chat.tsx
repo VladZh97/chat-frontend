@@ -10,7 +10,7 @@ const Chat = () => {
 
   return (
     <div className="flex h-screen w-full grow flex-col rounded-3xl bg-white pb-2">
-      <Header messages={messages} />
+      <Header />
       <ChatMain
         messages={messages}
         setMessages={handleSendMessage}

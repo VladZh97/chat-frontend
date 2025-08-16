@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
 
 export interface IConfig {
+  name: string;
+  publicName: string;
   avatarIcon: string;
   chatIcon: string;
   accentColor: string;
@@ -17,6 +19,8 @@ export interface IConfig {
 }
 
 export const initState: IConfig = {
+  name: 'My chatbot',
+  publicName: '',
   avatarIcon: '',
   chatIcon: '',
   accentColor: '#0A0A0A',
