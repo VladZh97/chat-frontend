@@ -9,7 +9,7 @@ export type TMessage = {
   accountId: IAccount['_id'];
   chatbotId: IChatbot['_id'];
   conversationId: string;
-  sender: 'user' | 'bot';
+  sender: 'user' | 'assistant';
   visitorId: string;
   messageQuality: number;
 };

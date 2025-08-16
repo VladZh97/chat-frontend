@@ -48,7 +48,7 @@ const chatbot = {
   // Playground streaming (editor view) – sends messages array and instructions, no auth
   sendPlaygroundMessageStream: async (
     chatbotId: string,
-    messages: { role: 'user' | 'bot'; content: string }[],
+    messages: { role: 'user' | 'assistant'; content: string }[],
     instructions: string,
     onEvent: (evt: ChatStreamEvent) => void
   ): Promise<void> => {

@@ -5,7 +5,7 @@ import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import chatbot from '@/api/chatbot';
 
 export const usePlayground = () => {
-  const [messages, setMessages] = useState<{ role: 'user' | 'bot'; content: string }[]>([]);
+  const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingHtml, setStreamingHtml] = useState('');
@@ -23,7 +23,7 @@ export const usePlayground = () => {
     role,
     content,
   }: {
-    role: 'user' | 'bot';
+    role: 'user' | 'assistant';
     content: string;
   }) => {
     if (isStreaming || !content.trim()) return;
@@ -51,7 +51,7 @@ export const usePlayground = () => {
           }
           if (evt.type === 'complete') {
             const finalContent = evt.fullResponse ?? streamingHtmlRef.current;
-            setMessages(prev => [...prev, { role: 'bot', content: finalContent }]);
+            setMessages(prev => [...prev, { role: 'assistant', content: finalContent }]);
             setStreamingHtml('');
             streamingHtmlRef.current = '';
           }

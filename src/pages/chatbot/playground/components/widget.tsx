@@ -50,7 +50,7 @@ const Widget = () => {
 
 export default Widget;
 
-const Header = ({ messages }: { messages: { role: 'user' | 'bot'; content: string }[] }) => {
+const Header = ({ messages }: { messages: { role: 'user' | 'assistant'; content: string }[] }) => {
   const firstMessage = messages[0];
 
   return (
@@ -70,8 +70,8 @@ const Main = ({
   isStreaming,
   streamingHtml,
 }: {
-  messages: { role: 'user' | 'bot'; content: string }[];
-  setMessages: (message: { role: 'user' | 'bot'; content: string }) => void;
+  messages: { role: 'user' | 'assistant'; content: string }[];
+  setMessages: (message: { role: 'user' | 'assistant'; content: string }) => void;
   isStreaming: boolean;
   streamingHtml: string;
 }) => {
@@ -81,13 +81,13 @@ const Main = ({
   }));
 
   const messagesWithInitial = useMemo(() => {
-    const seed: { role: 'user' | 'bot'; content: string }[] = [];
-    if (initialMessage) seed.push({ role: 'bot', content: initialMessage });
+    const seed: { role: 'user' | 'assistant'; content: string }[] = [];
+    if (initialMessage) seed.push({ role: 'assistant', content: initialMessage });
     return [...seed, ...messages];
   }, [initialMessage, messages]);
 
   const groupedMessages = useMemo(() => {
-    const groups: Array<{ role: 'user' | 'bot'; messages: string[] }> = [];
+    const groups: Array<{ role: 'user' | 'assistant'; messages: string[] }> = [];
     for (const m of messagesWithInitial) {
       const last = groups[groups.length - 1];
       if (last && last.role === m.role) {
@@ -123,7 +123,7 @@ const Main = ({
         <div className="space-y-4 p-6">
           {groupedMessages.map((group, groupIndex) => (
             <div key={groupIndex} className="space-y-1">
-              {group.role === 'bot'
+              {group.role === 'assistant'
                 ? group.messages.map((msg, idx) => <BotMessage key={idx} message={msg} />)
                 : group.messages.map((msg, idx) => <UserMessage key={idx} message={msg} />)}
             </div>
@@ -229,7 +229,7 @@ const Footer = ({
 }: {
   inputValue: string;
   setInputValue: Dispatch<SetStateAction<string>>;
-  handleSendMessage: (message: { role: 'user' | 'bot'; content: string }) => void;
+  handleSendMessage: (message: { role: 'user' | 'assistant'; content: string }) => void;
 }) => {
   return (
     <div className="flex flex-col px-4">
@@ -250,7 +250,7 @@ const InputContainer = ({
 }: {
   inputValue: string;
   setInputValue: Dispatch<SetStateAction<string>>;
-  handleSendMessage: (message: { role: 'user' | 'bot'; content: string }) => void;
+  handleSendMessage: (message: { role: 'user' | 'assistant'; content: string }) => void;
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);

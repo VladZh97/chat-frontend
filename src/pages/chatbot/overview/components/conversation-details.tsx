@@ -58,7 +58,7 @@ export const ConversationDetails = ({
   }, [data]);
 
   const groupedMessages = useMemo(() => {
-    const groups: Array<{ role: 'user' | 'bot'; messages: string[] }> = [];
+    const groups: Array<{ role: 'user' | 'assistant'; messages: string[] }> = [];
     for (const m of messagesWithInitial) {
       const last = groups[groups.length - 1];
       if (last && last.role === m.role) {
@@ -75,7 +75,7 @@ export const ConversationDetails = ({
     const lines = data
       .map((msg: TMessage) => {
         const date = msg.createdAt ? moment(msg.createdAt).format('YYYY-MM-DD HH:mm:ss') : '';
-        const role = msg.sender === 'bot' ? 'assistant' : 'user';
+        const role = msg.sender === 'assistant' ? 'assistant' : 'user';
         const content = msg.message || '';
         return `[${date}] ${role}: ${content}`;
       })
@@ -143,7 +143,7 @@ export const ConversationDetails = ({
             ) : (
               groupedMessages.map((group, groupIndex) => (
                 <div key={groupIndex} className="space-y-1">
-                  {group.role === 'bot'
+                  {group.role === 'assistant'
                     ? group.messages.map((msg, idx) => <BotMessage key={idx} message={msg} />)
                     : group.messages.map((msg, idx) => <UserMessage key={idx} message={msg} />)}
                 </div>
