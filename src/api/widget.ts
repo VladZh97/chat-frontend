@@ -7,19 +7,6 @@ export interface ChatStreamEvent {
   fullResponse?: string;
 }
 
-export interface IWidgetConfig {
-  _id: string;
-  name: string;
-  avatarIcon: string;
-  chatIcon: string;
-  accentColor: string;
-  backgroundColor: string;
-  removeBranding: boolean;
-  initialMessage: string;
-  conversationStarters: string[];
-  instructions: string;
-}
-
 export interface IAnonymousAuthRequest {
   chatbotId: string;
   visitorId: string;
@@ -37,11 +24,6 @@ export interface ISendMessageRequest {
   conversationId: string;
   message: string;
   messageHistory: Array<{ role: 'user' | 'assistant'; content: string }>;
-}
-
-export interface ISendMessageResponse {
-  message: TMessage;
-  response: string;
 }
 
 export interface IMessageHistoryResponse {
@@ -63,12 +45,6 @@ widgetApi.interceptors.request.use(async config => {
 });
 
 const widgetApiService = {
-  // Get widget configuration (public endpoint)
-  async getConfig(chatbotId: string): Promise<IWidgetConfig> {
-    const response = await widgetApi.get(`/config/${chatbotId}`);
-    return response.data;
-  },
-
   // Create anonymous authentication
   async createAnonymousAuth(data: IAnonymousAuthRequest): Promise<IAnonymousAuthResponse> {
     const response = await widgetApi.post('/auth/anonymous', data);
@@ -166,32 +142,6 @@ const widgetApiService = {
       },
       params: { visitorId },
     });
-    return response.data;
-  },
-
-  // Save message to backend
-  async saveMessage(
-    data: Omit<ISendMessageRequest, 'messageHistory'> & {
-      sender: 'user' | 'assistant';
-      messageContent: string;
-    },
-    token: string
-  ): Promise<TMessage> {
-    const response = await widgetApi.post(
-      '/messages',
-      {
-        chatbotId: data.chatbotId,
-        visitorId: data.visitorId,
-        conversationId: data.conversationId,
-        message: data.messageContent,
-        sender: data.sender,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
     return response.data;
   },
 };
