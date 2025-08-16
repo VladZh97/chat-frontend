@@ -34,6 +34,7 @@ export const useWidget = () => {
     setSessionRestored,
     setAuthState,
     setVisitorId,
+    clearSession,
   } = useWidgetStoreShallow(s => ({
     messages: s.messages,
     visitorId: s.visitorId,
@@ -48,6 +49,7 @@ export const useWidget = () => {
     setSessionRestored: s.setSessionRestored,
     setAuthState: s.setAuthState,
     setVisitorId: s.setVisitorId,
+    clearSession: s.clearSession,
   }));
 
   const {
@@ -189,7 +191,7 @@ export const useWidget = () => {
           messageHistory,
         },
         accessToken,
-        (evt) => {
+        evt => {
           if (evt.type === 'connected') return;
           if (evt.type === 'chunk') {
             const incoming = evt.content ?? '';
@@ -247,6 +249,19 @@ export const useWidget = () => {
     }
   };
 
+  const startNewChat = () => {
+    // Clear the current session from store
+    clearSession();
+
+    // Clear conversation from localStorage
+    if (chatbotId && visitorId) {
+      WidgetStorage.clearConversation(chatbotId, visitorId);
+    }
+
+    // Reset session restored flag to trigger new conversation creation
+    setSessionRestored(true);
+  };
+
   return {
     messages,
     inputValue,
@@ -257,6 +272,7 @@ export const useWidget = () => {
     isAuthenticated,
     isAuthLoading,
     visitorId,
+    startNewChat,
   };
 };
 

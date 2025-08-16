@@ -2,9 +2,17 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/lib/utils';
 import { Download, Ellipsis, MessageSquarePlus, MessageSquareX } from 'lucide-react';
 import { useState } from 'preact/hooks';
+import { useWidget } from '../hooks/use-widget';
 
 export const Options = () => {
   const [open, setOpen] = useState(false);
+  const { startNewChat } = useWidget();
+
+  const handleStartNewChat = () => {
+    startNewChat();
+    setOpen(false); // Close the popover
+  };
+
   return (
     <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger
@@ -16,7 +24,7 @@ export const Options = () => {
         <Ellipsis className="size-5 text-stone-700" />
       </PopoverTrigger>
       <PopoverContent className="w-52 rounded-lg bg-white p-1 shadow-lg">
-        <Option>
+        <Option onClick={handleStartNewChat}>
           <MessageSquarePlus size={16} />
           Start a new chat
         </Option>
@@ -33,9 +41,12 @@ export const Options = () => {
   );
 };
 
-const Option = ({ children }: { children: React.ReactNode }) => {
+const Option = ({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) => {
   return (
-    <div className="flex cursor-pointer items-center gap-2.5 rounded px-2 py-1.5 text-sm text-stone-500 transition-colors hover:bg-stone-100 hover:text-stone-900">
+    <div
+      className="flex cursor-pointer items-center gap-2.5 rounded px-2 py-1.5 text-sm text-stone-500 transition-colors hover:bg-stone-100 hover:text-stone-900"
+      onClick={onClick}
+    >
       {children}
     </div>
   );
