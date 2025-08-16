@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { v4 as uuidv4 } from 'uuid';
 import { useParams } from 'react-router-dom';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import { useWidgetStoreShallow } from '../store/widget.store';
@@ -92,38 +93,14 @@ export const useWidget = () => {
     setSessionRestored,
   ]);
 
-  // Create conversation if needed
+  // Generate conversation ID if needed when authenticated and session is restored
   useEffect(() => {
-    if (
-      authIsAuthenticated &&
-      authVisitorId &&
-      !conversationId &&
-      accessToken &&
-      isSessionRestored
-    ) {
-      createConversation();
+    if (authIsAuthenticated && authVisitorId && isSessionRestored && !conversationId) {
+      // Generate a new conversation ID locally
+      const newConversationId = uuidv4();
+      setConversationId(newConversationId);
     }
-  }, [authIsAuthenticated, authVisitorId, conversationId, accessToken, isSessionRestored]);
-
-  const createConversation = async () => {
-    if (!chatbotId || !authVisitorId || !accessToken) return;
-
-    try {
-      const result = await widgetApiService.createConversation(
-        chatbotId,
-        authVisitorId,
-        accessToken
-      );
-      setConversationId(result.conversationId);
-    } catch (error) {
-      console.error('Failed to create conversation:', error);
-      const retry = await handleApiError(error);
-      if (retry) {
-        // Retry after auth refresh
-        setTimeout(createConversation, 1000);
-      }
-    }
-  };
+  }, [authIsAuthenticated, authVisitorId, isSessionRestored, conversationId, setConversationId]);
 
   // Clear messages when prompt actually changes (not on initial load)
   useEffect(() => {
@@ -153,8 +130,14 @@ export const useWidget = () => {
     role: 'user' | 'assistant';
     content: string;
   }) => {
-    if (isStreaming || !content.trim() || !isAuthenticated || !conversationId || !accessToken)
-      return;
+    if (isStreaming || !content.trim() || !isAuthenticated || !accessToken) return;
+
+    // Ensure we have a conversation ID before sending
+    let currentConversationId = conversationId;
+    if (!currentConversationId) {
+      currentConversationId = uuidv4();
+      setConversationId(currentConversationId);
+    }
 
     const userMessage: IWidgetMessage = {
       role,
@@ -186,7 +169,7 @@ export const useWidget = () => {
         {
           chatbotId: chatbotId!,
           visitorId: visitorId!,
-          conversationId: conversationId!,
+          conversationId: currentConversationId,
           message: content,
           messageHistory,
         },
@@ -258,8 +241,8 @@ export const useWidget = () => {
       WidgetStorage.clearConversation(chatbotId, visitorId);
     }
 
-    // Reset session restored flag to trigger new conversation creation
-    setSessionRestored(true);
+    // Note: The useEffect will automatically generate a new conversation ID
+    // when it sees that conversationId is null after clearing the session
   };
 
   return {

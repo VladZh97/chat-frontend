@@ -194,27 +194,6 @@ const widgetApiService = {
     );
     return response.data;
   },
-
-  // Create or restore a conversation
-  async createConversation(
-    chatbotId: string,
-    visitorId: string,
-    token: string
-  ): Promise<{ conversationId: string }> {
-    const response = await widgetApi.post(
-      '/conversations',
-      {
-        chatbotId,
-        visitorId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  },
 };
 
 export default widgetApiService;
