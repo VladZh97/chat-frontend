@@ -1,1 +1,1 @@
-export { default } from './components/chat-root';
+export { default } from './components/chat';
