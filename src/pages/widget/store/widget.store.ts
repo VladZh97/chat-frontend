@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
 
-export interface IChat {
+export interface IWidget {
   view: 'chat' | 'history';
 }
 
-const initState: IChat = {
+const initState: IWidget = {
   view: 'chat',
 };
 
@@ -13,11 +13,11 @@ interface IActions {
   setView: (view: 'chat' | 'history') => void;
 }
 
-export const useChatStore = create<IChat & IActions>(set => ({
+export const useWidgetStore = create<IWidget & IActions>(set => ({
   ...initState,
   setView: view => set(prev => ({ ...prev, view })),
 }));
 
-export const useChatStoreShallow = <U>(selector: (store: IChat & IActions) => U) => {
-  return useChatStore(useShallow(selector));
+export const useWidgetStoreShallow = <U>(selector: (store: IWidget & IActions) => U) => {
+  return useWidgetStore(useShallow(selector));
 };

@@ -1,2 +1,2 @@
 export * from './config.store';
-export * from './chat.store';
+export * from './widget.store';

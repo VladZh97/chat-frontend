@@ -9,7 +9,7 @@ import { UserMessage } from './user-message';
 import { StarterMessages } from './starter-messages';
 import { AssistantMessageLoading } from './assistant-message-loading';
 
-export const ChatMain = ({
+export const WidgetMain = ({
   messages,
   setMessages,
   isStreaming,

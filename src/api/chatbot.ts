@@ -3,7 +3,7 @@ import api from './api';
 import queryClient from '@/lib/query';
 import { useChatbotStore } from '@/store/chatbot.store';
 import { stats } from './stats';
-import type { ChatStreamEvent } from './chat';
+import type { ChatStreamEvent } from './widget';
 import { auth } from '@/lib/auth';
 
 const chatbot = {

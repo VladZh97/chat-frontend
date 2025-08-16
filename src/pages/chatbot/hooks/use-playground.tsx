@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import type { ChatStreamEvent } from '@/api/chat';
+import type { ChatStreamEvent } from '@/api/widget';
 import { useParams } from 'react-router-dom';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import chatbot from '@/api/chatbot';

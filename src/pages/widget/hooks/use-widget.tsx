@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import type { ChatStreamEvent } from '@/api/chat';
+// import type { ChatStreamEvent } from '@/api/widget';
 import { useParams } from 'react-router-dom';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import chatbot from '@/api/chatbot';
 
-export const useChat = () => {
+export const useWidget = () => {
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
@@ -43,7 +43,7 @@ export const useChat = () => {
         chatbotId!,
         updatedMessages,
         promptValue,
-        (evt: ChatStreamEvent) => {
+        (evt: any) => {
           if (evt.type === 'connected') return;
           if (evt.type === 'chunk') {
             const incoming = evt.content ?? '';

@@ -1,17 +1,17 @@
-import { useChat, useGetConfig } from '../hooks';
-import { Footer } from './chat-footer';
-import { Header } from './chat-header';
-import { ChatMain } from './chat-main';
+import { useWidget, useGetConfig } from '../hooks';
+import { Footer } from './widget-footer';
+import { Header } from './widget-header';
+import { WidgetMain } from './widget-main';
 
-const Chat = () => {
+const Widget = () => {
   useGetConfig();
   const { setInputValue, handleSendMessage, isStreaming, streamingHtml, messages, inputValue } =
-    useChat();
+    useWidget();
 
   return (
     <div className="flex h-screen w-full grow flex-col rounded-3xl bg-white pb-2">
       <Header />
-      <ChatMain
+      <WidgetMain
         messages={messages}
         setMessages={handleSendMessage}
         isStreaming={isStreaming}
@@ -26,4 +26,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default Widget;
