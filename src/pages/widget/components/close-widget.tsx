@@ -1,9 +1,10 @@
 import { X } from 'lucide-react';
 import { useCallback } from 'preact/hooks';
+import { HeywayEvent } from '../constants';
 
 export const CloseWidget = () => {
   const handleCloseWidget = useCallback(() => {
-    window.parent.postMessage({ type: 'heyway:close-widget' }, '*');
+    window.parent.postMessage({ type: HeywayEvent.CLOSE_WIDGET }, '*');
   }, []);
 
   return (

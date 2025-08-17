@@ -38,10 +38,6 @@ export const Options = () => {
           Start a new chat
         </Option>
         <Option>
-          <MessageSquareX size={16} />
-          End chat
-        </Option>
-        <Option>
           <Download size={16} />
           Download transcription
         </Option>
