@@ -7,8 +7,10 @@ import { useWidgetStoreShallow } from '../store/widget.store';
 import { useEffect } from 'preact/hooks';
 import { HeywayEvent } from '../constants';
 import { WidgetAuthErrorMessage } from './widget-auth-error-message';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 const Widget = () => {
+  const [parent] = useAutoAnimate();
   useGetConfig();
   const {
     setInputValue,
@@ -41,28 +43,26 @@ const Widget = () => {
   if (isAuthLoading) return null;
   if (!isAuthenticated) return <WidgetAuthErrorMessage />;
 
-  if (view === 'history') {
-    return (
-      <div className="flex h-screen w-full grow flex-col bg-white pb-2">
-        <ConversationList startNewChat={startNewChat} />
-      </div>
-    );
-  }
-
   return (
-    <div className="flex h-screen w-full grow flex-col bg-white pb-2">
-      <Header />
-      <WidgetMain
-        messages={messages}
-        setMessages={handleSendMessage}
-        isStreaming={isStreaming}
-        streamingHtml={streamingHtml}
-      />
-      <Footer
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-        handleSendMessage={handleSendMessage}
-      />
+    <div ref={parent} className="flex h-screen w-full grow flex-col bg-white pb-2">
+      {view === 'history' ? (
+        <ConversationList startNewChat={startNewChat} />
+      ) : (
+        <>
+          <Header />
+          <WidgetMain
+            messages={messages}
+            setMessages={handleSendMessage}
+            isStreaming={isStreaming}
+            streamingHtml={streamingHtml}
+          />
+          <Footer
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            handleSendMessage={handleSendMessage}
+          />
+        </>
+      )}
     </div>
   );
 };
