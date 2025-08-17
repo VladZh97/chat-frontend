@@ -26,6 +26,7 @@ const STORAGE_KEYS = {
   VISITOR_ID: 'heyway_visitor_id',
   ACCESS_TOKEN: 'heyway_access_token',
   CONVERSATION_PREFIX: 'heyway_conversation_',
+  ACTIVE_CONVERSATION: 'heyway_active_conversation_',
 } as const;
 
 const MAX_CONVERSATIONS = 10;
@@ -87,28 +88,31 @@ export class WidgetStorage {
   }
 
   static getConversation(chatbotId: string, visitorId: string): IWidgetSession | null {
-    try {
-      const key = `${STORAGE_KEYS.CONVERSATION_PREFIX}${chatbotId}_${visitorId}`;
-      const stored = localStorage.getItem(key);
-      if (!stored) return null;
-
-      const session: IWidgetSession = JSON.parse(stored);
-
-      // Check if session is expired
-      if (Date.now() - session.lastActivity > SESSION_EXPIRY) {
-        this.clearConversation(chatbotId, visitorId);
-        return null;
+    // First try to get the active conversation
+    const activeConversationId = this.getActiveConversationId(chatbotId, visitorId);
+    if (activeConversationId) {
+      const activeSession = this.getConversationById(chatbotId, visitorId, activeConversationId);
+      if (activeSession) {
+        return activeSession;
       }
-
-      return session;
-    } catch {
-      return null;
     }
+
+    // Fallback: get the most recent conversation for this chatbot-visitor
+    const conversations = this.getAllConversations(visitorId);
+    const latestConversation = conversations.find(c => c.chatbotId === chatbotId);
+
+    if (latestConversation) {
+      // Set this as the active conversation since we don't have one
+      this.setActiveConversationId(chatbotId, visitorId, latestConversation.conversationId);
+      return this.getConversationById(chatbotId, visitorId, latestConversation.conversationId);
+    }
+
+    return null;
   }
 
   static saveConversation(chatbotId: string, session: IWidgetSession): void {
     try {
-      const key = `${STORAGE_KEYS.CONVERSATION_PREFIX}${chatbotId}_${session.visitorId}`;
+      const key = `${STORAGE_KEYS.CONVERSATION_PREFIX}${chatbotId}_${session.visitorId}_${session.conversationId}`;
 
       // Limit messages to prevent storage bloat
       const limitedSession = {
@@ -118,28 +122,51 @@ export class WidgetStorage {
       };
 
       localStorage.setItem(key, JSON.stringify(limitedSession));
+
+      // Set this as the active conversation
+      this.setActiveConversationId(chatbotId, session.visitorId, session.conversationId);
+
       this.cleanupOldConversations();
     } catch {
       // Silent fail for storage issues
     }
   }
 
-  static clearConversation(chatbotId: string, visitorId: string): void {
+  static clearConversation(chatbotId: string, visitorId: string, conversationId?: string): void {
     try {
-      const key = `${STORAGE_KEYS.CONVERSATION_PREFIX}${chatbotId}_${visitorId}`;
-      localStorage.removeItem(key);
+      if (conversationId) {
+        // Clear specific conversation
+        const key = `${STORAGE_KEYS.CONVERSATION_PREFIX}${chatbotId}_${visitorId}_${conversationId}`;
+        localStorage.removeItem(key);
+      } else {
+        // Clear all conversations for this chatbot-visitor (for backward compatibility)
+        const keys = Object.keys(localStorage);
+        const conversationKeys = keys.filter(key =>
+          key.startsWith(`${STORAGE_KEYS.CONVERSATION_PREFIX}${chatbotId}_${visitorId}`)
+        );
+        conversationKeys.forEach(key => localStorage.removeItem(key));
+      }
     } catch {
       // Silent fail
     }
   }
 
-  static addMessage(chatbotId: string, visitorId: string, message: IWidgetMessage): void {
-    let session = this.getConversation(chatbotId, visitorId);
+  static addMessage(
+    chatbotId: string,
+    visitorId: string,
+    message: IWidgetMessage,
+    conversationId?: string
+  ): void {
+    let session: IWidgetSession | null = null;
+
+    if (conversationId) {
+      session = this.getConversationById(chatbotId, visitorId, conversationId);
+    }
 
     if (!session) {
       session = {
         visitorId,
-        conversationId: uuidv4(),
+        conversationId: conversationId || uuidv4(),
         messages: [],
         lastActivity: Date.now(),
       };
@@ -157,10 +184,13 @@ export class WidgetStorage {
       // Clear access token
       sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
 
-      // Clear all conversations
+      // Clear all conversations and active conversation IDs
       const keys = Object.keys(localStorage);
       keys.forEach(key => {
-        if (key.startsWith(STORAGE_KEYS.CONVERSATION_PREFIX)) {
+        if (
+          key.startsWith(STORAGE_KEYS.CONVERSATION_PREFIX) ||
+          key.startsWith(STORAGE_KEYS.ACTIVE_CONVERSATION)
+        ) {
           localStorage.removeItem(key);
         }
       });
@@ -173,7 +203,7 @@ export class WidgetStorage {
     try {
       const keys = Object.keys(localStorage);
       const conversationKeys = keys.filter(
-        key => key.startsWith(STORAGE_KEYS.CONVERSATION_PREFIX) && key.endsWith(`_${visitorId}`)
+        key => key.startsWith(STORAGE_KEYS.CONVERSATION_PREFIX) && key.includes(`_${visitorId}_`)
       );
 
       const conversations: IConversationPreview[] = [];
@@ -190,9 +220,14 @@ export class WidgetStorage {
 
           if (session.messages.length > 0) {
             const lastMessage = session.messages[session.messages.length - 1];
-            const chatbotId = key
-              .replace(STORAGE_KEYS.CONVERSATION_PREFIX, '')
-              .replace(`_${visitorId}`, '');
+            // Parse key: "heyway_conversation_chatbotId_visitorId_conversationId"
+            const keyWithoutPrefix = key.replace(STORAGE_KEYS.CONVERSATION_PREFIX, '');
+            const lastUnderscoreIndex = keyWithoutPrefix.lastIndexOf('_');
+            const secondLastUnderscoreIndex = keyWithoutPrefix.lastIndexOf(
+              '_',
+              lastUnderscoreIndex - 1
+            );
+            const chatbotId = keyWithoutPrefix.substring(0, secondLastUnderscoreIndex);
 
             conversations.push({
               chatbotId,
@@ -222,11 +257,19 @@ export class WidgetStorage {
     conversationId: string
   ): IWidgetSession | null {
     try {
-      const session = this.getConversation(chatbotId, visitorId);
-      if (session && session.conversationId === conversationId) {
-        return session;
+      const key = `${STORAGE_KEYS.CONVERSATION_PREFIX}${chatbotId}_${visitorId}_${conversationId}`;
+      const stored = localStorage.getItem(key);
+      if (!stored) return null;
+
+      const session: IWidgetSession = JSON.parse(stored);
+
+      // Check if session is expired
+      if (Date.now() - session.lastActivity > SESSION_EXPIRY) {
+        localStorage.removeItem(key);
+        return null;
       }
-      return null;
+
+      return session;
     } catch {
       return null;
     }
@@ -273,6 +316,37 @@ export class WidgetStorage {
         const toRemove = activeConversations.slice(MAX_CONVERSATIONS);
         toRemove.forEach(({ key }) => localStorage.removeItem(key));
       }
+    } catch {
+      // Silent fail
+    }
+  }
+
+  static getActiveConversationId(chatbotId: string, visitorId: string): string | null {
+    try {
+      const key = `${STORAGE_KEYS.ACTIVE_CONVERSATION}${chatbotId}_${visitorId}`;
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
+
+  static setActiveConversationId(
+    chatbotId: string,
+    visitorId: string,
+    conversationId: string
+  ): void {
+    try {
+      const key = `${STORAGE_KEYS.ACTIVE_CONVERSATION}${chatbotId}_${visitorId}`;
+      localStorage.setItem(key, conversationId);
+    } catch {
+      // Silent fail
+    }
+  }
+
+  static clearActiveConversationId(chatbotId: string, visitorId: string): void {
+    try {
+      const key = `${STORAGE_KEYS.ACTIVE_CONVERSATION}${chatbotId}_${visitorId}`;
+      localStorage.removeItem(key);
     } catch {
       // Silent fail
     }

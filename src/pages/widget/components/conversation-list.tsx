@@ -1,14 +1,17 @@
 import { useEffect } from 'preact/hooks';
 import moment from 'moment';
 import { MessageCirclePlus, MessagesSquare } from 'lucide-react';
+import { useParams } from 'react-router-dom';
 import { useConfigStoreShallow, useHistoryStoreShallow } from '../store';
 import { useWidgetStoreShallow } from '../store/widget.store';
-import { WidgetStorage } from '@/utils/widget-storage';
+import { WidgetStorage, type IConversationPreview } from '@/utils/widget-storage';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { PoweredByLabel } from './powered-by-label';
 import { cn } from '@/lib/utils';
 
 export const ConversationList = ({ startNewChat }: { startNewChat: () => void }) => {
+  const { id: chatbotId } = useParams();
+
   const { conversations, setConversations, setLoading, isLoading } = useHistoryStoreShallow(s => ({
     conversations: s.conversations,
     setConversations: s.setConversations,
@@ -22,9 +25,10 @@ export const ConversationList = ({ startNewChat }: { startNewChat: () => void })
     removeBranding: s.removeBranding,
   }));
 
-  const { visitorId, setView } = useWidgetStoreShallow(s => ({
+  const { visitorId, setView, restoreSession } = useWidgetStoreShallow(s => ({
     visitorId: s.visitorId,
     setView: s.setView,
+    restoreSession: s.restoreSession,
   }));
 
   // Load conversations when component mounts
@@ -42,9 +46,22 @@ export const ConversationList = ({ startNewChat }: { startNewChat: () => void })
     }
   }, [visitorId, setConversations, setLoading]);
 
-  const handleConversationClick = () => {
-    // For now, we'll just go back to chat view
-    // Later this could load the specific conversation
+  const handleConversationClick = (conversation: IConversationPreview) => {
+    // Load the specific conversation
+    if (chatbotId && visitorId) {
+      const session = WidgetStorage.getConversationById(
+        conversation.chatbotId,
+        visitorId,
+        conversation.conversationId
+      );
+      if (session) {
+        // Set this conversation as the active one
+        WidgetStorage.setActiveConversationId(chatbotId, visitorId, conversation.conversationId);
+
+        // Restore the conversation in the widget store
+        restoreSession(session);
+      }
+    }
     setView('chat');
   };
 
@@ -78,7 +95,7 @@ export const ConversationList = ({ startNewChat }: { startNewChat: () => void })
         <div className="space-y-1 p-4">
           {conversations?.map(conversation => (
             <div
-              onClick={() => handleConversationClick()}
+              onClick={() => handleConversationClick(conversation)}
               key={`${conversation.chatbotId}-${conversation.conversationId}`}
               className="flex cursor-pointer items-center gap-4 rounded-lg p-3 transition-colors hover:bg-stone-100"
             >

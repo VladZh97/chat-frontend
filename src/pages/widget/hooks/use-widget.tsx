@@ -1,5 +1,6 @@
 import { useState } from 'preact/hooks';
 import { useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import { useWidgetStoreShallow } from '../store/widget.store';
 import { WidgetStorage } from '@/utils/widget-storage';
@@ -26,6 +27,7 @@ export const useWidget = () => {
     setMessages,
     setConversationId,
     clearSession,
+    setSessionRestored,
   } = useWidgetStoreShallow(s => ({
     messages: s.messages,
     visitorId: s.visitorId,
@@ -36,6 +38,7 @@ export const useWidget = () => {
     setMessages: s.setMessages,
     setConversationId: s.setConversationId,
     clearSession: s.clearSession,
+    setSessionRestored: s.setSessionRestored,
   }));
 
   // Auth sync
@@ -64,16 +67,22 @@ export const useWidget = () => {
   });
 
   const startNewChat = () => {
+    // Generate a new conversation ID immediately
+    const newConversationId = uuidv4();
+
     // Clear the current session from store
     clearSession();
 
-    // Clear conversation from localStorage
-    if (chatbotId && visitorId) {
-      WidgetStorage.clearConversation(chatbotId, visitorId);
-    }
+    // Immediately set session as restored to prevent useRestoreSession from running
+    setSessionRestored(true);
 
-    // Note: The useEffect will automatically generate a new conversation ID
-    // when it sees that conversationId is null after clearing the session
+    // Set the new conversation ID
+    setConversationId(newConversationId);
+
+    // Set the new conversation as active in localStorage
+    if (chatbotId && visitorId) {
+      WidgetStorage.setActiveConversationId(chatbotId, visitorId, newConversationId);
+    }
   };
 
   return {

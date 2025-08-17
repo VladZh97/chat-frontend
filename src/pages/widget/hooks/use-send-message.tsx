@@ -58,7 +58,7 @@ export const useSendMessage = ({
 
     addMessage(userMessage);
     if (chatbotId && visitorId) {
-      WidgetStorage.addMessage(chatbotId, visitorId, userMessage);
+      WidgetStorage.addMessage(chatbotId, visitorId, userMessage, currentConversationId);
     }
 
     clearInput();
@@ -118,7 +118,12 @@ export const useSendMessage = ({
 
             addMessage(assistantMessage);
             if (chatbotId && visitorId) {
-              WidgetStorage.addMessage(chatbotId, visitorId, assistantMessage);
+              WidgetStorage.addMessage(
+                chatbotId,
+                visitorId,
+                assistantMessage,
+                currentConversationId
+              );
             }
 
             setStreamingHtml('');

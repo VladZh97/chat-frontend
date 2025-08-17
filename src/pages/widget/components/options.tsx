@@ -3,22 +3,40 @@ import { cn } from '@/lib/utils';
 import { Download, Ellipsis, MessageSquarePlus } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import { useWidgetStoreShallow } from '../store/widget.store';
 import { WidgetStorage } from '@/utils/widget-storage';
 
 export const Options = () => {
   const [open, setOpen] = useState(false);
   const { id: chatbotId } = useParams();
-  const { clearSession, visitorId } = useWidgetStoreShallow(s => ({
-    clearSession: s.clearSession,
-    visitorId: s.visitorId,
-  }));
+  const { clearSession, setConversationId, visitorId, setSessionRestored } = useWidgetStoreShallow(
+    s => ({
+      clearSession: s.clearSession,
+      setConversationId: s.setConversationId,
+      visitorId: s.visitorId,
+      setSessionRestored: s.setSessionRestored,
+    })
+  );
 
   const handleStartNewChat = () => {
+    // Generate a new conversation ID immediately
+    const newConversationId = uuidv4();
+
+    // Clear the current session from store
     clearSession();
+
+    // Immediately set session as restored to prevent useRestoreSession from running
+    setSessionRestored(true);
+
+    // Set the new conversation ID
+    setConversationId(newConversationId);
+
+    // Set the new conversation as active in localStorage
     if (chatbotId && visitorId) {
-      WidgetStorage.clearConversation(chatbotId, visitorId);
+      WidgetStorage.setActiveConversationId(chatbotId, visitorId, newConversationId);
     }
+
     setOpen(false);
   };
 
