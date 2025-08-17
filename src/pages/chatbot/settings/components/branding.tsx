@@ -10,21 +10,18 @@ import { useNavigate } from 'react-router-dom';
 const Branding = () => {
   const navigate = useNavigate();
   const { plan } = useCurrentSubscription();
+  const disabled = plan.title === PLAN_NAMES.FREE;
   const { removeBranding, setChatbot } = useChatbotStoreShallow(s => ({
     removeBranding: s.removeBranding,
     setChatbot: s.setChatbot,
   }));
 
-  const handleUpgrade = () => {
-    navigate('/subscription');
-  };
-
   return (
     <div className="mb-6 flex items-center justify-between">
       <Label>Remove Heyway branding</Label>
       <div className="flex items-center gap-4">
-        {plan.title === PLAN_NAMES.FREE && (
-          <Button variant="outline" onClick={handleUpgrade}>
+        {disabled && (
+          <Button variant="outline" onClick={() => navigate('/subscription')}>
             <Gem className="size-4" />
             Upgrade now
           </Button>
@@ -32,6 +29,7 @@ const Branding = () => {
         <Switch
           checked={removeBranding}
           onCheckedChange={value => setChatbot({ removeBranding: value })}
+          disabled={disabled}
         />
       </div>
     </div>
