@@ -1,6 +1,6 @@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { Download, Ellipsis, MessageSquarePlus, MessageSquareX } from 'lucide-react';
+import { Download, Ellipsis, MessageSquarePlus } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { useParams } from 'react-router-dom';
 import { useWidgetStoreShallow } from '../store/widget.store';
