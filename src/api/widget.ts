@@ -32,6 +32,13 @@ export interface IMessageHistoryResponse {
   conversationId: string;
 }
 
+export interface ISubmitEmailRequest {
+  chatbotId: string;
+  visitorId: string;
+  email: string;
+  conversationId: string;
+}
+
 // Global token refresh handler - will be set by useAnonymousAuth
 let tokenRefreshHandler: (() => Promise<string | null>) | null = null;
 
@@ -200,6 +207,15 @@ const widgetApiService = {
       params: { visitorId },
     });
     return response.data;
+  },
+
+  // Submit user email for lead collection
+  async submitEmail(data: ISubmitEmailRequest, token: string): Promise<void> {
+    await widgetApi.post('/leads/email', data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   },
 };
 
