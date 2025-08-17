@@ -2,15 +2,24 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/lib/utils';
 import { Download, Ellipsis, MessageSquarePlus, MessageSquareX } from 'lucide-react';
 import { useState } from 'preact/hooks';
-import { useWidget } from '../hooks/use-widget';
+import { useParams } from 'react-router-dom';
+import { useWidgetStoreShallow } from '../store/widget.store';
+import { WidgetStorage } from '@/utils/widget-storage';
 
 export const Options = () => {
   const [open, setOpen] = useState(false);
-  const { startNewChat } = useWidget();
+  const { id: chatbotId } = useParams();
+  const { clearSession, visitorId } = useWidgetStoreShallow(s => ({
+    clearSession: s.clearSession,
+    visitorId: s.visitorId,
+  }));
 
   const handleStartNewChat = () => {
-    startNewChat();
-    setOpen(false); // Close the popover
+    clearSession();
+    if (chatbotId && visitorId) {
+      WidgetStorage.clearConversation(chatbotId, visitorId);
+    }
+    setOpen(false);
   };
 
   return (

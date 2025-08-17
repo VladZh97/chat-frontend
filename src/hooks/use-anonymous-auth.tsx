@@ -34,58 +34,72 @@ export const useAnonymousAuth = (chatbotId: string) => {
     setState(prev => ({ ...prev, ...updates }));
   }, []);
 
+  // Prevent concurrent authenticate calls from running in parallel
+  const inFlightAuthPromise = useRef<Promise<string | null> | null>(null);
+
   const authenticate = useCallback(
     async (chatbotId: string): Promise<string | null> => {
-      try {
-        updateState({ isLoading: true, error: null });
+      if (inFlightAuthPromise.current) {
+        return inFlightAuthPromise.current;
+      }
 
-        // Get or create visitor ID
-        const visitorId = WidgetStorage.getOrCreateVisitorId();
+      const promise = (async () => {
+        try {
+          updateState({ isLoading: true, error: null });
 
-        // Check if we have a valid token in session storage
-        const existingToken = WidgetStorage.getAccessToken();
+          // Get or create visitor ID
+          const visitorId = WidgetStorage.getOrCreateVisitorId();
 
-        if (existingToken) {
-          // Try to use existing token first
+          // Check if we have a valid token in session storage
+          const existingToken = WidgetStorage.getAccessToken();
+
+          if (existingToken) {
+            // Try to use existing token first
+            updateState({
+              isAuthenticated: true,
+              isLoading: false,
+              visitorId,
+              accessToken: existingToken,
+            });
+            // Reset refresh attempts when using existing token
+            refreshAttempts.current = 0;
+            return existingToken;
+          }
+
+          // Create new anonymous authentication
+          const authResponse = await widgetApiService.createAnonymousAuth({
+            chatbotId,
+            visitorId,
+          });
+
+          // Store the access token
+          WidgetStorage.setAccessToken(authResponse.accessToken);
+
           updateState({
             isAuthenticated: true,
             isLoading: false,
-            visitorId,
-            accessToken: existingToken,
+            visitorId: authResponse.visitorId,
+            accessToken: authResponse.accessToken,
           });
-          // Reset refresh attempts when using existing token
+
+          // Reset refresh attempts on successful authentication
           refreshAttempts.current = 0;
-          return existingToken;
+          return authResponse.accessToken;
+        } catch (error) {
+          console.error('Anonymous authentication failed:', error);
+          updateState({
+            isAuthenticated: false,
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Authentication failed',
+          });
+          return null;
+        } finally {
+          inFlightAuthPromise.current = null;
         }
+      })();
 
-        // Create new anonymous authentication
-        const authResponse = await widgetApiService.createAnonymousAuth({
-          chatbotId,
-          visitorId,
-        });
-
-        // Store the access token
-        WidgetStorage.setAccessToken(authResponse.accessToken);
-
-        updateState({
-          isAuthenticated: true,
-          isLoading: false,
-          visitorId: authResponse.visitorId,
-          accessToken: authResponse.accessToken,
-        });
-
-        // Reset refresh attempts on successful authentication
-        refreshAttempts.current = 0;
-        return authResponse.accessToken;
-      } catch (error) {
-        console.error('Anonymous authentication failed:', error);
-        updateState({
-          isAuthenticated: false,
-          isLoading: false,
-          error: error instanceof Error ? error.message : 'Authentication failed',
-        });
-        return null;
-      }
+      inFlightAuthPromise.current = promise;
+      return promise;
     },
     [updateState]
   );
