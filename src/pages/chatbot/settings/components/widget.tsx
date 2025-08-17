@@ -18,11 +18,17 @@ const Widget = () => {
 export default Widget;
 
 const Header = () => {
+  const { name, publicName } = useChatbotStoreShallow(s => ({
+    name: s.name,
+    publicName: s.publicName,
+  }));
   return (
-    <div className="flex items-center justify-between p-6">
+    <div className="flex items-center p-6">
       <ArrowLeft className="size-5 text-stone-700" />
-      <span className="text-sm font-semibold text-stone-900">New chat</span>
-      <Ellipsis className="size-5 text-stone-700" />
+      <span className="mr-3 ml-4 truncate text-sm font-semibold text-stone-900">
+        {publicName || name}
+      </span>
+      <Ellipsis className="ml-auto size-5 text-stone-700" />
     </div>
   );
 };

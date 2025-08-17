@@ -9,12 +9,15 @@ import { useState } from 'preact/hooks';
 const Images = () => {
   const { uploadFileFn, loading } = useUploadFile();
   const [type, setType] = useState<'avatarIcon' | 'chatIcon'>();
-  const { avatarIcon, chatIcon, setChatbot, backgroundColor } = useChatbotStoreShallow(s => ({
-    avatarIcon: s.avatarIcon,
-    chatIcon: s.chatIcon,
-    setChatbot: s.setChatbot,
-    backgroundColor: s.backgroundColor,
-  }));
+  const { avatarIcon, chatIcon, setChatbot, backgroundColor, accentColor } = useChatbotStoreShallow(
+    s => ({
+      avatarIcon: s.avatarIcon,
+      chatIcon: s.chatIcon,
+      setChatbot: s.setChatbot,
+      backgroundColor: s.backgroundColor,
+      accentColor: s.accentColor,
+    })
+  );
 
   const handleImageUpload = async (type: 'avatarIcon' | 'chatIcon') => {
     if (loading) return;
@@ -48,11 +51,16 @@ const Images = () => {
     <div className="mb-6 grid grid-cols-2 gap-4">
       <div className="flex items-center gap-3 rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
         {avatarIcon ? (
-          <img
-            src={avatarIcon}
-            alt="Chatbot image"
-            className="size-12 overflow-hidden rounded-full object-cover"
-          />
+          <div
+            className="flex size-12 items-center justify-center rounded-full border"
+            style={{ backgroundColor: accentColor }}
+          >
+            <img
+              src={avatarIcon}
+              alt="Chatbot image"
+              className="size-12 overflow-hidden rounded-full object-cover"
+            />
+          </div>
         ) : (
           <span className="flex size-12 items-center justify-center rounded-full border border-stone-200 bg-stone-100">
             <Image className="size-5 text-stone-700" />
@@ -92,7 +100,11 @@ const Images = () => {
           className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#0A0A0A1A]"
           style={{ backgroundColor: backgroundColor }}
         >
-          <img src={chatIcon ? chatIcon : Icon} alt="Chatbot image" className="size-6" />
+          <img
+            src={chatIcon ? chatIcon : Icon}
+            alt="Chatbot image"
+            className="size-full object-cover"
+          />
         </div>
         <div>
           <Label className="mb-2">Chat icon</Label>
