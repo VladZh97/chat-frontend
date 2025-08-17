@@ -8,7 +8,7 @@ import {
   Trash,
 } from 'lucide-react';
 import { TABLE_SIZES } from '../constants';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useInfiniteQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { messages } from '@/api/messages';
 import { useState } from 'preact/hooks';
@@ -22,10 +22,41 @@ import queryClient from '@/lib/query';
 const ChatDetails = () => {
   const { id } = useParams();
   const [selectedConversation, setSelectedConversation] = useState<TConversation | null>(null);
-  const { data: conversations, isLoading } = useQuery({
-    queryKey: messages.getConversations.key(id!),
-    queryFn: () => messages.getConversations.query(id!),
-  });
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } =
+    useInfiniteQuery({
+      queryKey: messages.getConversations.key(id!),
+      queryFn: ({ pageParam = 1 }) => messages.getConversations.query(id!, pageParam),
+      getNextPageParam: (lastPage, allPages) => {
+        // Check if lastPage has the expected structure (new format)
+        if (lastPage && typeof lastPage === 'object' && 'hasMore' in lastPage) {
+          return lastPage.hasMore ? allPages.length + 1 : undefined;
+        }
+
+        // Fallback for array response (old format)
+        if (Array.isArray(lastPage)) {
+          // If we got a full page (2 items), there might be more
+          return lastPage.length === 2 ? allPages.length + 1 : undefined;
+        }
+
+        return undefined;
+      },
+      initialPageParam: 1,
+    });
+
+  const conversations =
+    data?.pages.flatMap(page => {
+      // Handle new paginated response format
+      if (page && typeof page === 'object' && 'conversations' in page) {
+        return page.conversations;
+      }
+      // Handle old array format as fallback
+      return Array.isArray(page) ? page : [];
+    }) || [];
+
+  if (error) {
+    console.error('API Error:', error);
+  }
   const handleSelectConversation = (conversation: TConversation) => {
     setSelectedConversation(conversation);
   };
@@ -57,6 +88,24 @@ const ChatDetails = () => {
           ))}
         {isLoading && Array.from({ length: 5 }).map((_, index) => <SkeletonRow key={index} />)}
         {!isLoading && conversations?.length === 0 && <EmptyState />}
+        {!isLoading && conversations?.length > 0 && hasNextPage && (
+          <div className="flex h-[54px] items-center justify-center">
+            {isFetchingNextPage && (
+              <div className="flex items-center gap-1 text-xs text-stone-400">
+                <Loader2 className="size-4 animate-spin" />
+                Loading more conversations...
+              </div>
+            )}
+            {!isFetchingNextPage && hasNextPage && (
+              <button
+                onClick={() => fetchNextPage()}
+                className="cursor-pointer text-xs text-stone-400 transition-colors hover:text-stone-600"
+              >
+                Load more conversations
+              </button>
+            )}
+          </div>
+        )}
       </div>
       {selectedConversation && (
         <ConversationDetails
@@ -88,9 +137,19 @@ const Row = ({
     mutationFn: () => messages.deleteConversation.query(chatbotId, conversation.conversationId),
     onSuccess: () => {
       toast.success('Conversation deleted successfully');
-      queryClient.setQueryData(messages.getConversations.key(chatbotId), (old: TConversation[]) =>
-        old.filter(c => c.conversationId !== conversation.conversationId)
-      );
+      // Update infinite query cache by removing the deleted conversation from all pages
+      queryClient.setQueryData(messages.getConversations.key(chatbotId), (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page: any) => ({
+            ...page,
+            conversations: (page.conversations || page).filter(
+              (c: TConversation) => c.conversationId !== conversation.conversationId
+            ),
+          })),
+        };
+      });
       queryClient.invalidateQueries({
         queryKey: messages.getMessages.key(chatbotId, conversation.conversationId),
       });

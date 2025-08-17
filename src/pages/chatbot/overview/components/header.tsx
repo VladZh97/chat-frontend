@@ -3,7 +3,6 @@ import { CodeXml } from 'lucide-react';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import { useGetChatbot } from '../../hooks';
 import TrainingStatusLabel from '@/components/training-status-label';
-import { toast } from 'sonner';
 import { copyEmbedCode } from '@/utils/copy-embed-code';
 
 const Header = () => {

@@ -49,7 +49,8 @@ const chatbot = {
   sendPlaygroundMessageStream: async (
     chatbotId: string,
     messages: { role: 'user' | 'assistant'; content: string }[],
-    instructions: string,
+    promptPreset: string,
+    prompt: string,
     onEvent: (evt: ChatStreamEvent) => void
   ): Promise<void> => {
     const authToken = await auth.currentUser?.getIdToken();
@@ -60,7 +61,7 @@ const chatbot = {
         Accept: 'text/event-stream',
         Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify({ chatbotId, messages, instructions, stream: true }),
+      body: JSON.stringify({ chatbotId, messages, promptPreset, prompt, stream: true }),
     });
 
     if (!response.ok) {

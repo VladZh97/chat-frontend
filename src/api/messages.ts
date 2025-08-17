@@ -2,9 +2,11 @@ import api from './api';
 
 export const messages = {
   getConversations: {
-    query: async (chatbotId: string) => {
-      const { data: conversations } = await api.get(`/messages/${chatbotId}/conversations`);
-      return conversations;
+    query: async (chatbotId: string, page: number = 1, limit: number = 20) => {
+      const { data } = await api.get(`/messages/${chatbotId}/conversations`, {
+        params: { page, limit },
+      });
+      return data;
     },
     key: (chatbotId: string) => ['conversations', chatbotId],
   },

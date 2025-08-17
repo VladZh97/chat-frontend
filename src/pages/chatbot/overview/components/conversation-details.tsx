@@ -120,7 +120,7 @@ export const ConversationDetails = ({
               <Mail className="size-4 text-stone-500" />
               Email
             </div>
-            <span className="text-sm font-medium text-stone-950">
+            <span className="block max-w-44 truncate text-sm font-medium text-stone-950">
               {selectedConversation.visitorEmail}
             </span>
           </div>

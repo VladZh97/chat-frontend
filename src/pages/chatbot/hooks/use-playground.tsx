@@ -11,13 +11,14 @@ export const usePlayground = () => {
   const [streamingHtml, setStreamingHtml] = useState('');
   const streamingHtmlRef = useRef('');
   const { id: chatbotId } = useParams();
-  const { promptValue } = useChatbotStoreShallow(s => ({
-    promptValue: s.promptValue,
+  const { promptPreset, prompt } = useChatbotStoreShallow(s => ({
+    promptPreset: s.promptPreset,
+    prompt: s.prompt,
   }));
 
   useEffect(() => {
     setMessages([]);
-  }, [promptValue]);
+  }, [promptPreset, prompt]);
 
   const handleSendMessage = async ({
     role,
@@ -38,7 +39,8 @@ export const usePlayground = () => {
       await chatbot.sendPlaygroundMessageStream(
         chatbotId!,
         updatedMessages,
-        promptValue,
+        promptPreset,
+        prompt,
         (evt: ChatStreamEvent) => {
           if (evt.type === 'connected') return;
           if (evt.type === 'chunk') {
