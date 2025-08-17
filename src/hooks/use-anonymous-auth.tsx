@@ -5,6 +5,7 @@ import widgetApiService, { setTokenRefreshHandler } from '@/api/widget';
 export interface IAnonymousAuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
+  isInitialLoading: boolean;
   visitorId: string | null;
   accessToken: string | null;
   error: string | null;
@@ -20,6 +21,7 @@ export const useAnonymousAuth = (chatbotId: string) => {
   const [state, setState] = useState<IAnonymousAuthState>({
     isAuthenticated: false,
     isLoading: true,
+    isInitialLoading: true,
     visitorId: null,
     accessToken: null,
     error: null,
@@ -29,6 +31,7 @@ export const useAnonymousAuth = (chatbotId: string) => {
   const refreshAttempts = useRef(0);
   const maxRefreshAttempts = 3;
   const lastRefreshAttempt = useRef(0);
+  const hasInitiallyAuthenticated = useRef(false);
 
   const updateState = useCallback((updates: Partial<IAnonymousAuthState>) => {
     setState(prev => ({ ...prev, ...updates }));
@@ -45,7 +48,12 @@ export const useAnonymousAuth = (chatbotId: string) => {
 
       const promise = (async () => {
         try {
-          updateState({ isLoading: true, error: null });
+          const isInitial = !hasInitiallyAuthenticated.current;
+          updateState({
+            isLoading: true,
+            isInitialLoading: isInitial,
+            error: null,
+          });
 
           // Get or create visitor ID
           const visitorId = WidgetStorage.getOrCreateVisitorId();
@@ -55,9 +63,11 @@ export const useAnonymousAuth = (chatbotId: string) => {
 
           if (existingToken) {
             // Try to use existing token first
+            hasInitiallyAuthenticated.current = true;
             updateState({
               isAuthenticated: true,
               isLoading: false,
+              isInitialLoading: false,
               visitorId,
               accessToken: existingToken,
             });
@@ -75,9 +85,11 @@ export const useAnonymousAuth = (chatbotId: string) => {
           // Store the access token
           WidgetStorage.setAccessToken(authResponse.accessToken);
 
+          hasInitiallyAuthenticated.current = true;
           updateState({
             isAuthenticated: true,
             isLoading: false,
+            isInitialLoading: false,
             visitorId: authResponse.visitorId,
             accessToken: authResponse.accessToken,
           });
@@ -90,6 +102,7 @@ export const useAnonymousAuth = (chatbotId: string) => {
           updateState({
             isAuthenticated: false,
             isLoading: false,
+            isInitialLoading: false,
             error: error instanceof Error ? error.message : 'Authentication failed',
           });
           return null;
@@ -138,7 +151,8 @@ export const useAnonymousAuth = (chatbotId: string) => {
     }
 
     try {
-      updateState({ isLoading: true, error: null });
+      // Don't set isLoading: true during refresh to prevent UI blinking
+      updateState({ error: null });
 
       const authResponse = await widgetApiService.refreshAnonymousAuth(
         state.visitorId,
@@ -150,7 +164,6 @@ export const useAnonymousAuth = (chatbotId: string) => {
 
       updateState({
         isAuthenticated: true,
-        isLoading: false,
         accessToken: authResponse.accessToken,
       });
 
@@ -181,7 +194,6 @@ export const useAnonymousAuth = (chatbotId: string) => {
       WidgetStorage.clearAccessToken();
       updateState({
         isAuthenticated: false,
-        isLoading: false,
         accessToken: null,
         error: 'Session expired. Please refresh the page.',
       });
@@ -191,11 +203,13 @@ export const useAnonymousAuth = (chatbotId: string) => {
 
   const logout = useCallback(() => {
     WidgetStorage.clearAccessToken();
-    // Reset refresh attempts on logout
+    // Reset refresh attempts and initial auth flag on logout
     refreshAttempts.current = 0;
+    hasInitiallyAuthenticated.current = false;
     updateState({
       isAuthenticated: false,
-      isLoading: false,
+      isLoading: true,
+      isInitialLoading: true,
       accessToken: null,
       error: null,
       // Keep visitorId for potential re-authentication

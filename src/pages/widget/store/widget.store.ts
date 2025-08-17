@@ -8,6 +8,7 @@ export interface IWidget {
   conversationId: string | null;
   isAuthenticated: boolean;
   isAuthLoading: boolean;
+  isInitialAuthLoading: boolean;
   authError: string | null;
   messages: IWidgetMessage[];
   isSessionRestored: boolean;
@@ -19,6 +20,7 @@ const initState: IWidget = {
   conversationId: null,
   isAuthenticated: false,
   isAuthLoading: true,
+  isInitialAuthLoading: true,
   authError: null,
   messages: [],
   isSessionRestored: false,
@@ -31,6 +33,7 @@ interface IActions {
   setAuthState: (state: {
     isAuthenticated: boolean;
     isAuthLoading: boolean;
+    isInitialAuthLoading?: boolean;
     authError: string | null;
   }) => void;
   setMessages: (messages: IWidgetMessage[]) => void;

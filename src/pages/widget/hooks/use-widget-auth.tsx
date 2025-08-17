@@ -11,6 +11,7 @@ export const useWidgetAuth = (chatbotId: string) => {
   const {
     isAuthenticated: authIsAuthenticated,
     isLoading: authIsLoading,
+    isInitialLoading: authIsInitialLoading,
     visitorId: authVisitorId,
     accessToken,
     error: authError,
@@ -22,16 +23,26 @@ export const useWidgetAuth = (chatbotId: string) => {
     setAuthState({
       isAuthenticated: authIsAuthenticated,
       isAuthLoading: authIsLoading,
+      isInitialAuthLoading: authIsInitialLoading,
       authError,
     });
     if (authVisitorId) {
       setVisitorId(authVisitorId);
     }
-  }, [authIsAuthenticated, authIsLoading, authError, authVisitorId, setAuthState, setVisitorId]);
+  }, [
+    authIsAuthenticated,
+    authIsLoading,
+    authIsInitialLoading,
+    authError,
+    authVisitorId,
+    setAuthState,
+    setVisitorId,
+  ]);
 
   return {
     authIsAuthenticated,
     authIsLoading,
+    authIsInitialLoading,
     authVisitorId,
     accessToken,
     authError,

@@ -21,11 +21,11 @@ const Widget = () => {
     messages,
     inputValue,
     isAuthenticated,
-    isAuthLoading,
   } = useWidget();
 
-  const { view } = useWidgetStoreShallow(s => ({
+  const { view, isInitialAuthLoading } = useWidgetStoreShallow(s => ({
     view: s.view,
+    isInitialAuthLoading: s.isInitialAuthLoading,
   }));
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const Widget = () => {
     }
   }, [isAuthenticated]);
 
-  if (isAuthLoading) return null;
+  if (isInitialAuthLoading) return null;
   if (!isAuthenticated) return <WidgetAuthErrorMessage />;
 
   return (
