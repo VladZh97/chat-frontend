@@ -100,18 +100,17 @@ export const ConversationList = ({ startNewChat }: { startNewChat: () => void })
               className="flex cursor-pointer items-center gap-4 rounded-lg p-3 transition-colors hover:bg-stone-100"
             >
               <div
-                className="size-10 rounded-full bg-stone-100"
+                className="size-10 shrink-0 rounded-full bg-stone-100"
                 style={{ backgroundColor: accentColor }}
               >
                 {avatarIcon && (
                   <img src={avatarIcon} alt="avatar" className="size-full object-cover" />
                 )}
               </div>
-              <div className="space-y-0.5">
-                <div
-                  className="text-sm font-medium text-stone-900"
-                  dangerouslySetInnerHTML={{ __html: conversation.lastMessage }}
-                />
+              <div className="grid space-y-0.5">
+                <div className="truncate text-sm font-medium text-stone-900">
+                  {conversation.lastMessage.replace(/<[^>]+>/g, '')}
+                </div>
                 <span className="text-xs font-normal text-stone-500">
                   {formatDate(conversation.lastActivity)}
                 </span>
