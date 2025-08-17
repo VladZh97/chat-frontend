@@ -20,17 +20,17 @@ export const Header = memo(() => {
   };
 
   return (
-    <div className="flex items-center justify-between p-6">
+    <div className="flex items-center p-6">
       <div
         className="flex size-8 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-stone-200"
         onClick={handleHistoryClick}
       >
         <ArrowLeft className="size-5 text-stone-700" />
       </div>
-      <span className="max-w-[calc(100%-140px)] truncate text-sm font-semibold text-stone-900">
+      <span className="ml-6 max-w-[calc(100%-140px)] truncate text-sm font-semibold text-stone-900">
         {publicName || name}
       </span>
-      <div className="flex items-center gap-2">
+      <div className="ml-auto flex items-center gap-2">
         <Options />
         <CloseWidget />
       </div>
