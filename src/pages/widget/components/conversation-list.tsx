@@ -100,7 +100,7 @@ export const ConversationList = ({ startNewChat }: { startNewChat: () => void })
               className="flex cursor-pointer items-center gap-4 rounded-lg p-3 transition-colors hover:bg-stone-100"
             >
               <div
-                className="size-10 shrink-0 rounded-full bg-stone-100"
+                className="size-10 shrink-0 overflow-hidden rounded-full bg-stone-100"
                 style={{ backgroundColor: accentColor }}
               >
                 {avatarIcon && (
