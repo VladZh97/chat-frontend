@@ -1,6 +1,6 @@
 import { useEffect } from 'preact/hooks';
 import moment from 'moment';
-import { MessageCirclePlus } from 'lucide-react';
+import { MessageCirclePlus, MessagesSquare } from 'lucide-react';
 import { useConfigStoreShallow, useHistoryStoreShallow } from '../store';
 import { useWidgetStoreShallow } from '../store/widget.store';
 import { WidgetStorage } from '@/utils/widget-storage';
@@ -9,10 +9,11 @@ import { PoweredByLabel } from './powered-by-label';
 import { cn } from '@/lib/utils';
 
 export const ConversationList = ({ startNewChat }: { startNewChat: () => void }) => {
-  const { conversations, setConversations, setLoading } = useHistoryStoreShallow(s => ({
+  const { conversations, setConversations, setLoading, isLoading } = useHistoryStoreShallow(s => ({
     conversations: s.conversations,
     setConversations: s.setConversations,
     setLoading: s.setLoading,
+    isLoading: s.isLoading,
   }));
 
   const { accentColor, avatarIcon, removeBranding } = useConfigStoreShallow(s => ({
@@ -51,6 +52,23 @@ export const ConversationList = ({ startNewChat }: { startNewChat: () => void })
     startNewChat();
     setView('chat');
   };
+
+  if (conversations?.length === 0 && !isLoading) {
+    return (
+      <div className="h-full">
+        <Header />
+        <div
+          className={cn(
+            'flex h-[calc(100%-108px)] flex-col items-center justify-center',
+            removeBranding && 'h-[calc(100%-68px)]'
+          )}
+        >
+          <EmptyState handleNewChatClick={handleNewChatClick} />
+        </div>
+        {!removeBranding && <PoweredByLabel />}
+      </div>
+    );
+  }
 
   return (
     <div className="h-full">
@@ -112,6 +130,29 @@ const Footer = ({
         Start a new chat
       </button>
       <PoweredByLabel />
+    </div>
+  );
+};
+
+const EmptyState = ({ handleNewChatClick }: { handleNewChatClick: () => void }) => {
+  const { accentColor } = useConfigStoreShallow(s => ({
+    accentColor: s.accentColor,
+  }));
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <MessagesSquare className="mb-5 text-stone-500" size={32} />
+      <p className="mb-2 text-center text-sm font-medium text-stone-900">No chats yet</p>
+      <p className="mb-8 text-center text-xs text-stone-500">
+        Start a conversation and your chats <br /> will show up here.
+      </p>
+      <button
+        className="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 text-white transition-opacity hover:opacity-80"
+        style={{ backgroundColor: accentColor }}
+        onClick={handleNewChatClick}
+      >
+        <MessageCirclePlus size={20} />
+        Start a new chat
+      </button>
     </div>
   );
 };
