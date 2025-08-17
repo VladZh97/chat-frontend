@@ -9,6 +9,7 @@ import { CodeXml, LoaderCircle } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useGetChatbot } from '../../hooks';
+import { copyEmbedCode } from '@/utils/copy-embed-code';
 
 const Header = () => {
   const { id } = useParams();
@@ -19,8 +20,10 @@ const Header = () => {
       toast.success('Chatbot updated successfully');
     },
   });
-  const { name } = useChatbotStoreShallow(s => ({
+  const { name, accountId, _id } = useChatbotStoreShallow(s => ({
     name: s.name,
+    accountId: s.accountId,
+    _id: s._id,
   }));
 
   const handleSave = () => {
@@ -45,7 +48,7 @@ const Header = () => {
       </div>
 
       <div className="ml-10 flex items-center gap-2">
-        <Button variant="outline">
+        <Button variant="outline" onClick={() => copyEmbedCode(accountId, _id)}>
           <CodeXml />
           Copy embed code
         </Button>

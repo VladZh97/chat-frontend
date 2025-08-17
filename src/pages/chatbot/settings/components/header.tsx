@@ -9,12 +9,15 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import TrainingStatusLabel from '@/components/training-status-label';
 import { useGetChatbot } from '../../hooks';
+import { copyEmbedCode } from '@/utils/copy-embed-code';
 
 const Header = () => {
   const { id } = useParams();
   const { isLoading } = useGetChatbot();
-  const { name } = useChatbotStoreShallow(s => ({
+  const { name, accountId, _id } = useChatbotStoreShallow(s => ({
     name: s.name,
+    accountId: s.accountId,
+    _id: s._id,
   }));
 
   const { mutate: updateChatbot, isPending } = useMutation({
@@ -47,7 +50,7 @@ const Header = () => {
       </div>
 
       <div className="ml-10 flex items-center gap-2">
-        <Button variant="outline">
+        <Button variant="outline" onClick={() => copyEmbedCode(accountId, _id)}>
           <CodeXml />
           Copy embed code
         </Button>

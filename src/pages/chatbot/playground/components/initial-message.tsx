@@ -8,7 +8,7 @@ const InitialMessage = () => {
     setChatbot: s.setChatbot,
   }));
   return (
-    <div className="mb-6 border-b border-stone-200 pb-6">
+    <div className="mb-6">
       <Label className="mb-2">Initial message</Label>
       <Input
         className="h-10"

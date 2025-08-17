@@ -9,17 +9,17 @@ const promptsMap = new Map(promptsData.map(p => [p.name, p.prompt]));
 const promptOptions = [...promptsMap.keys()];
 
 const Prompts = () => {
-  const { promptOption, promptValue, setChatbot } = useChatbotStoreShallow(s => ({
-    promptOption: s.promptOption,
-    promptValue: s.promptValue,
+  const { promptPreset, prompt, setChatbot } = useChatbotStoreShallow(s => ({
+    promptPreset: s.promptPreset,
+    prompt: s.prompt,
     setChatbot: s.setChatbot,
   }));
 
   const handlePromptChange = useCallback(
     (value: string) => {
       setChatbot({
-        promptOption: value,
-        promptValue: promptsMap.get(value) ?? '',
+        promptPreset: value,
+        prompt: promptsMap.get(value) ?? '',
       });
     },
     [setChatbot]
@@ -27,28 +27,28 @@ const Prompts = () => {
 
   const handleInstructionChange = useCallback(
     (e: Event) => {
-      setChatbot({ promptValue: (e.target as HTMLTextAreaElement).value });
+      setChatbot({ prompt: (e.target as HTMLTextAreaElement).value });
     },
     [setChatbot]
   );
 
   useEffect(() => {
-    if (!promptOption && !promptValue) {
+    if (!promptPreset && !prompt) {
       const defaultOption = promptsData.find(p => p.default);
       if (!defaultOption) return;
-      setChatbot({ promptOption: defaultOption.name, promptValue: defaultOption.prompt });
+      setChatbot({ promptPreset: defaultOption.name, prompt: defaultOption.prompt });
     }
-  }, [promptOption]);
+  }, [promptPreset, prompt, setChatbot]);
 
   return (
     <>
       <div className="mb-6">
         <Label className="mb-2">Prompts</Label>
         <Select<string>
-          value={promptOption}
+          value={promptPreset}
           onValueChange={value => handlePromptChange(value as string)}
         >
-          <Select.Trigger>{promptOption}</Select.Trigger>
+          <Select.Trigger>{promptPreset}</Select.Trigger>
           <Select.Content>
             {promptOptions.map(option => (
               <Select.Option value={option} key={option}>
@@ -60,11 +60,7 @@ const Prompts = () => {
       </div>
       <div>
         <Label className="mb-2">Instructions</Label>
-        <Textarea
-          className="h-56 resize-none"
-          value={promptValue}
-          onChange={handleInstructionChange}
-        />
+        <Textarea className="h-56 resize-none" value={prompt} onChange={handleInstructionChange} />
       </div>
     </>
   );

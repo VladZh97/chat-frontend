@@ -3,10 +3,14 @@ import { CodeXml } from 'lucide-react';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import { useGetChatbot } from '../../hooks';
 import TrainingStatusLabel from '@/components/training-status-label';
+import { toast } from 'sonner';
+import { copyEmbedCode } from '@/utils/copy-embed-code';
 
 const Header = () => {
-  const { name } = useChatbotStoreShallow(s => ({
+  const { name, accountId, _id } = useChatbotStoreShallow(s => ({
     name: s.name,
+    accountId: s.accountId,
+    _id: s._id,
   }));
   const { isLoading } = useGetChatbot();
   return (
@@ -22,7 +26,7 @@ const Header = () => {
         <TrainingStatusLabel />
       </div>
 
-      <Button variant="outline" className="ml-10">
+      <Button variant="outline" className="ml-10" onClick={() => copyEmbedCode(accountId, _id)}>
         <CodeXml />
         Copy embed code
       </Button>

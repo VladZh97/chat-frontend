@@ -8,7 +8,7 @@ import SidebarChatbots from './sidebar-chatbots';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { useMemo, useState } from 'preact/hooks';
 import { useAuth } from '@/providers/auth-provider';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import user from '@/api/user';
 import EditUserProfile from '@/dialogs/edit-user-profile';
 import { useDialog } from '@/hooks';
@@ -111,6 +111,7 @@ const Sidebar = () => {
 export default Sidebar;
 
 const Profile = () => {
+  const queryClient = useQueryClient();
   const { showDialog } = useDialog();
   const { data: me } = useQuery({
     queryKey: user.get.key,
@@ -121,6 +122,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
+    queryClient.clear();
     navigate('/login');
   };
   if (!me) return null;
