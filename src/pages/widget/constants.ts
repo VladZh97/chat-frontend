@@ -3,4 +3,5 @@ export enum HeywayEvent {
   AuthError = 'heyway:auth-error',
   CONFIG = 'heyway:config',
   CLOSE_WIDGET = 'heyway:close-widget',
+  TRANSCRIPT = 'heyway:transcript',
 }

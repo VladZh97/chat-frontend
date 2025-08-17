@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useWidgetStoreShallow } from '../store/widget.store';
 import { WidgetStorage } from '@/utils/widget-storage';
+import { HeywayEvent } from '../constants';
 
 export const Options = () => {
   const [open, setOpen] = useState(false);
@@ -20,24 +21,32 @@ export const Options = () => {
   );
 
   const handleStartNewChat = () => {
-    // Generate a new conversation ID immediately
     const newConversationId = uuidv4();
-
-    // Clear the current session from store
     clearSession();
-
-    // Immediately set session as restored to prevent useRestoreSession from running
     setSessionRestored(true);
-
-    // Set the new conversation ID
     setConversationId(newConversationId);
-
-    // Set the new conversation as active in localStorage
     if (chatbotId && visitorId) {
       WidgetStorage.setActiveConversationId(chatbotId, visitorId, newConversationId);
     }
-
     setOpen(false);
+  };
+
+  const handleDownloadTranscription = () => {
+    if (!chatbotId || !visitorId) return;
+    const conversationId = WidgetStorage.getActiveConversationId(chatbotId, visitorId);
+    if (conversationId) {
+      const conversation = WidgetStorage.getConversationById(chatbotId, visitorId, conversationId);
+      if (conversation) {
+        window.parent.postMessage(
+          {
+            type: HeywayEvent.TRANSCRIPT,
+            conversationId: conversation.conversationId,
+            transcript: conversation.messages,
+          },
+          '*'
+        );
+      }
+    }
   };
 
   return (
@@ -55,7 +64,7 @@ export const Options = () => {
           <MessageSquarePlus size={16} />
           Start a new chat
         </Option>
-        <Option>
+        <Option onClick={handleDownloadTranscription}>
           <Download size={16} />
           Download transcription
         </Option>
