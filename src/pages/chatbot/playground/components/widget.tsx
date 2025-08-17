@@ -24,7 +24,8 @@ import {
 import type { SetStateAction } from 'preact/compat';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { usePlayground } from '../../hooks';
-import React from 'preact/compat';
+import React, { memo } from 'preact/compat';
+import { useTextOnAccent } from '@/hooks/use-accent-colors';
 
 const Widget = () => {
   const { messages, inputValue, setInputValue, handleSendMessage, isStreaming, streamingHtml } =
@@ -210,11 +211,13 @@ const UserMessage = ({ message }: { message: string }) => {
   const { accentColor } = useChatbotStoreShallow(s => ({
     accentColor: s.accentColor,
   }));
+  const textOnAccent = useTextOnAccent(accentColor);
+
   return (
     <div className="flex justify-end">
       <p
-        className="rounded-2xl rounded-br-none px-4 py-3 text-sm font-normal text-white"
-        style={{ backgroundColor: accentColor }}
+        className="rounded-2xl rounded-br-none px-4 py-3 text-sm font-normal"
+        style={{ backgroundColor: accentColor, color: textOnAccent.color }}
       >
         {message}
       </p>
@@ -254,8 +257,7 @@ const InputContainer = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const { accentColor, removeBranding } = useChatbotStoreShallow(s => ({
-    accentColor: s.accentColor,
+  const { removeBranding } = useChatbotStoreShallow(s => ({
     removeBranding: s.removeBranding,
   }));
   return (
@@ -303,18 +305,29 @@ const InputContainer = ({
             </EmojiPicker>
           </PopoverContent>
         </Popover>
-
-        <span
-          className="flex size-8 cursor-pointer items-center justify-center rounded-full text-white"
-          style={{ backgroundColor: accentColor }}
-          onClick={() => handleSendMessage({ role: 'user', content: inputValue })}
-        >
-          <ArrowUp />
-        </span>
+        <SendButton
+          handleSendMessage={() => handleSendMessage({ role: 'user', content: inputValue })}
+        />
       </div>
     </div>
   );
 };
+
+const SendButton = memo(({ handleSendMessage }: { handleSendMessage: () => void }) => {
+  const { accentColor } = useChatbotStoreShallow(s => ({
+    accentColor: s.accentColor,
+  }));
+  const textOnAccent = useTextOnAccent(accentColor);
+  return (
+    <span
+      className="flex size-8 cursor-pointer items-center justify-center rounded-full"
+      style={{ backgroundColor: accentColor }}
+      onClick={handleSendMessage}
+    >
+      <ArrowUp style={{ color: textOnAccent.color }} />
+    </span>
+  );
+});
 
 const PoweredBy = () => {
   const { removeBranding } = useChatbotStoreShallow(s => ({

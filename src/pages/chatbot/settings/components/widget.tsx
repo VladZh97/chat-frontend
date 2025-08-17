@@ -2,6 +2,7 @@ import { ArrowLeft, ArrowUp, Ellipsis, Smile } from 'lucide-react';
 import PoveredBy from '@/assets/povered-by.svg?react';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import { cn } from '@/lib/utils';
+import { useTextOnAccent } from '@/hooks/use-accent-colors';
 // Removed unused imports
 
 const Widget = () => {
@@ -59,11 +60,12 @@ const UserMessage = () => {
   const { accentColor } = useChatbotStoreShallow(s => ({
     accentColor: s.accentColor,
   }));
+  const textOnAccent = useTextOnAccent(accentColor);
   return (
     <div className="flex justify-end">
       <p
-        className="rounded-2xl rounded-br-none px-4 py-3 text-sm font-normal text-white"
-        style={{ backgroundColor: accentColor }}
+        className="rounded-2xl rounded-br-none px-4 py-3 text-sm font-normal"
+        style={{ backgroundColor: accentColor, color: textOnAccent.color }}
       >
         Tell me everything about your pricing
       </p>
@@ -85,6 +87,7 @@ const InputContainer = () => {
     accentColor: s.accentColor,
     removeBranding: s.removeBranding,
   }));
+  const textOnAccent = useTextOnAccent(accentColor);
   return (
     <div
       className={cn(
@@ -106,7 +109,7 @@ const InputContainer = () => {
           className="flex size-8 cursor-pointer items-center justify-center rounded-full text-white"
           style={{ backgroundColor: accentColor }}
         >
-          <ArrowUp />
+          <ArrowUp style={{ color: textOnAccent.color }} />
         </span>
       </div>
     </div>

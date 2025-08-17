@@ -20,6 +20,7 @@ import moment from 'moment';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import queryClient from '@/lib/query';
+import { useTextOnAccent } from '@/hooks/use-accent-colors';
 
 export const ConversationDetails = ({
   selectedConversation,
@@ -210,11 +211,12 @@ const UserMessage = ({ message }: { message: string }) => {
   const { accentColor } = useChatbotStoreShallow(s => ({
     accentColor: s.accentColor,
   }));
+  const textOnAccent = useTextOnAccent(accentColor);
   return (
     <div className="flex justify-end">
       <p
-        className="rounded-2xl rounded-br-none px-4 py-3 text-sm font-normal text-white"
-        style={{ backgroundColor: accentColor }}
+        className="rounded-2xl rounded-br-none px-4 py-3 text-sm font-normal"
+        style={{ backgroundColor: accentColor, color: textOnAccent.color }}
       >
         {message}
       </p>

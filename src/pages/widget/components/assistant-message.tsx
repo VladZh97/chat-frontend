@@ -1,11 +1,14 @@
 import { useConfigStoreShallow } from '../store';
 import { AssistantMessageActions } from './assistant-message-actions';
+import { useTextOnAccentTint } from '@/hooks/use-accent-colors';
 
 export const AssistantMessage = ({ message }: { message: string }) => {
   const { accentColor, avatar } = useConfigStoreShallow(s => ({
     accentColor: s.accentColor,
     avatar: s.avatarIcon,
   }));
+
+  const textOnAccentTint = useTextOnAccentTint(accentColor);
   if (!message) return null;
   return (
     <div
@@ -20,7 +23,11 @@ export const AssistantMessage = ({ message }: { message: string }) => {
       </div>
       <div className="flex flex-col">
         <div
-          className="prose rounded-2xl rounded-bl-none bg-[var(--accent-color)]/10 px-4 py-3 text-sm font-normal text-stone-900"
+          className="prose rounded-2xl rounded-bl-none px-4 py-3 text-sm font-normal"
+          style={{
+            backgroundColor: textOnAccentTint.backgroundColor,
+            color: textOnAccentTint.color,
+          }}
           dangerouslySetInnerHTML={{ __html: message }}
         />
         <AssistantMessageActions />

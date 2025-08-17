@@ -1,8 +1,9 @@
-import { useRef, type Dispatch, type SetStateAction } from 'preact/compat';
+import { memo, useRef, type Dispatch, type SetStateAction } from 'preact/compat';
 import { useConfigStoreShallow } from '../store';
 import { cn } from '@/lib/utils';
 import { ArrowUp } from 'lucide-react';
 import { EmojiPickerComponent } from './emoji-picker';
+import { useTextOnAccent } from '@/hooks/use-accent-colors';
 
 export const InputContainer = ({
   inputValue,
@@ -14,8 +15,7 @@ export const InputContainer = ({
   handleSendMessage: (message: { role: 'user' | 'assistant'; content: string }) => void;
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { accentColor, removeBranding } = useConfigStoreShallow(s => ({
-    accentColor: s.accentColor,
+  const { removeBranding } = useConfigStoreShallow(s => ({
     removeBranding: s.removeBranding,
   }));
 
@@ -49,15 +49,29 @@ export const InputContainer = ({
       />
       <div className="ml-2 flex shrink-0 items-center gap-4">
         <EmojiPickerComponent onEmojiSelect={onEmojiSelect} />
-
-        <span
-          className="flex size-8 cursor-pointer items-center justify-center rounded-full text-white"
-          style={{ backgroundColor: accentColor }}
-          onClick={() => handleSendMessage({ role: 'user', content: inputValue })}
-        >
-          <ArrowUp />
-        </span>
+        <SendButton
+          handleSendMessage={() => handleSendMessage({ role: 'user', content: inputValue })}
+        />
       </div>
     </div>
   );
 };
+
+const SendButton = memo(({ handleSendMessage }: { handleSendMessage: () => void }) => {
+  const { accentColor } = useConfigStoreShallow(s => ({
+    accentColor: s.accentColor,
+  }));
+  const textOnAccent = useTextOnAccent(accentColor);
+  return (
+    <span
+      className="flex size-8 cursor-pointer items-center justify-center rounded-full"
+      style={{
+        backgroundColor: accentColor,
+        color: textOnAccent.color,
+      }}
+      onClick={handleSendMessage}
+    >
+      <ArrowUp />
+    </span>
+  );
+});

@@ -8,6 +8,7 @@ import { WidgetStorage, type IConversationPreview } from '@/utils/widget-storage
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { PoweredByLabel } from './powered-by-label';
 import { cn } from '@/lib/utils';
+import { useTextOnAccent } from '@/hooks/use-accent-colors';
 
 export const ConversationList = ({ startNewChat }: { startNewChat: () => void }) => {
   const { id: chatbotId } = useParams();
@@ -135,12 +136,17 @@ const Footer = ({
   accentColor: string;
   handleNewChatClick: () => void;
 }) => {
+  const textOnAccent = useTextOnAccent(accentColor);
+
   return (
     <div className="flex w-full flex-col items-center justify-center px-4">
       <button
         onClick={handleNewChatClick}
-        className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl text-white transition-opacity hover:opacity-80"
-        style={{ backgroundColor: accentColor }}
+        className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl transition-opacity hover:opacity-80"
+        style={{
+          backgroundColor: accentColor,
+          color: textOnAccent.color,
+        }}
       >
         <MessageCirclePlus size={20} />
         Start a new chat
@@ -154,6 +160,9 @@ const EmptyState = ({ handleNewChatClick }: { handleNewChatClick: () => void }) 
   const { accentColor } = useConfigStoreShallow(s => ({
     accentColor: s.accentColor,
   }));
+
+  const textOnAccent = useTextOnAccent(accentColor);
+
   return (
     <div className="flex flex-col items-center justify-center">
       <MessagesSquare className="mb-5 text-stone-500" size={32} />
@@ -162,8 +171,11 @@ const EmptyState = ({ handleNewChatClick }: { handleNewChatClick: () => void }) 
         Start a conversation and your chats <br /> will show up here.
       </p>
       <button
-        className="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 text-white transition-opacity hover:opacity-80"
-        style={{ backgroundColor: accentColor }}
+        className="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 transition-opacity hover:opacity-80"
+        style={{
+          backgroundColor: accentColor,
+          color: textOnAccent.color,
+        }}
         onClick={handleNewChatClick}
       >
         <MessageCirclePlus size={20} />
