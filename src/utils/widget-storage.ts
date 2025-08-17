@@ -13,6 +13,15 @@ export interface IWidgetSession {
   lastActivity: number;
 }
 
+export interface IConversationPreview {
+  chatbotId: string;
+  conversationId: string;
+  lastMessage: string;
+  lastMessageRole: 'user' | 'assistant';
+  lastActivity: number;
+  messageCount: number;
+}
+
 const STORAGE_KEYS = {
   VISITOR_ID: 'heyway_visitor_id',
   ACCESS_TOKEN: 'heyway_access_token',
@@ -157,6 +166,78 @@ export class WidgetStorage {
       });
     } catch {
       // Silent fail
+    }
+  }
+
+  static getAllConversations(visitorId: string): IConversationPreview[] {
+    try {
+      const keys = Object.keys(localStorage);
+      const conversationKeys = keys.filter(
+        key => key.startsWith(STORAGE_KEYS.CONVERSATION_PREFIX) && key.endsWith(`_${visitorId}`)
+      );
+
+      const conversations: IConversationPreview[] = [];
+
+      conversationKeys.forEach(key => {
+        try {
+          const session: IWidgetSession = JSON.parse(localStorage.getItem(key) || '{}');
+
+          // Check if session is expired
+          if (Date.now() - session.lastActivity > SESSION_EXPIRY) {
+            localStorage.removeItem(key);
+            return;
+          }
+
+          if (session.messages.length > 0) {
+            const lastMessage = session.messages[session.messages.length - 1];
+            const chatbotId = key
+              .replace(STORAGE_KEYS.CONVERSATION_PREFIX, '')
+              .replace(`_${visitorId}`, '');
+
+            conversations.push({
+              chatbotId,
+              conversationId: session.conversationId,
+              lastMessage: lastMessage.content,
+              lastMessageRole: lastMessage.role,
+              lastActivity: session.lastActivity,
+              messageCount: session.messages.length,
+            });
+          }
+        } catch {
+          // Remove corrupted conversation data
+          localStorage.removeItem(key);
+        }
+      });
+
+      // Sort by last activity (newest first)
+      return conversations.sort((a, b) => b.lastActivity - a.lastActivity);
+    } catch {
+      return [];
+    }
+  }
+
+  static getConversationById(
+    chatbotId: string,
+    visitorId: string,
+    conversationId: string
+  ): IWidgetSession | null {
+    try {
+      const session = this.getConversation(chatbotId, visitorId);
+      if (session && session.conversationId === conversationId) {
+        return session;
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  static deleteConversation(chatbotId: string, visitorId: string): boolean {
+    try {
+      this.clearConversation(chatbotId, visitorId);
+      return true;
+    } catch {
+      return false;
     }
   }
 

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { TMessage } from '@/types/message.type';
+import { WidgetStorage } from '@/utils/widget-storage';
 
 export interface ChatStreamEvent {
   type: 'connected' | 'chunk' | 'complete';
@@ -31,6 +32,13 @@ export interface IMessageHistoryResponse {
   conversationId: string;
 }
 
+// Global token refresh handler - will be set by useAnonymousAuth
+let tokenRefreshHandler: (() => Promise<string | null>) | null = null;
+
+export const setTokenRefreshHandler = (handler: () => Promise<string | null>) => {
+  tokenRefreshHandler = handler;
+};
+
 // Create a separate API instance for widget (no Firebase auth)
 const widgetApi = axios.create({
   baseURL: 'http://localhost:3000/api/widget',
@@ -39,10 +47,36 @@ const widgetApi = axios.create({
 
 // Add interceptor to include anonymous auth token
 widgetApi.interceptors.request.use(async config => {
-  // Note: The token will be added by the useAnonymousAuth hook
-  // This interceptor is here for consistency and future token refresh logic
+  const token = WidgetStorage.getAccessToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
+
+// Add response interceptor to handle 401 errors
+widgetApi.interceptors.response.use(
+  response => response,
+  async error => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry && tokenRefreshHandler) {
+      originalRequest._retry = true;
+
+      try {
+        const newToken = await tokenRefreshHandler();
+        if (newToken) {
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return widgetApi(originalRequest);
+        }
+      } catch (refreshError) {
+        console.error('Token refresh failed during API call:', refreshError);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 const widgetApiService = {
   // Create anonymous authentication
@@ -56,13 +90,15 @@ const widgetApiService = {
     visitorId: string,
     currentToken: string
   ): Promise<IAnonymousAuthResponse> {
-    const response = await widgetApi.post(
-      '/auth/refresh',
-      { visitorId },
+    // Create a direct axios call bypassing interceptors for refresh
+    // since the current token might be expired
+    const response = await axios.post(
+      `${widgetApi.defaults.baseURL}/auth/refresh`,
+      { visitorId, currentToken },
       {
-        headers: {
-          Authorization: `Bearer ${currentToken}`,
-        },
+        timeout: widgetApi.defaults.timeout,
+        // Don't use Authorization header since token might be expired
+        // Send token in body instead for backend validation
       }
     );
     return response.data;
@@ -74,14 +110,35 @@ const widgetApiService = {
     token: string,
     onEvent: (event: ChatStreamEvent) => void
   ): Promise<void> {
-    const response = await fetch(`${widgetApi.defaults.baseURL}/messages/stream`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
-    });
+    const makeRequest = async (authToken: string) => {
+      const response = await fetch(`${widgetApi.defaults.baseURL}/messages/stream`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.status === 401 && tokenRefreshHandler) {
+        // Try to refresh token and retry once
+        const newToken = await tokenRefreshHandler();
+        if (newToken) {
+          return fetch(`${widgetApi.defaults.baseURL}/messages/stream`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${newToken}`,
+            },
+            body: JSON.stringify(data),
+          });
+        }
+      }
+
+      return response;
+    };
+
+    const response = await makeRequest(token);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

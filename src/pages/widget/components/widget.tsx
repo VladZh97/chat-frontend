@@ -2,12 +2,15 @@ import { useWidget, useGetConfig } from '../hooks';
 import { Footer } from './widget-footer';
 import { Header } from './widget-header';
 import { WidgetMain } from './widget-main';
+import { ConversationList } from './conversation-list';
+import { useWidgetStoreShallow } from '../store/widget.store';
 
 const Widget = () => {
   useGetConfig();
   const {
     setInputValue,
     handleSendMessage,
+    startNewChat,
     isStreaming,
     streamingHtml,
     messages,
@@ -15,6 +18,10 @@ const Widget = () => {
     isAuthenticated,
     isAuthLoading,
   } = useWidget();
+
+  const { view } = useWidgetStoreShallow(s => ({
+    view: s.view,
+  }));
 
   // Show loading state while authenticating
   if (isAuthLoading) {
@@ -47,6 +54,14 @@ const Widget = () => {
             </button>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (view === 'history') {
+    return (
+      <div className="flex h-screen w-full grow flex-col rounded-3xl bg-white pb-2">
+        <ConversationList startNewChat={startNewChat} />
       </div>
     );
   }

@@ -2,6 +2,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Options } from './options';
 import { CloseWidget } from './close-widget';
 import { useConfigStoreShallow } from '../store';
+import { useWidgetStoreShallow } from '../store/widget.store';
 import { memo } from 'preact/compat';
 
 export const Header = memo(() => {
@@ -10,12 +11,23 @@ export const Header = memo(() => {
     publicName: s.publicName,
   }));
 
+  const { setView } = useWidgetStoreShallow(s => ({
+    setView: s.setView,
+  }));
+
+  const handleHistoryClick = () => {
+    setView('history');
+  };
+
   return (
     <div className="flex items-center justify-between p-6">
-      <div className="flex size-8 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-stone-200">
+      <div
+        className="flex size-8 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-stone-200"
+        onClick={handleHistoryClick}
+      >
         <ArrowLeft className="size-5 text-stone-700" />
       </div>
-      <span className="max-w-[calc(100%-100px)] truncate text-sm font-semibold text-stone-900">
+      <span className="max-w-[calc(100%-140px)] truncate text-sm font-semibold text-stone-900">
         {publicName || name}
       </span>
       <div className="flex items-center gap-2">

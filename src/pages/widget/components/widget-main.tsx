@@ -63,7 +63,7 @@ export const WidgetMain = ({
   }, [groupedMessages.length, isStreaming, streamingHtml]);
 
   return (
-    <ScrollArea className={cn('h-[calc(100%-164px)]', removeBranding && 'h-[calc(100%-132px)]')}>
+    <ScrollArea className={cn('h-[calc(100%-176px)]', removeBranding && 'h-[calc(100%-144px)]')}>
       <div className="flex flex-1 flex-col" ref={scrollRef}>
         <div className="space-y-4 p-6">
           {groupedMessages.map((group, groupIndex) => (
