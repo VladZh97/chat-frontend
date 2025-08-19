@@ -89,9 +89,10 @@ export const Drawer = ({
   if (animationState === 'exited') return null;
 
   const backdropOpacity = animationState === 'entered' ? 'opacity-100' : 'opacity-0';
-  const contentTransform = animationState === 'entered' 
-    ? 'transform translate-y-0 opacity-100' 
-    : 'transform translate-y-full opacity-0';
+  const contentTransform =
+    animationState === 'entered'
+      ? 'transform translate-y-0 opacity-100'
+      : 'transform translate-y-full opacity-0';
   const contentDuration = animationState === 'exiting' ? 'transition-duration-250' : '';
 
   const backdropClasses = cn(
@@ -108,7 +109,7 @@ export const Drawer = ({
   );
 
   return (
-    <div className="fixed inset-0 z-50 pointer-events-auto">
+    <div className="pointer-events-auto fixed inset-0 z-50">
       {/* Backdrop */}
       {backdrop && <div className={backdropClasses} onClick={handleBackdropClick} />}
 

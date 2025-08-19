@@ -32,7 +32,7 @@ export const initState: IConfig = {
   rateLimitMessage: '',
   initialMessage: 'How can I help you?',
   conversationStarters: [],
-  collectLeads: false,
+  collectLeads: true,
 };
 
 interface IActions {

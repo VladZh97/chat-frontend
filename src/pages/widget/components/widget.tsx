@@ -73,7 +73,7 @@ const Widget = () => {
       setTimeout(() => {
         // Now send the original message that was intercepted
         handleSendMessage({ role: 'user', content: pendingMessage });
-      }, 500);
+      }, 1000);
     }
   };
 

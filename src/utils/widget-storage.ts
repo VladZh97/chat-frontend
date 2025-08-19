@@ -28,6 +28,7 @@ const STORAGE_KEYS = {
   CONVERSATION_PREFIX: 'heyway_conversation_',
   ACTIVE_CONVERSATION: 'heyway_active_conversation_',
   LEAD_COLLECTED: 'heyway_lead_collected_',
+  NEW_CHAT_FLAG: 'heyway_new_chat_flag_',
 } as const;
 
 const MAX_CONVERSATIONS = 10;
@@ -379,5 +380,46 @@ export class WidgetStorage {
     } catch {
       // Silent fail
     }
+  }
+
+  static setNewChatFlag(chatbotId: string, visitorId: string): void {
+    try {
+      const key = `${STORAGE_KEYS.NEW_CHAT_FLAG}${chatbotId}_${visitorId}`;
+      sessionStorage.setItem(key, 'true');
+    } catch {
+      // Silent fail
+    }
+  }
+
+  static hasNewChatFlag(chatbotId: string, visitorId: string): boolean {
+    try {
+      const key = `${STORAGE_KEYS.NEW_CHAT_FLAG}${chatbotId}_${visitorId}`;
+      return sessionStorage.getItem(key) === 'true';
+    } catch {
+      return false;
+    }
+  }
+
+  static clearNewChatFlag(chatbotId: string, visitorId: string): void {
+    try {
+      const key = `${STORAGE_KEYS.NEW_CHAT_FLAG}${chatbotId}_${visitorId}`;
+      sessionStorage.removeItem(key);
+    } catch {
+      // Silent fail
+    }
+  }
+
+  static startNewChat(chatbotId: string, visitorId: string, newConversationId: string): void {
+    // Clear the current active conversation data
+    const currentActiveConversationId = this.getActiveConversationId(chatbotId, visitorId);
+    if (currentActiveConversationId) {
+      this.clearConversation(chatbotId, visitorId, currentActiveConversationId);
+    }
+
+    // Set the new chat flag
+    this.setNewChatFlag(chatbotId, visitorId);
+
+    // Set the new active conversation
+    this.setActiveConversationId(chatbotId, visitorId, newConversationId);
   }
 }

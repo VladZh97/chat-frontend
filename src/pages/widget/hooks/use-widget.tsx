@@ -74,9 +74,9 @@ export const useWidget = () => {
     // Set the new conversation ID
     setConversationId(newConversationId);
 
-    // Set the new conversation as active in localStorage
+    // Use the new startNewChat method that properly clears old data and sets flags
     if (chatbotId && visitorId) {
-      WidgetStorage.setActiveConversationId(chatbotId, visitorId, newConversationId);
+      WidgetStorage.startNewChat(chatbotId, visitorId, newConversationId);
     }
   };
 

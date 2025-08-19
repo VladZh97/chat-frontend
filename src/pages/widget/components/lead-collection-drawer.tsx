@@ -67,7 +67,7 @@ export const LeadCollectionDrawer = ({
                 value={email}
                 onChange={e => setEmail((e.target as HTMLInputElement).value)}
                 placeholder="Your email address"
-                className="h-11 w-full rounded-xl border-none bg-neutral-100 px-4"
+                className="tw-text-sm h-11 w-full rounded-xl border-none bg-neutral-100 px-4"
                 disabled={isSubmitting}
               />
             </div>
@@ -128,7 +128,7 @@ export const LeadCollectionDrawer = ({
             onClick={handleSubmit}
             disabled={isSubmitting || !isFormValid}
             className={cn(
-              'w-full rounded-xl px-4 py-3 text-sm font-semibold transition-colors',
+              'w-full cursor-pointer rounded-xl px-4 py-3 text-sm font-semibold transition-colors',
               'disabled:cursor-not-allowed disabled:!bg-neutral-200 disabled:!text-neutral-500'
             )}
             style={{

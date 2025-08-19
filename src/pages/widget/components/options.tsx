@@ -26,7 +26,7 @@ export const Options = () => {
     setSessionRestored(true);
     setConversationId(newConversationId);
     if (chatbotId && visitorId) {
-      WidgetStorage.setActiveConversationId(chatbotId, visitorId, newConversationId);
+      WidgetStorage.startNewChat(chatbotId, visitorId, newConversationId);
     }
     setOpen(false);
   };

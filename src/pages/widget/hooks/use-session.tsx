@@ -16,11 +16,21 @@ export const useRestoreSession = (
 
   useEffect(() => {
     if (isAuthenticated && authVisitorId && chatbotId && !isSessionRestored) {
-      const storedSession = WidgetStorage.getConversation(chatbotId, authVisitorId);
-      if (storedSession) {
-        restoreSession(storedSession);
-      } else {
+      // Check if a new chat was explicitly started
+      const hasNewChatFlag = WidgetStorage.hasNewChatFlag(chatbotId, authVisitorId);
+
+      if (hasNewChatFlag) {
+        // Clear the flag and don't restore any session
+        WidgetStorage.clearNewChatFlag(chatbotId, authVisitorId);
         setSessionRestored(true);
+      } else {
+        // Normal session restoration
+        const storedSession = WidgetStorage.getConversation(chatbotId, authVisitorId);
+        if (storedSession) {
+          restoreSession(storedSession);
+        } else {
+          setSessionRestored(true);
+        }
       }
     }
   }, [
