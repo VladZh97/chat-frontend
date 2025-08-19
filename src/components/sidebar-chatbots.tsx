@@ -46,7 +46,7 @@ const SidebarChatbots = () => {
               to={`/chatbot/${chatbot._id}/overview`}
               className={cn(
                 'flex items-center gap-2 rounded-lg border border-transparent p-2 text-sm text-stone-400 transition-colors duration-200 hover:text-stone-300',
-                id === chatbot._id && 'border-stone-700 bg-stone-800 font-semibold text-stone-50'
+                id === chatbot._id && 'border-stone-800 bg-stone-900 font-semibold text-stone-50'
               )}
             >
               <Bot className="size-4 shrink-0" />
