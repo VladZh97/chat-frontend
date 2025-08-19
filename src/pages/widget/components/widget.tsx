@@ -70,10 +70,8 @@ const Widget = () => {
   const handleLeadSubmitSuccess = async (email: string) => {
     const success = await handleSubmitLead(email);
     if (success && pendingMessage) {
-      setTimeout(() => {
-        // Now send the original message that was intercepted
-        handleSendMessage({ role: 'user', content: pendingMessage });
-      }, 1000);
+      // Now send the original message that was intercepted
+      handleSendMessage({ role: 'user', content: pendingMessage });
     }
   };
 

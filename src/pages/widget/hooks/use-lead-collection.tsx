@@ -57,7 +57,9 @@ export const useLeadCollection = ({
       WidgetStorage.setLeadCollected(chatbotId, visitorId);
 
       // Close the popover
-      setIsLeadPopoverOpen(false);
+      setTimeout(() => {
+        setIsLeadPopoverOpen(false);
+      }, 1000);
 
       return true;
     } catch (error) {
