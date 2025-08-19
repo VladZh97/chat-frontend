@@ -90,6 +90,9 @@ export const useWidget = () => {
     isAuthenticated,
     isAuthLoading,
     visitorId,
+    chatbotId,
+    accessToken,
+    conversationId,
     startNewChat,
   };
 };

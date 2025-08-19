@@ -27,6 +27,7 @@ const STORAGE_KEYS = {
   ACCESS_TOKEN: 'heyway_access_token',
   CONVERSATION_PREFIX: 'heyway_conversation_',
   ACTIVE_CONVERSATION: 'heyway_active_conversation_',
+  LEAD_COLLECTED: 'heyway_lead_collected_',
 } as const;
 
 const MAX_CONVERSATIONS = 10;
@@ -189,7 +190,8 @@ export class WidgetStorage {
       keys.forEach(key => {
         if (
           key.startsWith(STORAGE_KEYS.CONVERSATION_PREFIX) ||
-          key.startsWith(STORAGE_KEYS.ACTIVE_CONVERSATION)
+          key.startsWith(STORAGE_KEYS.ACTIVE_CONVERSATION) ||
+          key.startsWith(STORAGE_KEYS.LEAD_COLLECTED)
         ) {
           localStorage.removeItem(key);
         }
@@ -346,6 +348,33 @@ export class WidgetStorage {
   static clearActiveConversationId(chatbotId: string, visitorId: string): void {
     try {
       const key = `${STORAGE_KEYS.ACTIVE_CONVERSATION}${chatbotId}_${visitorId}`;
+      localStorage.removeItem(key);
+    } catch {
+      // Silent fail
+    }
+  }
+
+  static isLeadCollected(chatbotId: string, visitorId: string): boolean {
+    try {
+      const key = `${STORAGE_KEYS.LEAD_COLLECTED}${chatbotId}_${visitorId}`;
+      return localStorage.getItem(key) === 'true';
+    } catch {
+      return false;
+    }
+  }
+
+  static setLeadCollected(chatbotId: string, visitorId: string): void {
+    try {
+      const key = `${STORAGE_KEYS.LEAD_COLLECTED}${chatbotId}_${visitorId}`;
+      localStorage.setItem(key, 'true');
+    } catch {
+      // Silent fail
+    }
+  }
+
+  static clearLeadCollected(chatbotId: string, visitorId: string): void {
+    try {
+      const key = `${STORAGE_KEYS.LEAD_COLLECTED}${chatbotId}_${visitorId}`;
       localStorage.removeItem(key);
     } catch {
       // Silent fail
