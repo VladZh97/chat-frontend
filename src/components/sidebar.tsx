@@ -56,7 +56,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex h-full w-[272px] shrink-0 flex-col overflow-hidden bg-stone-900">
+    <div className="flex h-full w-[272px] shrink-0 flex-col overflow-hidden bg-stone-950">
       <ScrollArea className="h-full [&>div>div]:h-full">
         <div className="flex h-full flex-col">
           <div className="p-4">
@@ -73,7 +73,7 @@ const Sidebar = () => {
                   className={cn(
                     'flex items-center gap-2 rounded-lg border border-transparent p-2 text-sm text-stone-400 transition-colors duration-200 hover:text-stone-300',
                     pathname === item.path &&
-                      'border-stone-700 bg-stone-800 font-semibold text-stone-50'
+                      'border-stone-800 bg-stone-900 font-semibold text-stone-50'
                   )}
                   key={item.path}
                 >
