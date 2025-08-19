@@ -16,11 +16,6 @@ interface UseSendMessageParams {
   visitorId?: string;
   handleApiError: (error: unknown) => Promise<boolean>;
   clearInput: () => void;
-  collectLeads: boolean;
-  emailCollected: boolean;
-  awaitingEmail: boolean;
-  setEmailCollected: (collected: boolean) => void;
-  setAwaitingEmail: (awaiting: boolean) => void;
 }
 
 export const useSendMessage = ({
@@ -34,20 +29,12 @@ export const useSendMessage = ({
   visitorId,
   handleApiError,
   clearInput,
-  collectLeads,
-  emailCollected,
-  awaitingEmail,
-  setEmailCollected,
-  setAwaitingEmail,
 }: UseSendMessageParams) => {
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingHtml, setStreamingHtml] = useState('');
   const streamingHtmlRef = useRef('');
   const pendingRef = useRef('');
   const fullAccumulatedRef = useRef('');
-  const originalMessageRef = useRef<string | null>(null);
-  
-  const emailSchema = z.string().email();
 
   // Extracted function to process message streaming
   const processMessageStream = async (messageContent: string, currentConversationId: string) => {
@@ -142,66 +129,6 @@ export const useSendMessage = ({
   }) => {
     if (isStreaming || !content.trim() || !isAuthenticated || !accessToken) return;
 
-    // Handle email collection flow
-    if (collectLeads && awaitingEmail) {
-      const emailValidation = emailSchema.safeParse(content);
-      if (!emailValidation.success) {
-        return; // Email validation will be handled in the input component
-      }
-
-      // Clear input immediately after validation passes
-      clearInput();
-
-      // Set up conversation ID
-      const currentConversationId = conversationId ?? uuidv4();
-      if (!conversationId) {
-        setConversationId(currentConversationId);
-      }
-
-      // Add user email message
-      const userMessage: IWidgetMessage = {
-        role,
-        content,
-        timestamp: Date.now(),
-      };
-      addMessage(userMessage);
-      if (chatbotId && visitorId) {
-        WidgetStorage.addMessage(chatbotId, visitorId, userMessage, currentConversationId);
-      }
-
-      // Send email to backend
-      try {
-        if (chatbotId && visitorId) {
-          await widgetApiService.submitEmail({
-            chatbotId,
-            visitorId,
-            email: content,
-            conversationId: currentConversationId,
-          }, accessToken);
-        }
-
-        // Mark email as collected and stop awaiting
-        setEmailCollected(true);
-        setAwaitingEmail(false);
-
-        // After successful email submission, process the original message if it exists
-        if (originalMessageRef.current) {
-          const originalMessage = originalMessageRef.current;
-          originalMessageRef.current = null; // Clear the stored message
-          
-          // Process the original message through normal streaming flow
-          await processMessageStream(originalMessage, currentConversationId);
-        }
-      } catch (error) {
-        console.error('Failed to submit email:', error);
-        // Still mark as collected even if submission fails to prevent repeated attempts
-        setEmailCollected(true);
-        setAwaitingEmail(false);
-      }
-      
-      return;
-    }
-
     let currentConversationId = conversationId ?? undefined;
     if (!currentConversationId) {
       currentConversationId = uuidv4();
@@ -219,39 +146,8 @@ export const useSendMessage = ({
       WidgetStorage.addMessage(chatbotId, visitorId, userMessage, currentConversationId);
     }
 
-    // Check if we need to trigger email collection after first user message
-    const isFirstUserMessage = collectLeads && !emailCollected && messages.filter(m => m.role === 'user').length === 0;
-    
-    if (isFirstUserMessage) {
-      // Store the original message for later processing
-      originalMessageRef.current = content;
-      
-      // Clear input immediately after first message
-      clearInput();
-      
-      // Add the email request message immediately after first user message
-      const emailRequestMessage: IWidgetMessage = {
-        role: 'assistant',
-        content: 'Please, provide your email',
-        timestamp: Date.now(),
-      };
-      
-      addMessage(emailRequestMessage);
-      if (chatbotId && visitorId) {
-        WidgetStorage.addMessage(
-          chatbotId,
-          visitorId,
-          emailRequestMessage,
-          currentConversationId
-        );
-      }
-      
-      setAwaitingEmail(true);
-      return; // Don't proceed with normal message flow when email collection is triggered
-    }
-
     clearInput();
-    
+
     // Process the message through streaming
     await processMessageStream(content, currentConversationId);
   };

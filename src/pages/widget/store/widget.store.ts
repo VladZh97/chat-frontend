@@ -12,8 +12,6 @@ export interface IWidget {
   authError: string | null;
   messages: IWidgetMessage[];
   isSessionRestored: boolean;
-  emailCollected: boolean;
-  awaitingEmail: boolean;
 }
 
 const initState: IWidget = {
@@ -26,8 +24,6 @@ const initState: IWidget = {
   authError: null,
   messages: [],
   isSessionRestored: false,
-  emailCollected: false,
-  awaitingEmail: false,
 };
 
 interface IActions {
@@ -45,8 +41,6 @@ interface IActions {
   restoreSession: (session: IWidgetSession) => void;
   clearSession: () => void;
   setSessionRestored: (restored: boolean) => void;
-  setEmailCollected: (collected: boolean) => void;
-  setAwaitingEmail: (awaiting: boolean) => void;
 }
 
 export const useWidgetStore = create<IWidget & IActions>(set => ({
@@ -71,12 +65,8 @@ export const useWidgetStore = create<IWidget & IActions>(set => ({
       messages: [],
       conversationId: null,
       isSessionRestored: false,
-      emailCollected: false,
-      awaitingEmail: false,
     })),
   setSessionRestored: restored => set(prev => ({ ...prev, isSessionRestored: restored })),
-  setEmailCollected: collected => set(prev => ({ ...prev, emailCollected: collected })),
-  setAwaitingEmail: awaiting => set(prev => ({ ...prev, awaitingEmail: awaiting })),
 }));
 
 export const useWidgetStoreShallow = <U>(selector: (store: IWidget & IActions) => U) => {

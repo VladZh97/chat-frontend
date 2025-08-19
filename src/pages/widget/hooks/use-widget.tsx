@@ -2,7 +2,6 @@ import { useState } from 'preact/hooks';
 import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useWidgetStoreShallow } from '../store/widget.store';
-import { useConfigStoreShallow } from '../store';
 import { WidgetStorage } from '@/utils/widget-storage';
 import { useWidgetAuth } from './use-widget-auth';
 import { useEnsureConversationId, useRestoreSession } from './use-session';
@@ -12,11 +11,6 @@ import { useSendMessage } from './use-send-message';
 export const useWidget = () => {
   const [inputValue, setInputValue] = useState('');
   const { id: chatbotId } = useParams();
-
-
-  const { collectLeads } = useConfigStoreShallow(s => ({
-    collectLeads: s.collectLeads,
-  }));
 
   const {
     messages,
@@ -29,10 +23,6 @@ export const useWidget = () => {
     setConversationId,
     clearSession,
     setSessionRestored,
-    emailCollected,
-    awaitingEmail,
-    setEmailCollected,
-    setAwaitingEmail,
   } = useWidgetStoreShallow(s => ({
     messages: s.messages,
     visitorId: s.visitorId,
@@ -44,10 +34,6 @@ export const useWidget = () => {
     setConversationId: s.setConversationId,
     clearSession: s.clearSession,
     setSessionRestored: s.setSessionRestored,
-    emailCollected: s.emailCollected,
-    awaitingEmail: s.awaitingEmail,
-    setEmailCollected: s.setEmailCollected,
-    setAwaitingEmail: s.setAwaitingEmail,
   }));
 
   // Auth sync
@@ -73,11 +59,6 @@ export const useWidget = () => {
     visitorId: visitorId!,
     handleApiError,
     clearInput: () => setInputValue(''),
-    collectLeads,
-    emailCollected,
-    awaitingEmail,
-    setEmailCollected,
-    setAwaitingEmail,
   });
 
   const startNewChat = () => {

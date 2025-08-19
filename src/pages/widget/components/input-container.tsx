@@ -5,9 +5,6 @@ import { cn } from '@/lib/utils';
 import { ArrowUp } from 'lucide-react';
 import { EmojiPickerComponent } from './emoji-picker';
 import { useTextOnAccent } from '@/hooks/use-accent-colors';
-import { z } from 'zod';
-
-const emailSchema = z.string().email();
 
 export const InputContainer = ({
   inputValue,
@@ -19,15 +16,9 @@ export const InputContainer = ({
   handleSendMessage: (message: { role: 'user' | 'assistant'; content: string }) => void;
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [emailError, setEmailError] = useState<string | null>(null);
 
-  const { removeBranding, collectLeads } = useConfigStoreShallow(s => ({
+  const { removeBranding } = useConfigStoreShallow(s => ({
     removeBranding: s.removeBranding,
-    collectLeads: s.collectLeads,
-  }));
-
-  const { awaitingEmail } = useWidgetStoreShallow(s => ({
-    awaitingEmail: s.awaitingEmail,
   }));
 
   const onEmojiSelect = (emoji: string) => {
@@ -38,46 +29,27 @@ export const InputContainer = ({
   };
 
   const handleSubmit = () => {
-    if (awaitingEmail) {
-      const emailValidation = emailSchema.safeParse(inputValue);
-      if (!emailValidation.success) {
-        setEmailError('Please enter a valid email address');
-        return;
-      }
-      setEmailError(null);
-      handleSendMessage({ role: 'user', content: inputValue });
-    } else {
-      handleSendMessage({ role: 'user', content: inputValue });
-    }
-  };
-
-  const getPlaceholder = () => {
-    if (collectLeads && awaitingEmail) return 'Provide your email';
-    return 'Ask me anything';
+    handleSendMessage({ role: 'user', content: inputValue });
   };
 
   return (
     <div
       className={cn(
-        'flex h-14 items-center rounded-xl py-3 pr-3 pl-4',
-        removeBranding && 'mb-2',
-        emailError ? 'border border-red-200 bg-red-50' : 'bg-stone-100'
+        'flex h-14 items-center rounded-xl bg-stone-100 py-3 pr-3 pl-4',
+        removeBranding && 'mb-2'
       )}
     >
       <input
         ref={inputRef}
         type="text"
-        placeholder={getPlaceholder()}
+        placeholder="Ask me anything"
         className={cn(
           'grow border-none text-sm font-normal outline-none focus:outline-none focus-visible:outline-none',
-          emailError
-            ? 'text-red-600 placeholder:text-red-400'
-            : 'text-stone-900 placeholder:text-stone-900/40'
+          'text-stone-900 placeholder:text-stone-900/40'
         )}
         value={inputValue}
         onChange={e => {
           setInputValue((e.target as HTMLInputElement).value);
-          if (emailError) setEmailError(null);
         }}
         onKeyPress={e => {
           if (e.key === 'Enter' && !e.shiftKey) {
