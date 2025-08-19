@@ -10,7 +10,7 @@ const ChatbotName = () => {
   }));
 
   return (
-    <div className="mb-6 border-b border-stone-200 pb-6">
+    <div className="mb-6">
       <Label className="mb-2">Chatbot name</Label>
       <Input
         className={cn('h-10', !name && 'border-red-500 bg-red-100 text-red-500')}

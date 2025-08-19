@@ -28,7 +28,10 @@ const Branding = () => {
         )}
         <Switch
           checked={removeBranding}
-          onCheckedChange={value => setChatbot({ removeBranding: value })}
+          onCheckedChange={value => {
+            if (disabled) return;
+            setChatbot({ removeBranding: value });
+          }}
           disabled={disabled}
         />
       </div>

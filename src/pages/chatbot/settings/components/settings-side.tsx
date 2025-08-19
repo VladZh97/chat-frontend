@@ -19,10 +19,10 @@ const SettingsSide = () => {
     <ScrollArea className="h-[calc(100vh-101px)]">
       <div className="px-8 py-6">
         <ChatbotName />
+        <CollectLeads />
         <Images />
         <Colors />
         <Branding />
-        <CollectLeads />
         <RateLimiting />
         <div className="mt-6 border-t border-stone-200 pt-6">
           <Button variant="destructive" onClick={handleDeleteChatbot}>
