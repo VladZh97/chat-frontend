@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid';
 import widgetApiService from '@/api/widget';
 import { findSafeFlushIndex } from '@/pages/usage/utils';
 import { WidgetStorage, type IWidgetMessage } from '@/utils/widget-storage';
-import { z } from 'zod';
 
 interface UseSendMessageParams {
   messages: Array<{ role: 'user' | 'assistant'; content: string }>;

@@ -1,6 +1,5 @@
-import { memo, useRef, useState, type Dispatch, type SetStateAction } from 'preact/compat';
+import { memo, useRef, type Dispatch, type SetStateAction } from 'preact/compat';
 import { useConfigStoreShallow } from '../store';
-import { useWidgetStoreShallow } from '../store/widget.store';
 import { cn } from '@/lib/utils';
 import { ArrowUp } from 'lucide-react';
 import { EmojiPickerComponent } from './emoji-picker';
