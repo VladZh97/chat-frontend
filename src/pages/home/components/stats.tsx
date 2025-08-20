@@ -44,7 +44,7 @@ const AnswersQualityCard = () => {
 
   return (
     <StatCard icon={<ThumbsUp className="size-4 text-stone-500" />} title="Answers quality">
-      {isLoading || !data?.score ? '-/-' : `${data?.score}/5`}
+      {isLoading || !data?.score || data.score === -1 ? '-/-' : `${data?.score}/5`}
     </StatCard>
   );
 };

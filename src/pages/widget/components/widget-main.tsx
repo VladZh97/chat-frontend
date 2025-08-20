@@ -81,7 +81,7 @@ export const WidgetMain = ({
   return (
     <ScrollArea className={cn('h-[calc(100%-176px)]', removeBranding && 'h-[calc(100%-144px)]')}>
       <div className="flex flex-1 flex-col" ref={scrollRef}>
-        <div className="space-y-4 p-6">
+        <div className="space-y-4 p-6 pb-10">
           {groupedMessages.map((group, groupIndex) => (
             <div key={groupIndex} className="space-y-1">
               {group.role === 'assistant'
