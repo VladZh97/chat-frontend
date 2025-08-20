@@ -21,7 +21,7 @@ export const AssistantMessage = ({ message }: { message: string }) => {
       >
         {avatar && <img src={avatar} alt="avatar" className="size-full object-cover" />}
       </div>
-      <div className="flex flex-col">
+      <div className="group relative flex flex-col">
         <div
           className="prose rounded-2xl rounded-bl-none px-4 py-3 text-sm font-normal"
           style={{
@@ -30,7 +30,7 @@ export const AssistantMessage = ({ message }: { message: string }) => {
           }}
           dangerouslySetInnerHTML={{ __html: message }}
         />
-        <AssistantMessageActions />
+        <AssistantMessageActions message={message} />
       </div>
     </div>
   );

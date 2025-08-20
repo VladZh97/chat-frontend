@@ -5,11 +5,13 @@ import { useState, useCallback, useEffect } from 'preact/hooks';
 import { useMutation } from '@tanstack/react-query';
 import type { IChatbot } from '@/types/chatbot.type';
 import { useNavigate } from 'react-router-dom';
-import { LoaderCircle } from 'lucide-react';
+import { Gem, LoaderCircle } from 'lucide-react';
 import chatbot from '@/api/chatbot';
 import { cn } from '@/lib/utils';
 import { useDialog } from '@/hooks';
 import { Switch } from '@/components/ui/switch';
+import { PLAN_NAMES } from '@/config';
+import useCurrentSubscription from '@/hooks/use-current-subscription';
 
 const ID = 'create-new-chatbot';
 
@@ -18,6 +20,8 @@ const CreateNewChatbot = () => {
   const [name, setName] = useState('');
   const [collectLeads, setCollectLeads] = useState(false);
   const { closeDialog, updateDialog } = useDialog();
+  const { plan } = useCurrentSubscription();
+  const disabled = plan.title === PLAN_NAMES.FREE;
 
   const { mutate: createChatbot, isPending } = useMutation({
     mutationFn: (data: Partial<IChatbot>) => chatbot.create(data),
@@ -69,7 +73,28 @@ const CreateNewChatbot = () => {
         </div>
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-stone-900">Collect leads</span>
-          <Switch checked={collectLeads} onCheckedChange={setCollectLeads} />
+          <div className="flex items-center gap-4">
+            {disabled && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  navigate('/subscription');
+                  closeDialog(ID);
+                }}
+              >
+                <Gem className="size-4" />
+                Upgrade now
+              </Button>
+            )}
+            <Switch
+              disabled={disabled}
+              checked={collectLeads}
+              onCheckedChange={value => {
+                if (disabled) return;
+                setCollectLeads(value);
+              }}
+            />
+          </div>
         </div>
       </div>
       <div className="rounded-b-2xl border-t border-stone-200 bg-stone-50 p-6">

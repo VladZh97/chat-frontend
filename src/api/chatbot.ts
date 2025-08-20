@@ -40,10 +40,6 @@ const chatbot = {
       if (!oldData) return [];
       return oldData.filter(chatbot => chatbot._id !== id);
     });
-    queryClient.setQueryData(stats.chats.key(), (oldData: IChatbot[] | undefined) => {
-      if (!oldData) return [];
-      return oldData.filter(chatbot => chatbot._id !== id);
-    });
   },
   // Playground streaming (editor view) – sends messages array and instructions, no auth
   sendPlaygroundMessageStream: async (
