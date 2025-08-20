@@ -104,9 +104,9 @@ export const AssistantMessageActions = ({
         <ThumbsUp
           className={`size-[14px] transition-colors ${
             currentRating === 5
-              ? 'text-green-600'
+              ? 'text-stone-900'
               : canRate
-                ? 'text-stone-500 group-hover/icon:text-green-600'
+                ? 'text-stone-500 group-hover/icon:text-stone-900'
                 : 'text-stone-300'
           }`}
         />
@@ -118,9 +118,9 @@ export const AssistantMessageActions = ({
         <ThumbsDown
           className={`size-[14px] transition-colors ${
             currentRating === 0
-              ? 'text-red-600'
+              ? 'text-stone-900'
               : canRate
-                ? 'text-stone-500 group-hover/icon:text-red-600'
+                ? 'text-stone-500 group-hover/icon:text-stone-900'
                 : 'text-stone-300'
           }`}
         />
