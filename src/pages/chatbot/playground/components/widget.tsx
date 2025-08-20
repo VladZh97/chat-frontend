@@ -1,13 +1,4 @@
-import {
-  ArrowLeft,
-  ArrowUp,
-  Copy,
-  Ellipsis,
-  RefreshCw,
-  Smile,
-  ThumbsDown,
-  ThumbsUp,
-} from 'lucide-react';
+import { ArrowLeft, ArrowUp, Ellipsis, Smile, X } from 'lucide-react';
 import PoveredBy from '@/assets/povered-by.svg?react';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import { cn } from '@/lib/utils';
@@ -33,7 +24,7 @@ const Widget = () => {
 
   return (
     <div className="flex h-full max-h-[600px] w-[416px] grow flex-col rounded-3xl bg-white pb-2 shadow-xl">
-      <Header messages={messages} />
+      <Header />
       <Main
         messages={messages}
         setMessages={handleSendMessage}
@@ -51,16 +42,21 @@ const Widget = () => {
 
 export default Widget;
 
-const Header = ({ messages }: { messages: { role: 'user' | 'assistant'; content: string }[] }) => {
-  const firstMessage = messages[0];
-
+const Header = () => {
+  const { name, publicName } = useChatbotStoreShallow(s => ({
+    name: s.name,
+    publicName: s.publicName,
+  }));
   return (
-    <div className="flex items-center justify-between p-6">
-      <ArrowLeft className="size-5 text-stone-700" />
-      <span className="max-w-[calc(100%-100px)] truncate text-sm font-semibold text-stone-900">
-        {!firstMessage ? 'New chat' : firstMessage.content}
+    <div className="flex items-center p-6">
+      <ArrowLeft className="size-5 text-neutral-700" />
+      <span className="mr-3 ml-4 truncate text-sm font-semibold text-neutral-900">
+        {publicName || name}
       </span>
-      <Ellipsis className="size-5 text-stone-700" />
+      <div className="ml-auto flex items-center gap-2">
+        <Ellipsis className="size-5 text-neutral-700" />
+        <X className="size-5 text-neutral-700" />
+      </div>
     </div>
   );
 };
@@ -165,20 +161,6 @@ const BotMessage = ({ message }: { message: string }) => {
           className="prose rounded-2xl rounded-bl-none bg-[var(--accent-color)]/10 px-4 py-3 text-sm font-normal text-stone-900"
           dangerouslySetInnerHTML={{ __html: message }}
         />
-        <div className="mt-2 flex items-center gap-2">
-          <span className="group cursor-pointer">
-            <RefreshCw className="size-[14px] text-stone-500 transition-colors group-hover:text-stone-900" />
-          </span>
-          <span className="group cursor-pointer">
-            <Copy className="size-[14px] text-stone-500 transition-colors group-hover:text-stone-900" />
-          </span>
-          <span className="group cursor-pointer">
-            <ThumbsUp className="size-[14px] text-stone-500 transition-colors group-hover:text-stone-900" />
-          </span>
-          <span className="group cursor-pointer">
-            <ThumbsDown className="size-[14px] text-stone-500 transition-colors group-hover:text-stone-900" />
-          </span>
-        </div>
       </div>
     </div>
   );
@@ -357,7 +339,7 @@ const StarterMessages = ({
       {conversationStarters.map(starter => (
         <span
           key={starter.id}
-          className="flex cursor-pointer items-center justify-center rounded-2xl bg-white px-3 py-2 text-sm font-semibold text-stone-900 shadow transition-colors hover:bg-stone-50"
+          className="shadow-card flex cursor-pointer items-center justify-center rounded-2xl bg-white px-3 py-2 text-sm font-semibold text-stone-900 transition-colors hover:bg-stone-50"
           onClick={() => onSelect(starter.value)}
         >
           {starter.value}
