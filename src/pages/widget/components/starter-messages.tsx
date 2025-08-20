@@ -16,7 +16,7 @@ export const StarterMessages = ({
       {conversationStarters.map(starter => (
         <span
           key={starter.id}
-          className="flex cursor-pointer items-center justify-center rounded-2xl bg-white px-3 py-2 text-sm font-semibold text-stone-900 shadow transition-colors hover:bg-stone-50"
+          className="flex cursor-pointer items-center justify-center rounded-2xl bg-white px-3 py-2 text-sm font-semibold text-neutral-900 shadow transition-colors hover:bg-neutral-50"
           onClick={() => onSelect(starter.value)}
         >
           {starter.value}

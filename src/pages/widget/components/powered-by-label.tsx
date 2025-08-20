@@ -7,7 +7,7 @@ export const PoweredByLabel = () => {
   }));
   if (removeBranding) return null;
   return (
-    <div className="mt-2 flex h-8 items-center justify-center gap-1.5 text-xs text-stone-500">
+    <div className="mt-2 flex h-8 items-center justify-center gap-1.5 text-xs text-neutral-500">
       Powered by
       <PoveredBy />
     </div>

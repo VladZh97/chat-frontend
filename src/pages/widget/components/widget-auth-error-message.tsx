@@ -7,11 +7,11 @@ export const WidgetAuthErrorMessage = () => {
   }));
   return (
     <div className="flex h-screen flex-col items-center justify-center">
-      <MessagesSquare className="mb-5 text-stone-500" size={32} />
-      <p className="mb-2 text-center text-sm font-medium text-stone-900">
+      <MessagesSquare className="mb-5 text-neutral-500" size={32} />
+      <p className="mb-2 text-center text-sm font-medium text-neutral-900">
         Unable to connect to chat
       </p>
-      <p className="mb-8 text-center text-xs text-stone-500">Please try again.</p>
+      <p className="mb-8 text-center text-xs text-neutral-500">Please try again.</p>
       <button
         className="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 text-white transition-opacity hover:opacity-80"
         style={{ backgroundColor: accentColor }}

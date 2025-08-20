@@ -92,9 +92,9 @@ export const AssistantMessageActions = ({
     <div className="invisible absolute bottom-0 left-0 flex translate-y-full items-center gap-2 pt-1 opacity-0 transition-[opacity,visibility] group-hover:visible group-hover:opacity-100">
       <span className="group/icon cursor-pointer" onClick={handleCopy}>
         {isCopied ? (
-          <CopyCheck className="size-[14px] text-stone-500 transition-colors group-hover/icon:text-stone-900" />
+          <CopyCheck className="size-[14px] text-neutral-500 transition-colors group-hover/icon:text-neutral-900" />
         ) : (
-          <Copy className="size-[14px] text-stone-500 transition-colors group-hover/icon:text-stone-900" />
+          <Copy className="size-[14px] text-neutral-500 transition-colors group-hover/icon:text-neutral-900" />
         )}
       </span>
       <span
@@ -104,10 +104,10 @@ export const AssistantMessageActions = ({
         <ThumbsUp
           className={`size-[14px] transition-colors ${
             currentRating === 5
-              ? 'text-stone-900'
+              ? 'text-neutral-900'
               : canRate
-                ? 'text-stone-500 group-hover/icon:text-stone-900'
-                : 'text-stone-300'
+                ? 'text-neutral-500 group-hover/icon:text-neutral-900'
+                : 'text-neutral-300'
           }`}
         />
       </span>
@@ -118,10 +118,10 @@ export const AssistantMessageActions = ({
         <ThumbsDown
           className={`size-[14px] transition-colors ${
             currentRating === 0
-              ? 'text-stone-900'
+              ? 'text-neutral-900'
               : canRate
-                ? 'text-stone-500 group-hover/icon:text-stone-900'
-                : 'text-stone-300'
+                ? 'text-neutral-500 group-hover/icon:text-neutral-900'
+                : 'text-neutral-300'
           }`}
         />
       </span>

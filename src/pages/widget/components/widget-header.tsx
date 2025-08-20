@@ -22,12 +22,12 @@ export const Header = memo(() => {
   return (
     <div className="flex items-center p-6">
       <div
-        className="flex size-8 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-stone-200"
+        className="flex size-8 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-neutral-200"
         onClick={handleHistoryClick}
       >
-        <ArrowLeft className="size-5 text-stone-700" />
+        <ArrowLeft className="size-5 text-neutral-700" />
       </div>
-      <span className="ml-6 max-w-[calc(100%-140px)] truncate text-sm font-semibold text-stone-900">
+      <span className="ml-6 max-w-[calc(100%-140px)] truncate text-sm font-semibold text-neutral-900">
         {publicName || name}
       </span>
       <div className="ml-auto flex items-center gap-2">

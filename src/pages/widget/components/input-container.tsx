@@ -34,7 +34,7 @@ export const InputContainer = ({
   return (
     <div
       className={cn(
-        'flex h-14 items-center rounded-xl bg-stone-100 py-3 pr-3 pl-4',
+        'flex h-14 items-center rounded-xl bg-neutral-100 py-3 pr-3 pl-4',
         removeBranding && 'mb-2'
       )}
     >
@@ -44,7 +44,7 @@ export const InputContainer = ({
         placeholder="Ask me anything"
         className={cn(
           'grow border-none text-sm font-normal outline-none focus:outline-none focus-visible:outline-none',
-          'text-stone-900 placeholder:text-stone-900/40'
+          'text-neutral-900 placeholder:text-neutral-900/40'
         )}
         value={inputValue}
         onChange={e => {

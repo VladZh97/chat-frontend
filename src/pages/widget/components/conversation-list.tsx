@@ -98,10 +98,10 @@ export const ConversationList = ({ startNewChat }: { startNewChat: () => void })
             <div
               onClick={() => handleConversationClick(conversation)}
               key={`${conversation.chatbotId}-${conversation.conversationId}`}
-              className="flex cursor-pointer items-center gap-4 rounded-lg p-3 transition-colors hover:bg-stone-100"
+              className="flex cursor-pointer items-center gap-4 rounded-lg p-3 transition-colors hover:bg-neutral-100"
             >
               <div
-                className="size-10 shrink-0 overflow-hidden rounded-full bg-stone-100"
+                className="size-10 shrink-0 overflow-hidden rounded-full bg-neutral-100"
                 style={{ backgroundColor: accentColor }}
               >
                 {avatarIcon && (
@@ -109,10 +109,10 @@ export const ConversationList = ({ startNewChat }: { startNewChat: () => void })
                 )}
               </div>
               <div className="grid space-y-0.5">
-                <div className="truncate text-sm font-medium text-stone-900">
+                <div className="truncate text-sm font-medium text-neutral-900">
                   {conversation.lastMessage.replace(/<[^>]+>/g, '')}
                 </div>
-                <span className="text-xs font-normal text-stone-500">
+                <span className="text-xs font-normal text-neutral-500">
                   {formatDate(conversation.lastActivity)}
                 </span>
               </div>
@@ -126,7 +126,7 @@ export const ConversationList = ({ startNewChat }: { startNewChat: () => void })
 };
 
 const Header = () => {
-  return <div className="p-6 text-center text-sm font-semibold text-stone-900">Messages</div>;
+  return <div className="p-6 text-center text-sm font-semibold text-neutral-900">Messages</div>;
 };
 
 const Footer = ({
@@ -165,9 +165,9 @@ const EmptyState = ({ handleNewChatClick }: { handleNewChatClick: () => void }) 
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <MessagesSquare className="mb-5 text-stone-500" size={32} />
-      <p className="mb-2 text-center text-sm font-medium text-stone-900">No chats yet</p>
-      <p className="mb-8 text-center text-xs text-stone-500">
+      <MessagesSquare className="mb-5 text-neutral-500" size={32} />
+      <p className="mb-2 text-center text-sm font-medium text-neutral-900">No chats yet</p>
+      <p className="mb-8 text-center text-xs text-neutral-500">
         Start a conversation and your chats <br /> will show up here.
       </p>
       <button

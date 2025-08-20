@@ -53,11 +53,11 @@ export const Options = () => {
     <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger
         className={cn(
-          'flex size-8 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-stone-200',
-          open && 'bg-stone-200'
+          'flex size-8 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-neutral-200',
+          open && 'bg-neutral-200'
         )}
       >
-        <Ellipsis className="size-5 text-stone-700" />
+        <Ellipsis className="size-5 text-neutral-700" />
       </PopoverTrigger>
       <PopoverContent className="w-52 rounded-lg bg-white p-1 shadow-lg">
         <Option onClick={handleStartNewChat}>
@@ -76,7 +76,7 @@ export const Options = () => {
 const Option = ({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) => {
   return (
     <div
-      className="flex cursor-pointer items-center gap-2.5 rounded px-2 py-1.5 text-sm text-stone-500 transition-colors hover:bg-stone-100 hover:text-stone-900"
+      className="flex cursor-pointer items-center gap-2.5 rounded px-2 py-1.5 text-sm text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
       onClick={onClick}
     >
       {children}

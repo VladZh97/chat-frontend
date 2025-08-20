@@ -19,7 +19,7 @@ export const EmojiPickerComponent = ({
     <Popover onOpenChange={setIsOpen} open={isOpen}>
       <PopoverTrigger asChild>
         <div className="group cursor-pointer">
-          <Smile className="size-5 text-stone-400 transition-colors group-hover:text-stone-900" />
+          <Smile className="size-5 text-neutral-400 transition-colors group-hover:text-neutral-900" />
         </div>
       </PopoverTrigger>
       <PopoverContent className="w-fit p-0">
