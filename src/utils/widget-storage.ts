@@ -4,6 +4,8 @@ export interface IWidgetMessage {
   role: 'user' | 'assistant';
   content: string;
   timestamp: number;
+  messageId?: string;
+  rating?: number;
 }
 
 export interface IWidgetSession {
@@ -421,5 +423,27 @@ export class WidgetStorage {
 
     // Set the new active conversation
     this.setActiveConversationId(chatbotId, visitorId, newConversationId);
+  }
+
+  static updateMessageRating(
+    chatbotId: string,
+    visitorId: string,
+    conversationId: string,
+    messageId: string,
+    rating: number
+  ): void {
+    try {
+      const session = this.getConversationById(chatbotId, visitorId, conversationId);
+      if (!session) return;
+
+      // Find and update the message with the rating
+      const messageIndex = session.messages.findIndex(msg => msg.messageId === messageId);
+      if (messageIndex >= 0) {
+        session.messages[messageIndex].rating = rating;
+        this.saveConversation(chatbotId, session);
+      }
+    } catch {
+      // Silent fail
+    }
   }
 }

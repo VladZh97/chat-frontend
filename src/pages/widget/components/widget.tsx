@@ -102,6 +102,8 @@ const Widget = () => {
             setMessages={handleSendMessageWithLeadCheck}
             isStreaming={isStreaming}
             streamingHtml={streamingHtml}
+            chatbotId={chatbotId || undefined}
+            accessToken={accessToken || undefined}
           />
           <Footer
             inputValue={inputValue}

@@ -34,6 +34,7 @@ export const useSendMessage = ({
   const streamingHtmlRef = useRef('');
   const pendingRef = useRef('');
   const fullAccumulatedRef = useRef('');
+  const messageIdRef = useRef<string | undefined>();
 
   // Extracted function to process message streaming
   const processMessageStream = async (messageContent: string, currentConversationId: string) => {
@@ -41,6 +42,7 @@ export const useSendMessage = ({
     streamingHtmlRef.current = '';
     pendingRef.current = '';
     fullAccumulatedRef.current = '';
+    messageIdRef.current = undefined;
     setIsStreaming(true);
 
     try {
@@ -65,6 +67,11 @@ export const useSendMessage = ({
             fullAccumulatedRef.current += incoming;
             pendingRef.current += incoming;
 
+            // Capture messageId from the first chunk that has it
+            if (evt.messageId && !messageIdRef.current) {
+              messageIdRef.current = evt.messageId;
+            }
+
             const safeIndex = findSafeFlushIndex(pendingRef.current);
             if (safeIndex >= 0) {
               const flushChunk = pendingRef.current.slice(0, safeIndex + 1);
@@ -85,10 +92,16 @@ export const useSendMessage = ({
               streamingHtmlRef.current + pendingRef.current ??
               fullAccumulatedRef.current;
 
+            // Capture messageId from complete event (MongoDB _id) if available
+            if (evt.messageId) {
+              messageIdRef.current = evt.messageId;
+            }
+
             const assistantMessage: IWidgetMessage = {
               role: 'assistant',
               content: finalContent,
               timestamp: Date.now(),
+              messageId: messageIdRef.current, // This will be the MongoDB _id from the complete event
             };
 
             addMessage(assistantMessage);
@@ -105,6 +118,7 @@ export const useSendMessage = ({
             streamingHtmlRef.current = '';
             pendingRef.current = '';
             fullAccumulatedRef.current = '';
+            messageIdRef.current = undefined;
           }
         }
       );

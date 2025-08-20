@@ -2,7 +2,25 @@ import { useConfigStoreShallow } from '../store';
 import { AssistantMessageActions } from './assistant-message-actions';
 import { useTextOnAccentTint } from '@/hooks/use-accent-colors';
 
-export const AssistantMessage = ({ message }: { message: string }) => {
+interface AssistantMessageProps {
+  message: string;
+  messageId?: string;
+  rating?: number;
+  chatbotId?: string;
+  visitorId?: string;
+  conversationId?: string;
+  accessToken?: string;
+}
+
+export const AssistantMessage = ({
+  message,
+  messageId,
+  rating,
+  chatbotId,
+  visitorId,
+  conversationId,
+  accessToken,
+}: AssistantMessageProps) => {
   const { accentColor, avatar } = useConfigStoreShallow(s => ({
     accentColor: s.accentColor,
     avatar: s.avatarIcon,
@@ -30,7 +48,15 @@ export const AssistantMessage = ({ message }: { message: string }) => {
           }}
           dangerouslySetInnerHTML={{ __html: message }}
         />
-        <AssistantMessageActions message={message} />
+        <AssistantMessageActions
+          message={message}
+          messageId={messageId}
+          rating={rating}
+          chatbotId={chatbotId}
+          visitorId={visitorId}
+          conversationId={conversationId}
+          accessToken={accessToken}
+        />
       </div>
     </div>
   );

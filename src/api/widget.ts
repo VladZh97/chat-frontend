@@ -6,6 +6,7 @@ export interface ChatStreamEvent {
   type: 'connected' | 'chunk' | 'complete';
   content?: string;
   fullResponse?: string;
+  messageId?: string;
 }
 
 export interface IAnonymousAuthRequest {
@@ -37,6 +38,11 @@ export interface ISubmitEmailRequest {
   visitorId: string;
   email: string;
   conversationId: string;
+}
+
+export interface IRateMessageRequest {
+  messageId: string;
+  rating: number;
 }
 
 // Global token refresh handler - will be set by useAnonymousAuth
@@ -177,11 +183,20 @@ const widgetApiService = {
             }
             try {
               const parsed = JSON.parse(data);
-              onEvent({
-                type: 'chunk',
-                content: parsed.content,
-                fullResponse: parsed.fullResponse,
-              });
+              if (parsed.type === 'complete') {
+                onEvent({
+                  type: 'complete',
+                  fullResponse: parsed.fullResponse,
+                  messageId: parsed.messageId, // MongoDB _id from the saved document
+                });
+              } else {
+                onEvent({
+                  type: 'chunk',
+                  content: parsed.content,
+                  fullResponse: parsed.fullResponse,
+                  messageId: parsed.messageId,
+                });
+              }
             } catch {
               // Skip invalid JSON
             }
@@ -212,6 +227,15 @@ const widgetApiService = {
   // Submit user email for lead collection
   async submitEmail(data: ISubmitEmailRequest, token: string): Promise<void> {
     await widgetApi.post('/leads/email', data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+
+  // Rate a message
+  async rateMessage(data: IRateMessageRequest, token: string): Promise<void> {
+    await widgetApi.post('/messages/rate', data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
