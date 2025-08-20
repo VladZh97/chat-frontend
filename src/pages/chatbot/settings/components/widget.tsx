@@ -24,13 +24,13 @@ const Header = () => {
   }));
   return (
     <div className="flex items-center p-6">
-      <ArrowLeft className="size-5 text-stone-700" />
-      <span className="mr-3 ml-4 truncate text-sm font-semibold text-stone-900">
+      <ArrowLeft className="size-5 text-neutral-700" />
+      <span className="mr-3 ml-4 truncate text-sm font-semibold text-neutral-900">
         {publicName || name}
       </span>
       <div className="ml-auto flex items-center gap-2">
-        <Ellipsis className="size-5 text-stone-700" />
-        <X className="size-5 text-stone-700" />
+        <Ellipsis className="size-5 text-neutral-700" />
+        <X className="size-5 text-neutral-700" />
       </div>
     </div>
   );
@@ -58,7 +58,7 @@ const BotMessage = () => {
       <div className="size-6 overflow-hidden rounded-full" style={{ backgroundColor: accentColor }}>
         {avatar && <img src={avatar} alt="avatar" className="size-full object-cover" />}
       </div>
-      <p className="rounded-2xl rounded-bl-none bg-[var(--accent-color)]/10 px-4 py-3 text-sm font-normal text-stone-900">
+      <p className="rounded-2xl rounded-bl-none bg-[var(--accent-color)]/10 px-4 py-3 text-sm font-normal text-neutral-900">
         How can I help you?
       </p>
     </div>
@@ -100,18 +100,18 @@ const InputContainer = () => {
   return (
     <div
       className={cn(
-        'flex h-14 items-center rounded-xl bg-stone-100 py-3 pr-3 pl-4',
+        'flex h-14 items-center rounded-xl bg-neutral-100 py-3 pr-3 pl-4',
         removeBranding && 'mb-2'
       )}
     >
       <input
         type="text"
         placeholder="Ask me anything"
-        className="grow border-none text-sm font-normal text-stone-900 outline-none placeholder:text-stone-900/40 focus:outline-none focus-visible:outline-none"
+        className="grow border-none text-sm font-normal text-neutral-900 outline-none placeholder:text-neutral-900/40 focus:outline-none focus-visible:outline-none"
       />
       <div className="ml-2 flex shrink-0 items-center gap-4">
         <div className="group cursor-pointer">
-          <Smile className="size-5 text-stone-400 transition-colors group-hover:text-stone-900" />
+          <Smile className="size-5 text-neutral-400 transition-colors group-hover:text-neutral-900" />
         </div>
 
         <span
@@ -131,7 +131,7 @@ const PoweredBy = () => {
   }));
   if (removeBranding) return null;
   return (
-    <div className="mt-2 flex h-8 items-center justify-center gap-1.5 text-xs text-stone-500">
+    <div className="mt-2 flex h-8 items-center justify-center gap-1.5 text-xs text-neutral-500">
       Powered by
       <PoveredBy />
     </div>
