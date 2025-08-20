@@ -20,10 +20,11 @@ const Header = () => {
       toast.success('Chatbot updated successfully');
     },
   });
-  const { name, accountId, _id } = useChatbotStoreShallow(s => ({
+  const { name, accountId, _id, changed } = useChatbotStoreShallow(s => ({
     name: s.name,
     accountId: s.accountId,
     _id: s._id,
+    changed: s.changed,
   }));
 
   const handleSave = () => {
@@ -52,7 +53,11 @@ const Header = () => {
           <CodeXml />
           Copy embed code
         </Button>
-        <Button onClick={handleSave} className={cn(isPending && 'cursor-default')}>
+        <Button
+          onClick={handleSave}
+          className={cn(isPending && 'cursor-default')}
+          disabled={!changed}
+        >
           {isPending && <LoaderCircle className="size-4 animate-spin" />}
           {isPending ? 'Saving changes...' : 'Save changes'}
         </Button>

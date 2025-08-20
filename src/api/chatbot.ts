@@ -23,7 +23,7 @@ const chatbot = {
   },
   getById: async (id: string) => {
     const { data: chatbot } = await api.get<IChatbot>(`/chatbot/${id}`);
-    useChatbotStore.getState().setChatbot(chatbot);
+    useChatbotStore.getState().setChatbot({ ...chatbot, init: true });
     return chatbot;
   },
   update: async (id: string, data: Partial<IChatbot>) => {

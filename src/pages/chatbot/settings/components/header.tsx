@@ -14,10 +14,11 @@ import { copyEmbedCode } from '@/utils/copy-embed-code';
 const Header = () => {
   const { id } = useParams();
   const { isLoading } = useGetChatbot();
-  const { name, accountId, _id } = useChatbotStoreShallow(s => ({
+  const { name, accountId, _id, changed } = useChatbotStoreShallow(s => ({
     name: s.name,
     accountId: s.accountId,
     _id: s._id,
+    changed: s.changed,
   }));
 
   const { mutate: updateChatbot, isPending } = useMutation({
@@ -31,7 +32,9 @@ const Header = () => {
     if (!name) return;
     const state = useChatbotStore.getState();
     const payload = Object.fromEntries(
-      Object.entries(state).filter(([, value]) => typeof value !== 'function')
+      Object.entries(state).filter(
+        ([key, value]) => typeof value !== 'function' && key !== 'changed'
+      )
     );
     updateChatbot(payload);
   };
@@ -54,7 +57,11 @@ const Header = () => {
           <CodeXml />
           Copy embed code
         </Button>
-        <Button disabled={!name} onClick={handleSave} className={cn(isPending && 'cursor-default')}>
+        <Button
+          disabled={!changed}
+          onClick={handleSave}
+          className={cn(isPending && 'cursor-default')}
+        >
           {isPending && <LoaderCircle className="size-4 animate-spin" />}
           {isPending ? 'Saving changes...' : 'Save changes'}
         </Button>
