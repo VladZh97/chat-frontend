@@ -79,7 +79,7 @@ const SubmitAction = ({ dialogId, knowledgeId }: { dialogId: string; knowledgeId
 
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['knowledge', chatbotId] }),
-        queryClient.invalidateQueries({ queryKey: ['tokens-usage', chatbotId] }),
+        queryClient.invalidateQueries({ queryKey: ['memory-usage', chatbotId] }),
       ]);
 
       toast.success(knowledgeId ? 'Source updated successfully' : 'Source added successfully');

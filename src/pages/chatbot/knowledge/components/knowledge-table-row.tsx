@@ -43,7 +43,7 @@ const KnowledgeTableRow = ({ data }: { data: IKnowledge }) => {
     if (isPending) return;
     try {
       await deleteKnowledge();
-      queryClient.invalidateQueries({ queryKey: ['tokens-usage', chatbotId] });
+      queryClient.invalidateQueries({ queryKey: ['memory-usage', chatbotId] });
     } catch (error) {
       console.error(error);
     }
