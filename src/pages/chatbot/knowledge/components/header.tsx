@@ -2,15 +2,16 @@ import { Button } from '@/components/ui/button';
 import { Bot } from 'lucide-react';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import TrainingStatusLabel from '@/components/training-status-label';
-import { CONFIG } from '@/config';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { knowledge } from '@/api/knowledge';
 import queryClient from '@/lib/query';
 import type { IKnowledge } from '@/types/knowledge.type';
 import chatbot from '@/api/chatbot';
+import { useCurrentPlan } from '@/hooks';
 
 const Header = () => {
+  const { plan } = useCurrentPlan();
   const { id: chatbotId } = useParams();
   const { name } = useChatbotStoreShallow(s => ({
     name: s.name,
@@ -25,9 +26,9 @@ const Header = () => {
     queryKey: ['knowledge', chatbotId],
     queryFn: () => knowledge.list(chatbotId as string),
   });
-  const { data: tokensUsage } = useQuery({
-    queryKey: ['tokens-usage', chatbotId],
-    queryFn: () => knowledge.tokensUsage(chatbotId as string),
+  const { data: memoryUsage } = useQuery({
+    queryKey: ['memory-usage', chatbotId],
+    queryFn: () => knowledge.memoryUsage(chatbotId as string),
   });
 
   const { mutateAsync: train, isPending: isTraining } = useMutation({
@@ -57,18 +58,21 @@ const Header = () => {
       </div>
 
       <div className="ml-10 flex items-center gap-4">
-        <div className="flex flex-col">
-          <span className="mb-0.5 text-xs text-stone-500">Used tokens</span>
-          <span className="mb-1.5 text-xs font-semibold text-stone-700">
-            {tokensUsage?.count?.toLocaleString() ?? 0} / {CONFIG.MAX_TOKENS.toLocaleString()}
-          </span>
-          <span className="block h-1 w-full overflow-hidden rounded-full bg-stone-200">
-            <span
-              className="block h-full rounded-full bg-stone-900"
-              style={{ width: `${((tokensUsage?.count ?? 0) / CONFIG.MAX_TOKENS) * 100}%` }}
-            ></span>
-          </span>
-        </div>
+        {plan.title && (
+          <div className="flex flex-col">
+            <span className="mb-0.5 text-xs text-stone-500">Used memory</span>
+            <span className="mb-1.5 text-xs font-semibold text-stone-700">
+              {((memoryUsage?.count ?? 0) / 1024).toFixed(2)} /{' '}
+              {`${plan.limits.maxMemory.toLocaleString()} kb`}
+            </span>
+            <span className="block h-1 w-full overflow-hidden rounded-full bg-stone-200">
+              <span
+                className="block h-full rounded-full bg-stone-900"
+                style={{ width: `${((memoryUsage?.count ?? 0) / plan.limits.maxMemory) * 100}%` }}
+              ></span>
+            </span>
+          </div>
+        )}
         <Button
           size="sm"
           onClick={() => {

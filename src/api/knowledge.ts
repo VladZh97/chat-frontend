@@ -19,13 +19,13 @@ export const knowledge = {
     });
     return knowledge;
   },
-  tokensUsage: async (chatbotId: string) => {
-    const { data: tokens } = await api.get<{ count: number }>(`/knowledge/tokens-usage`, {
+  memoryUsage: async (chatbotId: string) => {
+    const { data: memory } = await api.get<{ count: number }>(`/knowledge/memory-usage`, {
       params: {
         chatbotId,
       },
     });
-    return tokens;
+    return memory;
   },
   delete: async (knowledgeId: string, chatbotId: string) => {
     const { data: knowledge } = await api.delete<IKnowledge>(`/knowledge/${knowledgeId}`, {

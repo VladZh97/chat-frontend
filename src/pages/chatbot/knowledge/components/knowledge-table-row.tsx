@@ -72,43 +72,48 @@ const KnowledgeTableRow = ({ data }: { data: IKnowledge }) => {
           {data.type === 'text' && data.metadata.title}
         </span>
       </div>
-      <div className="ml-auto shrink-0 pr-2 pl-10">
-        <Popover open={isOpen || isPending} onOpenChange={setIsOpen}>
-          <PopoverTrigger
-            className={cn(
-              'flex size-8 cursor-pointer items-center justify-center rounded-md transition-colors duration-200 hover:bg-stone-200',
-              (isOpen || isPending) && 'bg-stone-200'
-            )}
-          >
-            <Ellipsis className="size-4 text-stone-900" />
-          </PopoverTrigger>
-          <PopoverContent
-            align="center"
-            side="bottom"
-            className="w-48 space-y-1 rounded-lg bg-white p-2 shadow-lg"
-          >
-            {data.type === 'text' && (
-              <div
-                className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-stone-900 hover:bg-stone-100"
-                onClick={handleEdit}
-              >
-                <PencilLine className="size-4" />
-                Edit source
-              </div>
-            )}
-            <div
+      <div className="ml-auto flex w-48 shrink-0 items-center pl-3">
+        <div className="flex h-10 w-[120px] items-center gap-2 px-2 text-xs text-stone-500">
+          {`${(data.size / 1024).toFixed(2)} KB`}
+        </div>
+        <div className="w-[60px] shrink-0 pr-2">
+          <Popover open={isOpen || isPending} onOpenChange={setIsOpen}>
+            <PopoverTrigger
               className={cn(
-                'flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-red-600 hover:bg-red-50',
-                isPending && 'cursor-default'
+                'flex size-8 cursor-pointer items-center justify-center rounded-md transition-colors duration-200 hover:bg-stone-200',
+                (isOpen || isPending) && 'bg-stone-200'
               )}
-              onClick={handleDelete}
             >
-              <Trash className="size-4" />
-              Remove source
-              {isPending && <Loader2 className="ml-auto size-4 animate-spin" />}
-            </div>
-          </PopoverContent>
-        </Popover>
+              <Ellipsis className="size-4 text-stone-900" />
+            </PopoverTrigger>
+            <PopoverContent
+              align="center"
+              side="bottom"
+              className="w-48 space-y-1 rounded-lg bg-white p-2 shadow-lg"
+            >
+              {data.type === 'text' && (
+                <div
+                  className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-stone-900 hover:bg-stone-100"
+                  onClick={handleEdit}
+                >
+                  <PencilLine className="size-4" />
+                  Edit source
+                </div>
+              )}
+              <div
+                className={cn(
+                  'flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-red-600 hover:bg-red-50',
+                  isPending && 'cursor-default'
+                )}
+                onClick={handleDelete}
+              >
+                <Trash className="size-4" />
+                Remove source
+                {isPending && <Loader2 className="ml-auto size-4 animate-spin" />}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 export const CONFIG = {
-  MAX_TOKENS: 100_000,
   MAX_FILE_SIZE: 5 * 1024 * 1024,
 };
 
@@ -18,6 +17,7 @@ export const PLANS = {
       maxChatbots: 1,
       maxMessages: 100,
       maxFileSize: CONFIG.MAX_FILE_SIZE / 2,
+      maxMemory: 400,
     },
   },
   [PLAN_NAMES.PRO]: {
@@ -28,6 +28,7 @@ export const PLANS = {
       maxChatbots: 1,
       maxMessages: 2000,
       maxFileSize: CONFIG.MAX_FILE_SIZE / 2,
+      maxMemory: 30_000, // 30 MB
     },
   },
   [PLAN_NAMES.TEAM]: {
@@ -44,6 +45,7 @@ export const PLANS = {
       maxChatbots: 3,
       maxMessages: 10000,
       maxFileSize: CONFIG.MAX_FILE_SIZE / 2,
+      maxMemory: 50_000, // 50 MB
     },
   },
 };

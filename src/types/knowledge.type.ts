@@ -15,4 +15,5 @@ export interface IKnowledge {
   updatedAt: string;
   metadata: Record<string, unknown>;
   trained: boolean;
+  size: number;
 }

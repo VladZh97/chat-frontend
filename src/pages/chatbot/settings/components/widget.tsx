@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowUp, Ellipsis, Smile } from 'lucide-react';
+import { ArrowLeft, ArrowUp, Ellipsis, Smile, X } from 'lucide-react';
 import PoveredBy from '@/assets/povered-by.svg?react';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import { cn } from '@/lib/utils';
@@ -28,7 +28,10 @@ const Header = () => {
       <span className="mr-3 ml-4 truncate text-sm font-semibold text-stone-900">
         {publicName || name}
       </span>
-      <Ellipsis className="ml-auto size-5 text-stone-700" />
+      <div className="ml-auto flex items-center gap-2">
+        <Ellipsis className="size-5 text-stone-700" />
+        <X className="size-5 text-stone-700" />
+      </div>
     </div>
   );
 };
