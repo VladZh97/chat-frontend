@@ -11,6 +11,7 @@ export interface IWidgetMessage {
 export interface IWidgetSession {
   visitorId: string;
   conversationId: string;
+  chatbotId?: string;
   messages: IWidgetMessage[];
   lastActivity: number;
 }
@@ -24,10 +25,16 @@ export interface IConversationPreview {
   messageCount: number;
 }
 
+export interface IConversationsStore {
+  visitorId: string;
+  conversations: IWidgetSession[];
+}
+
 const STORAGE_KEYS = {
   VISITOR_ID: 'heyway_visitor_id',
   ACCESS_TOKEN: 'heyway_access_token',
   CONVERSATION_PREFIX: 'heyway_conversation_',
+  CONVERSATIONS_ARRAY: 'heyway_conversations',
   ACTIVE_CONVERSATION: 'heyway_active_conversation_',
   LEAD_COLLECTED: 'heyway_lead_collected_',
   NEW_CHAT_FLAG: 'heyway_new_chat_flag_',
@@ -55,6 +62,95 @@ export class WidgetStorage {
       localStorage.setItem(STORAGE_KEYS.VISITOR_ID, visitorId);
     } catch {
       // Silent fail for storage issues
+    }
+  }
+
+  private static getConversationsStore(visitorId: string): IConversationsStore {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.CONVERSATIONS_ARRAY);
+      if (stored) {
+        const stores: IConversationsStore[] = JSON.parse(stored);
+        return (
+          stores.find(store => store.visitorId === visitorId) || { visitorId, conversations: [] }
+        );
+      }
+    } catch {
+      // Silent fail
+    }
+    return { visitorId, conversations: [] };
+  }
+
+  private static saveConversationsStore(store: IConversationsStore): void {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.CONVERSATIONS_ARRAY);
+      let stores: IConversationsStore[] = [];
+
+      if (stored) {
+        try {
+          stores = JSON.parse(stored);
+        } catch {
+          stores = [];
+        }
+      }
+
+      const existingIndex = stores.findIndex(s => s.visitorId === store.visitorId);
+      if (existingIndex >= 0) {
+        stores[existingIndex] = store;
+      } else {
+        stores.push(store);
+      }
+
+      localStorage.setItem(STORAGE_KEYS.CONVERSATIONS_ARRAY, JSON.stringify(stores));
+    } catch {
+      // Silent fail for storage issues
+    }
+  }
+
+  private static migrateToArrayFormat(visitorId: string): void {
+    try {
+      // Check if migration is needed
+      const store = this.getConversationsStore(visitorId);
+      if (store.conversations.length > 0) {
+        return; // Already migrated
+      }
+
+      // Get all old format conversations
+      const keys = Object.keys(localStorage);
+      const conversationKeys = keys.filter(
+        key => key.startsWith(STORAGE_KEYS.CONVERSATION_PREFIX) && key.includes(`_${visitorId}_`)
+      );
+
+      const conversations: IWidgetSession[] = [];
+
+      conversationKeys.forEach(key => {
+        try {
+          const session: IWidgetSession = JSON.parse(localStorage.getItem(key) || '{}');
+
+          // Check if session is valid and not expired
+          if (session.messages && Date.now() - session.lastActivity <= SESSION_EXPIRY) {
+            conversations.push(session);
+          }
+
+          // Remove old format key
+          localStorage.removeItem(key);
+        } catch {
+          // Remove corrupted data
+          localStorage.removeItem(key);
+        }
+      });
+
+      // Sort by lastActivity (newest first) and limit to MAX_CONVERSATIONS
+      const sortedConversations = conversations
+        .sort((a, b) => b.lastActivity - a.lastActivity)
+        .slice(0, MAX_CONVERSATIONS);
+
+      // Save to new format
+      if (sortedConversations.length > 0) {
+        const newStore: IConversationsStore = { visitorId, conversations: sortedConversations };
+        this.saveConversationsStore(newStore);
+      }
+    } catch {
+      // Silent fail
     }
   }
 
@@ -92,6 +188,9 @@ export class WidgetStorage {
   }
 
   static getConversation(chatbotId: string, visitorId: string): IWidgetSession | null {
+    // Ensure migration is complete
+    this.migrateToArrayFormat(visitorId);
+
     // First try to get the active conversation
     const activeConversationId = this.getActiveConversationId(chatbotId, visitorId);
     if (activeConversationId) {
@@ -101,14 +200,14 @@ export class WidgetStorage {
       }
     }
 
-    // Fallback: get the most recent conversation for this chatbot-visitor
-    const conversations = this.getAllConversations(visitorId);
-    const latestConversation = conversations.find(c => c.chatbotId === chatbotId);
+    // Fallback: get the most recent conversation for this chatbot from the store
+    const store = this.getConversationsStore(visitorId);
+    const latestConversation = store.conversations.find(conv => conv.chatbotId === chatbotId);
 
     if (latestConversation) {
       // Set this as the active conversation since we don't have one
       this.setActiveConversationId(chatbotId, visitorId, latestConversation.conversationId);
-      return this.getConversationById(chatbotId, visitorId, latestConversation.conversationId);
+      return latestConversation;
     }
 
     return null;
@@ -116,21 +215,52 @@ export class WidgetStorage {
 
   static saveConversation(chatbotId: string, session: IWidgetSession): void {
     try {
-      const key = `${STORAGE_KEYS.CONVERSATION_PREFIX}${chatbotId}_${session.visitorId}_${session.conversationId}`;
+      // Ensure migration is complete
+      this.migrateToArrayFormat(session.visitorId);
 
       // Limit messages to prevent storage bloat
       const limitedSession = {
         ...session,
+        chatbotId,
         messages: session.messages.slice(-MAX_MESSAGES_PER_CONVERSATION),
         lastActivity: Date.now(),
       };
 
-      localStorage.setItem(key, JSON.stringify(limitedSession));
+      // Get current conversations store
+      const store = this.getConversationsStore(session.visitorId);
+
+      // Find existing conversation
+      const existingIndex = store.conversations.findIndex(
+        conv => conv.conversationId === session.conversationId
+      );
+
+      if (existingIndex >= 0) {
+        // Update existing conversation
+        store.conversations[existingIndex] = limitedSession;
+      } else {
+        // Add new conversation
+        store.conversations.unshift(limitedSession); // Add to beginning (newest first)
+      }
+
+      // Sort by lastActivity (newest first)
+      store.conversations.sort((a, b) => b.lastActivity - a.lastActivity);
+
+      // Implement FIFO: Remove oldest conversations if we exceed the limit
+      if (store.conversations.length > MAX_CONVERSATIONS) {
+        store.conversations = store.conversations.slice(0, MAX_CONVERSATIONS);
+      }
+
+      // Save the updated store
+      this.saveConversationsStore(store);
 
       // Set this as the active conversation
       this.setActiveConversationId(chatbotId, session.visitorId, session.conversationId);
 
-      this.cleanupOldConversations();
+      // Periodically cleanup expired conversations
+      if (Math.random() < 0.1) {
+        // 10% chance to run cleanup
+        this.cleanupExpiredConversations();
+      }
     } catch {
       // Silent fail for storage issues
     }
@@ -138,17 +268,25 @@ export class WidgetStorage {
 
   static clearConversation(chatbotId: string, visitorId: string, conversationId?: string): void {
     try {
+      // Ensure migration is complete
+      this.migrateToArrayFormat(visitorId);
+
+      const store = this.getConversationsStore(visitorId);
+
       if (conversationId) {
         // Clear specific conversation
-        const key = `${STORAGE_KEYS.CONVERSATION_PREFIX}${chatbotId}_${visitorId}_${conversationId}`;
-        localStorage.removeItem(key);
-      } else {
-        // Clear all conversations for this chatbot-visitor (for backward compatibility)
-        const keys = Object.keys(localStorage);
-        const conversationKeys = keys.filter(key =>
-          key.startsWith(`${STORAGE_KEYS.CONVERSATION_PREFIX}${chatbotId}_${visitorId}`)
+        const updatedConversations = store.conversations.filter(
+          conv => conv.conversationId !== conversationId
         );
-        conversationKeys.forEach(key => localStorage.removeItem(key));
+        const updatedStore = { ...store, conversations: updatedConversations };
+        this.saveConversationsStore(updatedStore);
+      } else {
+        // Clear all conversations for this chatbot-visitor
+        const updatedConversations = store.conversations.filter(
+          conv => conv.chatbotId !== chatbotId
+        );
+        const updatedStore = { ...store, conversations: updatedConversations };
+        this.saveConversationsStore(updatedStore);
       }
     } catch {
       // Silent fail
@@ -161,6 +299,9 @@ export class WidgetStorage {
     message: IWidgetMessage,
     conversationId?: string
   ): void {
+    // Don't save empty messages
+    if (!message.content || !message.content.trim()) return;
+
     let session: IWidgetSession | null = null;
 
     if (conversationId) {
@@ -180,6 +321,37 @@ export class WidgetStorage {
     this.saveConversation(chatbotId, session);
   }
 
+  static cleanupEmptyMessages(visitorId: string): void {
+    try {
+      const store = this.getConversationsStore(visitorId);
+      let hasChanges = false;
+
+      const cleanedConversations = store.conversations
+        .map(conversation => {
+          const originalLength = conversation.messages.length;
+          // Filter out empty messages
+          conversation.messages = conversation.messages.filter(
+            msg => msg.content && msg.content.trim()
+          );
+
+          if (conversation.messages.length !== originalLength) {
+            hasChanges = true;
+          }
+
+          return conversation;
+        })
+        .filter(conversation => conversation.messages.length > 0); // Remove conversations with no valid messages
+
+      if (hasChanges || cleanedConversations.length !== store.conversations.length) {
+        const updatedStore = { ...store, conversations: cleanedConversations };
+        this.saveConversationsStore(updatedStore);
+        console.log(`Cleaned up empty messages for visitor ${visitorId}`);
+      }
+    } catch (error) {
+      console.error('Error cleaning up empty messages:', error);
+    }
+  }
+
   static clearAllData(): void {
     try {
       // Clear visitor ID
@@ -188,13 +360,17 @@ export class WidgetStorage {
       // Clear access token
       sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
 
-      // Clear all conversations and active conversation IDs
+      // Clear conversations array
+      localStorage.removeItem(STORAGE_KEYS.CONVERSATIONS_ARRAY);
+
+      // Clear all old format conversations and other data
       const keys = Object.keys(localStorage);
       keys.forEach(key => {
         if (
           key.startsWith(STORAGE_KEYS.CONVERSATION_PREFIX) ||
           key.startsWith(STORAGE_KEYS.ACTIVE_CONVERSATION) ||
-          key.startsWith(STORAGE_KEYS.LEAD_COLLECTED)
+          key.startsWith(STORAGE_KEYS.LEAD_COLLECTED) ||
+          key.startsWith(STORAGE_KEYS.NEW_CHAT_FLAG)
         ) {
           localStorage.removeItem(key);
         }
@@ -206,48 +382,59 @@ export class WidgetStorage {
 
   static getAllConversations(visitorId: string): IConversationPreview[] {
     try {
-      const keys = Object.keys(localStorage);
-      const conversationKeys = keys.filter(
-        key => key.startsWith(STORAGE_KEYS.CONVERSATION_PREFIX) && key.includes(`_${visitorId}_`)
-      );
+      // Ensure migration is complete
+      this.migrateToArrayFormat(visitorId);
 
+      // Clean up any empty messages
+      this.cleanupEmptyMessages(visitorId);
+
+      const store = this.getConversationsStore(visitorId);
       const conversations: IConversationPreview[] = [];
 
-      conversationKeys.forEach(key => {
+      store.conversations.forEach(session => {
         try {
-          const session: IWidgetSession = JSON.parse(localStorage.getItem(key) || '{}');
-
           // Check if session is expired
           if (Date.now() - session.lastActivity > SESSION_EXPIRY) {
-            localStorage.removeItem(key);
-            return;
+            return; // Skip expired sessions
           }
 
           if (session.messages.length > 0) {
-            const lastMessage = session.messages[session.messages.length - 1];
-            // Parse key: "heyway_conversation_chatbotId_visitorId_conversationId"
-            const keyWithoutPrefix = key.replace(STORAGE_KEYS.CONVERSATION_PREFIX, '');
-            const lastUnderscoreIndex = keyWithoutPrefix.lastIndexOf('_');
-            const secondLastUnderscoreIndex = keyWithoutPrefix.lastIndexOf(
-              '_',
-              lastUnderscoreIndex - 1
-            );
-            const chatbotId = keyWithoutPrefix.substring(0, secondLastUnderscoreIndex);
+            // Find the last non-empty message for display
+            let lastValidMessage = null;
+            for (let i = session.messages.length - 1; i >= 0; i--) {
+              const msg = session.messages[i];
+              if (msg.content && msg.content.trim()) {
+                lastValidMessage = msg;
+                break;
+              }
+            }
 
-            conversations.push({
-              chatbotId,
-              conversationId: session.conversationId,
-              lastMessage: lastMessage.content,
-              lastMessageRole: lastMessage.role,
-              lastActivity: session.lastActivity,
-              messageCount: session.messages.length,
-            });
+            // Only include conversations with valid messages
+            if (lastValidMessage) {
+              conversations.push({
+                chatbotId: session.chatbotId || '',
+                conversationId: session.conversationId,
+                lastMessage: lastValidMessage.content,
+                lastMessageRole: lastValidMessage.role,
+                lastActivity: session.lastActivity,
+                messageCount: session.messages.length,
+              });
+            }
           }
         } catch {
-          // Remove corrupted conversation data
-          localStorage.removeItem(key);
+          // Skip corrupted conversation data
         }
       });
+
+      // Filter out expired sessions and update store
+      const validConversations = store.conversations.filter(
+        session => Date.now() - session.lastActivity <= SESSION_EXPIRY
+      );
+
+      if (validConversations.length !== store.conversations.length) {
+        const updatedStore = { ...store, conversations: validConversations };
+        this.saveConversationsStore(updatedStore);
+      }
 
       // Sort by last activity (newest first)
       return conversations.sort((a, b) => b.lastActivity - a.lastActivity);
@@ -257,20 +444,27 @@ export class WidgetStorage {
   }
 
   static getConversationById(
-    chatbotId: string,
+    _chatbotId: string,
     visitorId: string,
     conversationId: string
   ): IWidgetSession | null {
     try {
-      const key = `${STORAGE_KEYS.CONVERSATION_PREFIX}${chatbotId}_${visitorId}_${conversationId}`;
-      const stored = localStorage.getItem(key);
-      if (!stored) return null;
+      // Ensure migration is complete
+      this.migrateToArrayFormat(visitorId);
 
-      const session: IWidgetSession = JSON.parse(stored);
+      const store = this.getConversationsStore(visitorId);
+      const session = store.conversations.find(conv => conv.conversationId === conversationId);
+
+      if (!session) return null;
 
       // Check if session is expired
       if (Date.now() - session.lastActivity > SESSION_EXPIRY) {
-        localStorage.removeItem(key);
+        // Remove expired session from array
+        const updatedConversations = store.conversations.filter(
+          conv => conv.conversationId !== conversationId
+        );
+        const updatedStore = { ...store, conversations: updatedConversations };
+        this.saveConversationsStore(updatedStore);
         return null;
       }
 
@@ -289,37 +483,33 @@ export class WidgetStorage {
     }
   }
 
-  private static cleanupOldConversations(): void {
+  private static cleanupExpiredConversations(): void {
     try {
-      const keys = Object.keys(localStorage);
-      const conversationKeys = keys
-        .filter(key => key.startsWith(STORAGE_KEYS.CONVERSATION_PREFIX))
-        .map(key => {
-          try {
-            const session: IWidgetSession = JSON.parse(localStorage.getItem(key) || '{}');
-            return { key, lastActivity: session.lastActivity || 0 };
-          } catch {
-            return { key, lastActivity: 0 };
-          }
-        })
-        .sort((a, b) => b.lastActivity - a.lastActivity);
+      // Clean up expired conversations from all visitor stores
+      const stored = localStorage.getItem(STORAGE_KEYS.CONVERSATIONS_ARRAY);
+      if (!stored) return;
 
-      // Remove expired conversations
+      const stores: IConversationsStore[] = JSON.parse(stored);
       const now = Date.now();
-      conversationKeys.forEach(({ key, lastActivity }) => {
-        if (now - lastActivity > SESSION_EXPIRY) {
-          localStorage.removeItem(key);
-        }
-      });
+      let hasChanges = false;
 
-      // Keep only the most recent conversations if we exceed the limit
-      const activeConversations = conversationKeys.filter(
-        ({ lastActivity }) => now - lastActivity <= SESSION_EXPIRY
-      );
+      const updatedStores = stores
+        .map(store => {
+          const validConversations = store.conversations.filter(
+            conv => now - conv.lastActivity <= SESSION_EXPIRY
+          );
 
-      if (activeConversations.length > MAX_CONVERSATIONS) {
-        const toRemove = activeConversations.slice(MAX_CONVERSATIONS);
-        toRemove.forEach(({ key }) => localStorage.removeItem(key));
+          if (validConversations.length !== store.conversations.length) {
+            hasChanges = true;
+            return { ...store, conversations: validConversations };
+          }
+
+          return store;
+        })
+        .filter(store => store.conversations.length > 0); // Remove empty stores
+
+      if (hasChanges || updatedStores.length !== stores.length) {
+        localStorage.setItem(STORAGE_KEYS.CONVERSATIONS_ARRAY, JSON.stringify(updatedStores));
       }
     } catch {
       // Silent fail
@@ -412,11 +602,8 @@ export class WidgetStorage {
   }
 
   static startNewChat(chatbotId: string, visitorId: string, newConversationId: string): void {
-    // Clear the current active conversation data
-    const currentActiveConversationId = this.getActiveConversationId(chatbotId, visitorId);
-    if (currentActiveConversationId) {
-      this.clearConversation(chatbotId, visitorId, currentActiveConversationId);
-    }
+    // The current active conversation should remain in the conversations array
+    // We just need to set the new conversation as active
 
     // Set the new chat flag
     this.setNewChatFlag(chatbotId, visitorId);

@@ -113,7 +113,6 @@ export const useSendMessage = ({
                 currentConversationId
               );
             }
-
             setStreamingHtml('');
             streamingHtmlRef.current = '';
             pendingRef.current = '';
