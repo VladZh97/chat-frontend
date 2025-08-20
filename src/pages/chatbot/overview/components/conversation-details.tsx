@@ -73,15 +73,24 @@ export const ConversationDetails = ({
 
   const handleExport = () => {
     if (!data || !Array.isArray(data)) return;
-    const lines = data
-      .map((msg: TMessage) => {
-        const date = msg.createdAt ? moment(msg.createdAt).format('YYYY-MM-DD HH:mm:ss') : '';
-        const role = msg.sender === 'assistant' ? 'assistant' : 'user';
-        const content = msg.message || '';
-        return `[${date}] ${role}: ${content}`;
-      })
-      .join('\n');
-    const blob = new Blob([lines], { type: 'text/plain' });
+    const lines = data.map(msg => {
+      const date = msg.timestamp
+        ? new Date(msg.timestamp)
+            .toLocaleString(undefined, {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+            })
+            .replace(',', '')
+        : '';
+      const role = msg.role;
+      const content = msg.content || '';
+      return `[${date}] ${role}: ${content}`;
+    });
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
