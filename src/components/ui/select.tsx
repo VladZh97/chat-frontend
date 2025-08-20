@@ -78,15 +78,17 @@ function Content({ children, className }: { children: ReactNode; className?: str
 interface OptionProps<T = string> {
   value: T;
   children: ReactNode;
+  className?: string;
 }
-function Option<T = string>({ value: optionValue, children }: OptionProps<T>) {
+function Option<T = string>({ value: optionValue, children, className }: OptionProps<T>) {
   const { value, setValue, setOpen } = useSelectContext<T>();
   const isSelected = value === optionValue;
   return (
     <span
       className={cn(
         'flex cursor-pointer items-center justify-between rounded px-2 py-1.5 text-sm text-stone-900 transition-colors duration-200 hover:bg-stone-100',
-        isSelected && 'bg-stone-100'
+        isSelected && 'bg-stone-100',
+        className
       )}
       onClick={() => {
         setValue(optionValue);
