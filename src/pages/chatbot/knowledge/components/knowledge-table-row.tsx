@@ -74,7 +74,7 @@ const KnowledgeTableRow = ({ data }: { data: IKnowledge }) => {
       </div>
       <div className="ml-auto flex w-48 shrink-0 items-center pl-3">
         <div className="flex h-10 w-[120px] items-center gap-2 px-2 text-xs text-stone-500">
-          {`${(data.size / 1024).toFixed(2)} KB`}
+          {`${(data.size / 1024).toFixed(2)} kb`}
         </div>
         <div className="w-[60px] shrink-0 pr-2">
           <Popover open={isOpen || isPending} onOpenChange={setIsOpen}>
