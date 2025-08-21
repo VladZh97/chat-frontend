@@ -91,11 +91,9 @@ const Skeleton = () => {
   );
   return width.map((w, index) => (
     <div key={index} className="group animate-pulse-fast">
-      <div className="relative flex h-40 items-center justify-center rounded-xl border border-stone-200 bg-stone-100 shadow transition-all duration-300 group-hover:shadow-lg">
-        <Bot className="size-8 text-stone-900" />
-      </div>
+      <div className="relative flex items-center justify-center rounded-xl border border-stone-200 bg-stone-100 pt-[54.44%] shadow transition-all duration-300 group-hover:shadow-lg"></div>
       <div className="mt-3 flex h-5 items-center">
-        <span className="block h-1.5 rounded-full bg-stone-200" style={{ width: `${w}%` }} />
+        <span className="block h-2 rounded-full bg-stone-200" style={{ width: `${w}%` }} />
       </div>
     </div>
   ));
