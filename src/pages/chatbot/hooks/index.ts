@@ -1,3 +1,4 @@
 export { default as useGetChatbot } from './use-get-chatbot';
 export { default as useSearchKnowledge } from './use-search-knowledge';
 export * from './use-playground';
+export * from './use-memory-limit';

@@ -10,11 +10,13 @@ import type { IKnowledge } from '@/types/knowledge.type';
 import chatbot from '@/api/chatbot';
 import { useCurrentPlan } from '@/hooks';
 import { cn } from '@/lib/utils';
+import { useMemoryLimit } from '../../hooks';
 
 const Header = () => {
   const navigate = useNavigate();
   const { plan } = useCurrentPlan();
   const { id: chatbotId } = useParams();
+  const { isMemoryLimitReached, memoryUsage } = useMemoryLimit(chatbotId as string);
   const { name } = useChatbotStoreShallow(s => ({
     name: s.name,
   }));
@@ -27,10 +29,6 @@ const Header = () => {
   const { data: knowledgeData } = useQuery({
     queryKey: ['knowledge', chatbotId],
     queryFn: () => knowledge.list(chatbotId as string),
-  });
-  const { data: memoryUsage } = useQuery({
-    queryKey: ['memory-usage', chatbotId],
-    queryFn: () => knowledge.memoryUsage(chatbotId as string),
   });
 
   const { mutateAsync: train, isPending: isTraining } = useMutation({
@@ -45,8 +43,6 @@ const Header = () => {
   });
 
   const isTrained = knowledgeData?.every(item => item.trained);
-  const isMemoryLimitReached =
-    memoryUsage?.count && memoryUsage.count > 0 && memoryUsage.count / 1024 > plan.limits.maxMemory;
 
   return (
     <div className="grid grid-cols-[auto_auto] items-center justify-between border-b border-transparent py-6">

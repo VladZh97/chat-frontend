@@ -3,6 +3,8 @@ import { Input } from '@/components/ui/input';
 import AddNewKnowledgeSource from '@/dialogs/add-new-knowledge-source';
 import { useDialog } from '@/hooks';
 import { Plus } from 'lucide-react';
+import { useMemoryLimit } from '../../hooks';
+import { useParams } from 'react-router-dom';
 
 const KnowledgeTableHeader = ({
   search,
@@ -12,9 +14,12 @@ const KnowledgeTableHeader = ({
   setSearch: (search: string) => void;
 }) => {
   const { showDialog } = useDialog();
+  const { id: chatbotId } = useParams();
   const handleAddNewKnowledgeSource = () => {
     showDialog(AddNewKnowledgeSource.id, AddNewKnowledgeSource);
   };
+  const { isMemoryLimitReached } = useMemoryLimit(chatbotId as string);
+
   return (
     <div className="mb-4 flex items-center justify-between">
       <Input
@@ -23,10 +28,12 @@ const KnowledgeTableHeader = ({
         value={search}
         onChange={e => setSearch((e.target as HTMLInputElement).value)}
       />
-      <Button variant="outline" onClick={handleAddNewKnowledgeSource}>
-        <Plus />
-        Add content
-      </Button>
+      {!isMemoryLimitReached && (
+        <Button variant="outline" onClick={handleAddNewKnowledgeSource}>
+          <Plus />
+          Add content
+        </Button>
+      )}
     </div>
   );
 };
