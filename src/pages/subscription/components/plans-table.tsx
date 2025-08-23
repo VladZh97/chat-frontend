@@ -217,7 +217,6 @@ const PlansTable = () => {
               /month
             </p>
             <Button
-              variant="outline"
               className={cn(
                 'mt-6 h-12 w-full text-base font-semibold',
                 !isCurrentPlan('Free') && 'invisible opacity-0'
