@@ -8,6 +8,7 @@ import { useMemo, useState } from 'preact/hooks';
 const CurrentPlanCard = () => {
   const { plan, subscription, account } = useCurrentSubscription();
   const [isPortalLoading, setIsPortalLoading] = useState(false);
+  const isCanceled = !!account?.stripeBillingId && !!account?.cancelAtPeriodEnd;
 
   const periodLabel = useMemo(() => {
     const p = subscription?.period === 'yearly' ? 'yearly' : 'monthly';
@@ -80,7 +81,7 @@ const CurrentPlanCard = () => {
               View Invoices
             </Button>
             <Button variant="outline" isLoading={isPortalLoading} onClick={openBillingPortal}>
-              Cancel plan
+              {isCanceled ? 'Reactivate' : 'Cancel'} plan
             </Button>
           </div>
         )}
