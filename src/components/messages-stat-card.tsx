@@ -20,7 +20,7 @@ export const MessagesStatCard = ({ id }: { id?: string | undefined }) => {
         <span
           className={cn('opacity-100 transition-opacity duration-300', isLoading && 'opacity-0')}
         >
-          {(data?.count ?? 0).toLocaleString()}/{plan?.limits.maxMessages?.toLocaleString()}
+          {(data?.count ?? 0).toLocaleString()}/{plan?.limits?.maxMessages?.toLocaleString()}
         </span>
         <span className="text-xs font-normal text-stone-500">{refreshOnLabel}</span>
       </div>
