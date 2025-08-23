@@ -218,7 +218,10 @@ const PlansTable = () => {
             </p>
             <Button
               variant="outline"
-              className={cn('mt-6 h-12 w-full text-base font-semibold')}
+              className={cn(
+                'mt-6 h-12 w-full text-base font-semibold',
+                !isCurrentPlan('Free') && 'invisible opacity-0'
+              )}
               disabled={isCurrentPlan('Free')}
             >
               {getButtonText('Free')}
@@ -256,7 +259,10 @@ const PlansTable = () => {
               /month
             </p>
             <Button
-              className="mt-6 h-12 w-full text-base font-semibold"
+              className={cn(
+                'mt-6 h-12 w-full text-base font-semibold',
+                isCurrentPlan('Pro') && '!bg-stone-500 opacity-50'
+              )}
               isLoading={loadingPlan === PLAN_NAMES.PRO}
               disabled={isCurrentPlan('Pro')}
               onClick={() => {
