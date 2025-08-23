@@ -12,6 +12,7 @@ import { Check, ChevronsUpDown, Gem } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { memo } from 'preact/compat';
 import { useNavigate } from 'react-router-dom';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 // Memoized constants outside component to prevent recreation
 const PROMPTS_MAP = new Map(promptsData.map(p => [p.name, p.prompt]));
@@ -88,19 +89,23 @@ const PromptSelector = memo(
           {promptPreset}
           <ChevronsUpDown className="size-4 text-stone-500" />
         </PopoverTrigger>
-        <PopoverContent className="w-[var(--radix-popover-trigger-width)] space-y-1 p-2">
-          {isCustomPromptLocked && <UpgradePrompt onUpgrade={onUpgrade} />}
-          {options.map(option => (
-            <PromptOptionItem
-              key={option}
-              option={option}
-              isSelected={option === promptPreset}
-              onClick={value => {
-                onPromptChange(value);
-                setOpen(false);
-              }}
-            />
-          ))}
+        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+          <ScrollArea className="h-[350px]">
+            <div className="space-y-1 p-2">
+              {isCustomPromptLocked && <UpgradePrompt onUpgrade={onUpgrade} />}
+              {options.map(option => (
+                <PromptOptionItem
+                  key={option}
+                  option={option}
+                  isSelected={option === promptPreset}
+                  onClick={value => {
+                    onPromptChange(value);
+                    setOpen(false);
+                  }}
+                />
+              ))}
+            </div>
+          </ScrollArea>
         </PopoverContent>
       </Popover>
     );
