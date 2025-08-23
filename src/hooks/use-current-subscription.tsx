@@ -21,8 +21,11 @@ const useCurrentSubscription = () => {
     };
 
   const subscription = SUBSCRIPTIONS.find(subscription => subscription.id === data?.billingPlan);
-  const plan = PLANS[subscription?.title as keyof typeof PLANS] || PLANS[PLAN_NAMES.FREE];
-  return { plan, subscription, account: data };
+  const isActive =
+    !data?.cancelAtPeriodEnd ||
+    (data.currentPeriodEnd && new Date(data.currentPeriodEnd) > new Date());
+  const plan = PLANS[isActive ? (subscription?.title as keyof typeof PLANS) : PLAN_NAMES.FREE];
+  return { plan, subscription, account: data, isActive };
 };
 
 export default useCurrentSubscription;
