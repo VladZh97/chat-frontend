@@ -76,9 +76,7 @@ const Widget = () => {
   };
 
   useEffect(() => {
-    console.log('isAuthenticated', isAuthenticated);
     if (isAuthenticated) {
-      console.log('posting message');
       window.parent.postMessage(
         {
           type: HeywayEvent.Authenticated,
