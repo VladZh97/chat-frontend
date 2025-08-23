@@ -74,8 +74,8 @@ const Header = () => {
                 isMemoryLimitReached && 'text-red-600'
               )}
             >
-              {((memoryUsage?.count ?? 0) / 1024).toFixed(2)} /{' '}
-              {`${plan.limits.maxMemory.toLocaleString()} kb`}
+              {(memoryUsage?.count ?? 0) === 0 ? 0 : ((memoryUsage?.count ?? 0) / 1024).toFixed(2)}{' '}
+              / {`${plan.limits.maxMemory.toLocaleString()} kb`}
             </span>
             <span className="block h-1 w-full overflow-hidden rounded-full bg-stone-200">
               <span
