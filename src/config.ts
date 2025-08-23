@@ -65,24 +65,24 @@ export const SUBSCRIPTIONS = [
     title: PLAN_NAMES.PRO,
     period: 'monthly',
     price: 39,
-    id: 'price_1RuEmKQsWw8FGM7mICiKO0QG',
+    id: 'price_1RzOnuH5z64scL5B5DzxHOeI',
   },
   {
     title: PLAN_NAMES.PRO,
     period: 'yearly',
     price: 396,
-    id: 'price_1RuH2VQsWw8FGM7mD3v2lsDb',
+    id: 'price_1RzOnuH5z64scL5BAGVAbwZ6',
   },
   {
     title: PLAN_NAMES.TEAM,
     period: 'monthly',
     price: 79,
-    id: 'price_1RuEnpQsWw8FGM7mWmnTAhxk',
+    id: 'price_1RzOoKH5z64scL5Bsn7WuQQI',
   },
   {
     title: PLAN_NAMES.TEAM,
     period: 'yearly',
     price: 792,
-    id: 'price_1RuH3BQsWw8FGM7miuEalfj1',
+    id: 'price_1RzOoqH5z64scL5B2DMRIQez',
   },
 ];
