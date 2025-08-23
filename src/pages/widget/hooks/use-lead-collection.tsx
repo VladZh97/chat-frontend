@@ -59,7 +59,7 @@ export const useLeadCollection = ({
       // Close the popover
       setTimeout(() => {
         setIsLeadPopoverOpen(false);
-      }, 1000);
+      }, 500);
 
       return true;
     } catch (error) {

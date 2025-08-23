@@ -35,7 +35,7 @@ export const LeadCollectionDrawer = ({
   const isFormValid = email.trim() && validateEmail(email) && hasConsented;
 
   const handleSubmit = () => {
-    if (!isFormValid) return;
+    if (!isFormValid || isSubmitting) return;
     onSubmit(email);
   };
 
@@ -126,7 +126,7 @@ export const LeadCollectionDrawer = ({
           {/* Submit button */}
           <button
             onClick={handleSubmit}
-            disabled={isSubmitting || !isFormValid}
+            disabled={!isFormValid}
             className={cn(
               'w-full cursor-pointer rounded-xl px-4 py-3 text-sm font-semibold transition-colors',
               'disabled:cursor-not-allowed disabled:!bg-neutral-200 disabled:!text-neutral-500'
