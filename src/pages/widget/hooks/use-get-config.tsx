@@ -54,13 +54,7 @@ export const useGetConfig = () => {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       const { type, payload } = event.data;
-      if (
-        event?.data &&
-        typeof event.data === 'object' &&
-        type === 'heyway:config'
-        // isValidConfig(event.data.config)
-      ) {
-        console.log('event.data.config', payload);
+      if (event?.data && typeof event.data === 'object' && type === 'heyway:config') {
         setConfig(payload);
       }
     };
