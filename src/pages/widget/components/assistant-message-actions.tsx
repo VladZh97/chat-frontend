@@ -2,6 +2,7 @@ import { Copy, CopyCheck, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import widgetApiService from '@/api/widget';
 import { WidgetStorage } from '@/utils/widget-storage';
+import { HeywayEvent } from '../constants';
 
 interface AssistantMessageActionsProps {
   message: string;
@@ -31,7 +32,13 @@ export const AssistantMessageActions = ({
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = message;
     const text = tempDiv.textContent || tempDiv.innerText || '';
-    await navigator.clipboard.writeText(text);
+    window.parent.postMessage(
+      {
+        type: HeywayEvent.COPY_MESSAGE,
+        message: text,
+      },
+      '*'
+    );
     setIsCopied(true);
     setTimeout(() => {
       setIsCopied(false);

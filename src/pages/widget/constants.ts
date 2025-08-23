@@ -4,4 +4,5 @@ export enum HeywayEvent {
   CONFIG = 'heyway:config',
   CLOSE_WIDGET = 'heyway:close-widget',
   TRANSCRIPT = 'heyway:transcript',
+  COPY_MESSAGE = 'heyway:clipboard',
 }
