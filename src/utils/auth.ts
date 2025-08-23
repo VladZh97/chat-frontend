@@ -21,7 +21,7 @@ export const isLoggedIn = async (): Promise<boolean> => {
     const token = await user.getIdTokenResult();
     // Check if the user has an accountId claim
     // return token.claims.accountId !== undefined;
-    return !!token;
+    return !!token && token.claims.accountId !== undefined;
   } catch (error) {
     console.error('Error checking authentication status:', error);
     return false;
