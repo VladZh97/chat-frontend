@@ -56,7 +56,7 @@ const chatbot = {
         Accept: 'text/event-stream',
         Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify({ chatbotId, messages, promptPreset, prompt, stream: true }),
+      body: JSON.stringify({ chatbotId, messages, promptPreset, prompt }),
     });
 
     if (!response.ok) {
