@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import { CircleCheckBig, ListChecks } from 'lucide-react';
+import { ListChecks, SquareCheckBig } from 'lucide-react';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
 
 const PlanFeaturesCard = () => {
@@ -18,7 +18,7 @@ const PlanFeaturesCard = () => {
         ) : (
           features.map(feature => (
             <p key={feature} className="flex items-center gap-3 text-base font-normal">
-              <CircleCheckBig className="size-4 text-stone-500" />
+              <SquareCheckBig className="size-4 text-orange-500" />
               {feature}
             </p>
           ))

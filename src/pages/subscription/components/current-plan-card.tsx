@@ -43,6 +43,8 @@ const CurrentPlanCard = () => {
     }
   };
 
+  const title = plan?.title ?? 'Free';
+
   return (
     <Card className="block p-0">
       <div className="flex items-center gap-2 px-6 pt-6 pb-5 text-base font-semibold">
@@ -50,20 +52,24 @@ const CurrentPlanCard = () => {
         Current plan
       </div>
       <div className="px-6 pb-8">
-        <p className="mb-6 text-2xl font-bold">{plan?.title ?? 'Free'}</p>
+        <p className="mb-6 text-2xl font-bold">{title}</p>
         <div className="space-y-2.5">
           <p className="flex items-center justify-between text-base font-normal">
             <span>Price</span>
-            <span>{priceLabel}</span>
+            <span>{title === 'Free' ? '$0 / monthly' : priceLabel}</span>
           </p>
-          <p className="flex items-center justify-between text-base font-normal">
-            <span>Billing cycle</span>
-            <span>{periodLabel}</span>
-          </p>
-          <p className="flex items-center justify-between text-base font-normal">
-            <span>Renewal date</span>
-            <span>{renewalDate}</span>
-          </p>
+          {title !== 'Free' && (
+            <>
+              <p className="flex items-center justify-between text-base font-normal">
+                <span>Billing cycle</span>
+                <span>{periodLabel}</span>
+              </p>
+              <p className="flex items-center justify-between text-base font-normal">
+                <span>Renewal date</span>
+                <span>{renewalDate}</span>
+              </p>
+            </>
+          )}
         </div>
         {plan?.title !== 'Free' && (
           <div className="mt-6 grid grid-cols-3 gap-2.5">
