@@ -1,13 +1,12 @@
 import chatbot from '@/api/chatbot';
-import { stats } from '@/api/stats';
+import { MessagesStatCard } from '@/components/messages-stat-card';
 import StatCard from '@/components/stat-card';
 import { Button } from '@/components/ui/button';
 import type { PLANS } from '@/config';
-import { useRefreshOnLabel } from '@/hooks';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
-import { Bot, CreditCard, MessagesSquare } from 'lucide-react';
+import { Bot, CreditCard } from 'lucide-react';
 import { useCallback } from 'preact/hooks';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,7 +18,7 @@ const Stats = () => {
     <div className="mb-4 grid grid-cols-3 gap-4">
       <PlanCard plan={plan} />
       <Chatbots limits={plan?.limits ?? {}} />
-      <MessagesCard limits={plan?.limits ?? {}} />
+      <MessagesStatCard />
     </div>
   );
 };
@@ -55,28 +54,6 @@ const Chatbots = ({ limits }: { limits: (typeof PLANS)[keyof typeof PLANS]['limi
       <span className={cn('opacity-100 transition-opacity duration-300', isLoading && 'opacity-0')}>
         {chatbots?.length ?? 0}/{limits.maxChatbots}
       </span>
-    </StatCard>
-  );
-};
-
-const MessagesCard = ({ limits }: { limits: (typeof PLANS)[keyof typeof PLANS]['limits'] }) => {
-  const { label: refreshOnLabel } = useRefreshOnLabel();
-  const { data: messages, isLoading } = useQuery({
-    queryKey: stats.messages.key(),
-    queryFn: () => stats.messages.query(undefined),
-    staleTime: 60_000,
-  });
-
-  return (
-    <StatCard icon={<MessagesSquare className="size-4 text-stone-500" />} title="Messages">
-      <div className="flex w-full items-center justify-between">
-        <span
-          className={cn('opacity-100 transition-opacity duration-300', isLoading && 'opacity-0')}
-        >
-          {messages?.count ?? 0}/{limits.maxMessages ?? 0}
-        </span>
-        <span className="text-sm font-normal text-stone-500">{refreshOnLabel}</span>
-      </div>
     </StatCard>
   );
 };
