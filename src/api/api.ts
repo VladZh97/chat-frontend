@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { auth } from '@/lib/auth';
+import { environment } from '@/environment';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: environment.api,
 });
 
 api.interceptors.request.use(async config => {

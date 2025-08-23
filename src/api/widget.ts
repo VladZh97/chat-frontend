@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { TMessage } from '@/types/message.type';
 import { WidgetStorage } from '@/utils/widget-storage';
+import { environment } from '@/environment';
 
 export interface ChatStreamEvent {
   type: 'connected' | 'chunk' | 'complete';
@@ -54,7 +55,7 @@ export const setTokenRefreshHandler = (handler: () => Promise<string | null>) =>
 
 // Create a separate API instance for widget (no Firebase auth)
 const widgetApi = axios.create({
-  baseURL: 'http://localhost:3000/api/widget',
+  baseURL: `${environment.api}/widget`,
   timeout: 30000,
 });
 
