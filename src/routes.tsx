@@ -14,6 +14,7 @@ const Settings = lazy(() => import('./pages/chatbot/settings'));
 const Widget = lazy(() => import('./pages/widget'));
 const Subscription = lazy(() => import('./pages/subscription'));
 const Usage = lazy(() => import('./pages/usage'));
+const NotFound = lazy(() => import('./pages/not-found'));
 
 const router = createBrowserRouter([
   {
@@ -123,8 +124,15 @@ const router = createBrowserRouter([
           },
         ],
       },
-      // // 404 page (public)
-      // { path: "*", Component: NotFound },
+      // 404 page (public)
+      {
+        path: "*",
+        element: (
+          <Suspense fallback>
+            <NotFound />
+          </Suspense>
+        ),
+      },
     ],
   },
 ]);
