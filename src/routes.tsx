@@ -15,6 +15,7 @@ const Widget = lazy(() => import('./pages/widget'));
 const Subscription = lazy(() => import('./pages/subscription'));
 const Usage = lazy(() => import('./pages/usage'));
 const NotFound = lazy(() => import('./pages/not-found'));
+const RouteError = lazy(() => import('./components/route-error'));
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,11 @@ const router = createBrowserRouter([
           <ProtectedRouteProvider>
             <BaseLayout />
           </ProtectedRouteProvider>
+        ),
+        errorElement: (
+          <Suspense fallback>
+            <RouteError />
+          </Suspense>
         ),
         children: [
           {

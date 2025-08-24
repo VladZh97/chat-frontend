@@ -276,6 +276,13 @@
       animation: none;
     }
   }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
 }
 
 /* Hide list markers visually (preserve indentation) until first word becomes visible */
