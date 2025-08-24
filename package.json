@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:staging": "tsc -b && vite build --mode staging",
+    "build:prod": "tsc -b && vite build --mode production",
     "preview": "vite preview",
+    "preview:staging": "vite preview --mode staging",
+    "preview:prod": "vite preview --mode production",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,md,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css,md,json}\""
   },

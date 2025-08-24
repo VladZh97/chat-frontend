@@ -1,8 +1,10 @@
 import account from '@/api/account';
-import { PLAN_NAMES, PLANS, SUBSCRIPTIONS } from '@/config';
+import { PLAN_NAMES, PLANS } from '@/config';
+import { environment } from '@/environment';
 import type { IAccount } from '@/types/account.type';
 import { useQuery } from '@tanstack/react-query';
 
+const SUBSCRIPTIONS = environment.subscriptions;
 const useCurrentSubscription = () => {
   const { data, isLoading } = useQuery({
     queryKey: account.get.key,

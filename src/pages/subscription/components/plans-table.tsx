@@ -1,10 +1,13 @@
 import { Button } from '@/components/ui/button';
-import { PLAN_NAMES, PLANS, SUBSCRIPTIONS } from '@/config';
+import { PLAN_NAMES, PLANS } from '@/config';
 import { cn } from '@/lib/utils';
 import { Loader2, SquareCheckBig } from 'lucide-react';
 import { useMemo, useState } from 'preact/hooks';
 import pricing from '@/api/pricing';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
+import { environment } from '@/environment';
+
+const SUBSCRIPTIONS = environment.subscriptions;
 
 const PlansTable = () => {
   const [activePlan, setActivePlan] = useState<'monthly' | 'yearly'>('monthly');
