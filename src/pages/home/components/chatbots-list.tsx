@@ -54,7 +54,7 @@ const ChatbotsList = () => {
               style={{ '--accent-color': chatbot.accentColor || '#FF6900' } as CSSProperties}
               onClick={() => handleChatbotClick(chatbot._id)}
               className={cn(
-                'relative flex items-center justify-center overflow-hidden rounded-xl border-b-2 pt-[54.44%] shadow transition-all duration-300 group-hover:shadow-lg',
+                'relative flex items-center justify-center overflow-hidden rounded-xl border-b-2 pt-[56%] shadow transition-all duration-300 group-hover:shadow-lg',
                 `border-[var(--accent-color)] bg-[var(--accent-color)]/10`
               )}
             >
@@ -68,7 +68,7 @@ const ChatbotsList = () => {
         {isLoading && <Skeleton />}
         {!isLoading && !data?.length && (
           <div
-            className="relative flex cursor-pointer flex-col items-center justify-center rounded-xl border border-stone-200 bg-white pt-[54.44%] text-sm text-stone-500 shadow transition-all duration-300 hover:shadow-lg"
+            className="relative flex cursor-pointer flex-col items-center justify-center rounded-xl border border-stone-200 bg-white pt-[56%] text-sm text-stone-500 shadow transition-all duration-300 hover:shadow-lg"
             onClick={handleCreateNewChatbot}
           >
             <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center">
@@ -91,7 +91,7 @@ const Skeleton = () => {
   );
   return width.map((w, index) => (
     <div key={index} className="group animate-pulse-fast">
-      <div className="relative flex items-center justify-center rounded-xl border border-stone-200 bg-stone-100 pt-[54.44%] shadow transition-all duration-300 group-hover:shadow-lg"></div>
+      <div className="relative flex items-center justify-center rounded-xl border border-stone-200 bg-stone-100 pt-[56%] shadow transition-all duration-300 group-hover:shadow-lg"></div>
       <div className="mt-3 flex h-5 items-center">
         <span className="block h-2 rounded-full bg-stone-200" style={{ width: `${w}%` }} />
       </div>
