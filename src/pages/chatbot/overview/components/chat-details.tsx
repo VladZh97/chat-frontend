@@ -73,6 +73,7 @@ const ChatDetails = () => {
         <div className="flex h-10 items-center text-sm font-medium text-stone-500">
           <span className={cn(TABLE_SIZES.STATUS, 'px-3')}>Status</span>
           <span className={cn(TABLE_SIZES.INITIAL_MESSAGE, 'px-3')}>Welcome message</span>
+          <span className={cn(TABLE_SIZES.EMAIL, 'px-3')}>Email</span>
           <span className={cn(TABLE_SIZES.MESSAGES, 'px-3')}>Messages</span>
           <span className={cn(TABLE_SIZES.DATE, 'px-3')}>Date</span>
           <span className={cn(TABLE_SIZES.ACTIONS, 'px-3')}></span>
@@ -182,9 +183,12 @@ const Row = ({
           dangerouslySetInnerHTML={{ __html: conversation.firstMessage.message }}
         />
       </div>
+      <span className={cn(TABLE_SIZES.EMAIL, 'truncate px-3')}>
+        {conversation.visitorEmail || ''}
+      </span>
       <span className={cn(TABLE_SIZES.MESSAGES, 'px-3')}>{conversation.totalMessages}</span>
       <span className={cn(TABLE_SIZES.DATE, 'px-3')}>
-        {moment(conversation.date).local().format('MMMM D, YYYY • hh:mm A')}
+        {moment(conversation.date).local().format('MMM D, YYYY • hh:mm A')}
       </span>
       <span className={cn(TABLE_SIZES.ACTIONS, 'px-3')}>
         <Popover open={isOpen} onOpenChange={setIsOpen}>

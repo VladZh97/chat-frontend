@@ -1,8 +1,9 @@
 const TABLE_SIZES = {
   STATUS: 'w-24',
   INITIAL_MESSAGE: 'grow',
-  MESSAGES: 'w-[120px]',
-  DATE: 'w-[256px]',
+  EMAIL: 'w-[256px]',
+  MESSAGES: 'w-[90px]',
+  DATE: 'w-[200px]',
   ACTIONS: 'w-[52px]',
 } as const;
 
