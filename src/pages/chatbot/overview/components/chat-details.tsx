@@ -162,8 +162,11 @@ const Row = ({
 
   return (
     <div
+      onClick={() => {
+        onSelectConversation(conversation);
+      }}
       className={cn(
-        'flex h-[54px] items-center text-sm font-medium text-stone-500 transition-colors last:rounded-b-md hover:bg-stone-50',
+        'flex h-[54px] cursor-pointer items-center text-sm font-medium text-stone-500 transition-colors last:rounded-b-md hover:bg-stone-50',
         isOpen && 'bg-stone-50'
       )}
     >
@@ -192,7 +195,7 @@ const Row = ({
       </span>
       <span className={cn(TABLE_SIZES.ACTIONS, 'px-3')}>
         <Popover open={isOpen} onOpenChange={setIsOpen}>
-          <PopoverTrigger>
+          <PopoverTrigger onClick={e => e.stopPropagation()}>
             <span
               className={cn(
                 'flex size-8 cursor-pointer items-center justify-center rounded-md text-stone-900 transition-colors hover:bg-stone-200',
