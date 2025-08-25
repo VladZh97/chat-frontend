@@ -203,6 +203,64 @@ export function pickOptimalTextColor(
     };
   }
 
+  // When preferring light text, be more aggressive about searching light values first
+  if (!preferDark) {
+    // First, try a wide range of light colors (70-100% lightness)
+    for (let L = Math.max(70, targetLightness); L <= 100; L += 2) {
+      if (passes(L)) {
+        const textRgb = hslToRgb(brandH, brandS, L);
+        return {
+          color: hslToHex(brandH, brandS, L),
+          lightness: L,
+          contrast: contrast(textRgb, backgroundRgb),
+        };
+      }
+    }
+    
+    // If no light color passes, try with relaxed contrast (3:1 instead of 4.5:1) for bright backgrounds
+    const backgroundLuminance = rgbToLuminance(backgroundRgb.r, backgroundRgb.g, backgroundRgb.b);
+    if (backgroundLuminance > 0.25) { // Bright background
+      // First try brand colors with relaxed contrast
+      for (let L = Math.max(70, targetLightness); L <= 100; L += 2) {
+        const textRgb = hslToRgb(brandH, brandS, L);
+        const currentContrast = contrast(textRgb, backgroundRgb);
+        if (currentContrast >= 3.0) { // Relaxed contrast requirement
+          return {
+            color: hslToHex(brandH, brandS, L),
+            lightness: L,
+            contrast: currentContrast,
+          };
+        }
+      }
+      
+      // If brand colors don't work, try desaturated light colors
+      for (let s = brandS; s >= 20; s -= 20) {
+        for (let L = 85; L <= 100; L += 2) {
+          const textRgb = hslToRgb(brandH, s, L);
+          const currentContrast = contrast(textRgb, backgroundRgb);
+          if (currentContrast >= 3.0) {
+            return {
+              color: hslToHex(brandH, s, L),
+              lightness: L,
+              contrast: currentContrast,
+            };
+          }
+        }
+      }
+      
+      // Last resort for bright backgrounds: pure white with relaxed contrast
+      const whiteRgb = { r: 255, g: 255, b: 255 };
+      const whiteContrast = contrast(whiteRgb, backgroundRgb);
+      if (whiteContrast >= 2.5) { // Very relaxed contrast for bright backgrounds
+        return {
+          color: '#ffffff',
+          lightness: 100,
+          contrast: whiteContrast,
+        };
+      }
+    }
+  }
+
   // Expand search outward from target, preferring the requested direction first
   for (let step = 1; step <= 100; step++) {
     // preferred side first
@@ -236,7 +294,8 @@ export function pickOptimalTextColor(
   const cDark = contrast(darkRgb, backgroundRgb);
   const cLight = contrast(lightRgb, backgroundRgb);
 
-  const useDark = cDark >= cLight;
+  // When preferring light text, prefer light even if contrast is slightly lower
+  const useDark = preferDark ? cDark >= cLight : cDark > cLight * 1.5;
   const finalL = useDark ? 0 : 100;
   const finalRgb = useDark ? darkRgb : lightRgb;
 
