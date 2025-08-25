@@ -1,8 +1,8 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Prompts from './prompts';
-import ConverstationStarters from './converstation-starters';
 import InitialMessage from './initial-message';
 import { PublicName } from './public-name';
+import ConversationStarters from './conversation-starters';
 
 const SettingsSide = () => {
   return (
@@ -10,7 +10,7 @@ const SettingsSide = () => {
       <div className="px-8 py-6">
         <PublicName />
         <InitialMessage />
-        <ConverstationStarters />
+        <ConversationStarters />
         <Prompts />
       </div>
     </ScrollArea>

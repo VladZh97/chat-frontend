@@ -72,7 +72,7 @@ const ChatDetails = () => {
       <div className="divide-y divide-stone-200 rounded-md border border-stone-200 bg-white shadow-sm">
         <div className="flex h-10 items-center text-sm font-medium text-stone-500">
           <span className={cn(TABLE_SIZES.STATUS, 'px-3')}>Status</span>
-          <span className={cn(TABLE_SIZES.INITIAL_MESSAGE, 'px-3')}>Initial message</span>
+          <span className={cn(TABLE_SIZES.INITIAL_MESSAGE, 'px-3')}>Welcome message</span>
           <span className={cn(TABLE_SIZES.MESSAGES, 'px-3')}>Messages</span>
           <span className={cn(TABLE_SIZES.DATE, 'px-3')}>Date</span>
           <span className={cn(TABLE_SIZES.ACTIONS, 'px-3')}></span>

@@ -15,7 +15,7 @@ import {
 import type { SetStateAction } from 'preact/compat';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { usePlayground } from '../../hooks';
-import React, { memo } from 'preact/compat';
+import React, { Fragment, memo } from 'preact/compat';
 import { useTextOnAccent } from '@/hooks/use-accent-colors';
 
 const Widget = () => {
@@ -337,13 +337,16 @@ const StarterMessages = ({
   return (
     <div className="absolute bottom-0 left-0 mt-auto flex w-full flex-wrap justify-end gap-2 p-6">
       {conversationStarters.map(starter => (
-        <span
-          key={starter.id}
-          className="shadow-card flex cursor-pointer items-center justify-center rounded-2xl bg-white px-3 py-2 text-sm font-semibold text-stone-900 transition-colors hover:bg-stone-50"
-          onClick={() => onSelect(starter.value)}
-        >
-          {starter.value}
-        </span>
+        <Fragment key={starter.id}>
+          {starter.value && (
+            <span
+              className="shadow-card flex cursor-pointer items-center justify-center rounded-2xl bg-white px-3 py-2 text-sm font-semibold text-stone-900 transition-colors hover:bg-stone-50"
+              onClick={() => onSelect(starter.value)}
+            >
+              {starter.value}
+            </span>
+          )}
+        </Fragment>
       ))}
     </div>
   );

@@ -9,7 +9,7 @@ const InitialMessage = () => {
   }));
   return (
     <div className="mb-6">
-      <Label className="mb-2">Initial message</Label>
+      <Label className="mb-2">Welcome message</Label>
       <Input
         className="h-10"
         value={initialMessage}

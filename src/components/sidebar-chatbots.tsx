@@ -31,9 +31,10 @@ const SidebarChatbots = () => {
     queryFn: () => chatbot.get.query(),
   });
 
-  const position = NAVIGATION.findIndex(item =>
+  let position = NAVIGATION.findIndex(item =>
     pathname.includes(item.path.replace(':id', id ?? ''))
   );
+  if (position === -1) position = 0;
 
   return (
     <div className="space-y-3">
