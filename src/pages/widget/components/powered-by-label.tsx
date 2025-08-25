@@ -10,7 +10,7 @@ export const PoweredByLabel = () => {
     <a
       href="https://www.heyway.chat"
       target="_blank"
-      className="mt-2 flex h-8 items-center justify-center gap-1.5 text-xs text-neutral-500"
+      className="mt-2 flex h-8 items-center justify-center gap-1.5 text-xs text-neutral-500 transition-opacity hover:opacity-80"
     >
       Powered by
       <PoveredBy />
