@@ -14,10 +14,7 @@ export const AssistantMessageLoading = () => {
         {avatar && <img src={avatar} alt="avatar" className="size-full object-cover" />}
       </div>
       <p className="py- flex h-11 items-center gap-1 rounded-2xl rounded-bl-none bg-[var(--accent-color)]/10 px-4">
-        <span className="sr-only">Assistant is typing…</span>
-        <span className="inline-block size-1.5 animate-bounce rounded-full bg-neutral-900 [animation-delay:-0.3s]"></span>
-        <span className="inline-block size-1.5 animate-bounce rounded-full bg-neutral-900 [animation-delay:-0.15s]"></span>
-        <span className="inline-block size-1.5 animate-bounce rounded-full bg-neutral-900"></span>
+        <span className="animate-pulse text-sm font-normal text-stone-900/60">Thinking...</span>
       </p>
     </div>
   );
