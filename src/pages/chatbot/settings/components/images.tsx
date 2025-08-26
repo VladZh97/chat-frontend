@@ -5,6 +5,7 @@ import Icon from '@/assets/chat.svg';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import { useUploadFile } from '@/hooks';
 import { useState } from 'preact/hooks';
+import { toast } from 'sonner';
 
 const Images = () => {
   const { uploadFileFn, loading } = useUploadFile();
@@ -30,7 +31,7 @@ const Images = () => {
       if (target.files && target.files.length > 0) {
         const file = target.files[0];
         if (file.size > 4 * 1024 * 1024) {
-          alert('File size cannot exceed 4MB');
+          toast.error('File size cannot exceed 4MB');
           return;
         }
         const url = await uploadFileFn(file);

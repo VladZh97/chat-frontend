@@ -4,6 +4,7 @@ import { CreditCard } from 'lucide-react';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
 import pricing from '@/api/pricing';
 import { useMemo, useState } from 'preact/hooks';
+import { toast } from 'sonner';
 
 const CurrentPlanCard = () => {
   const { plan, subscription, account } = useCurrentSubscription();
@@ -38,7 +39,7 @@ const CurrentPlanCard = () => {
       window.location.href = url;
     } catch (e) {
       console.error(e);
-      alert('Failed to open billing portal. Please try again.');
+      toast.error('Failed to open billing portal. Please try again.');
     } finally {
       setIsPortalLoading(false);
     }

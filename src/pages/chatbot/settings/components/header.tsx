@@ -10,14 +10,15 @@ import { toast } from 'sonner';
 import TrainingStatusLabel from '@/components/training-status-label';
 import { useGetChatbot } from '../../hooks';
 import { copyEmbedCode } from '@/utils/copy-embed-code';
+import { CopyEmbedCodeDialog } from '@/dialogs/copy-embed-code-dialog';
+import { useDialog } from '@/hooks';
 
 const Header = () => {
+  const { showDialog } = useDialog();
   const { id } = useParams();
   const { isLoading } = useGetChatbot();
-  const { name, accountId, _id, changed } = useChatbotStoreShallow(s => ({
+  const { name, changed } = useChatbotStoreShallow(s => ({
     name: s.name,
-    accountId: s.accountId,
-    _id: s._id,
     changed: s.changed,
   }));
 
@@ -39,6 +40,10 @@ const Header = () => {
     updateChatbot(payload);
   };
 
+  const handleCopyEmbedCode = () => {
+    showDialog(CopyEmbedCodeDialog.id, CopyEmbedCodeDialog);
+  };
+
   return (
     <div className="grid grid-cols-[auto_auto] items-center justify-between border-b border-stone-200 px-8 py-6">
       <div className="grid grid-cols-[auto_auto] items-center gap-2.5">
@@ -53,7 +58,7 @@ const Header = () => {
       </div>
 
       <div className="ml-10 flex items-center gap-2">
-        <Button variant="outline" onClick={() => copyEmbedCode(accountId, _id)}>
+        <Button variant="outline" onClick={handleCopyEmbedCode}>
           <CodeXml />
           Copy embed code
         </Button>

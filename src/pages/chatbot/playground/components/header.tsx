@@ -10,8 +10,11 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useGetChatbot } from '../../hooks';
 import { copyEmbedCode } from '@/utils/copy-embed-code';
+import { CopyEmbedCodeDialog } from '@/dialogs/copy-embed-code-dialog';
+import { useDialog } from '@/hooks';
 
 const Header = () => {
+  const { showDialog } = useDialog();
   const { id } = useParams();
   const { isLoading } = useGetChatbot();
   const { mutate: updateChatbot, isPending } = useMutation({
@@ -20,10 +23,8 @@ const Header = () => {
       toast.success('Chatbot updated successfully');
     },
   });
-  const { name, accountId, _id, changed } = useChatbotStoreShallow(s => ({
+  const { name, changed } = useChatbotStoreShallow(s => ({
     name: s.name,
-    accountId: s.accountId,
-    _id: s._id,
     changed: s.changed,
   }));
 
@@ -33,6 +34,9 @@ const Header = () => {
       Object.entries(state).filter(([, value]) => typeof value !== 'function')
     );
     updateChatbot(payload);
+  };
+  const handleCopyEmbedCode = () => {
+    showDialog(CopyEmbedCodeDialog.id, CopyEmbedCodeDialog);
   };
 
   return (
@@ -49,7 +53,7 @@ const Header = () => {
       </div>
 
       <div className="ml-10 flex items-center gap-2">
-        <Button variant="outline" onClick={() => copyEmbedCode(accountId, _id)}>
+        <Button variant="outline" onClick={handleCopyEmbedCode}>
           <CodeXml />
           Copy embed code
         </Button>

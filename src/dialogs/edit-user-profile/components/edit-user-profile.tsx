@@ -9,6 +9,7 @@ import user from '@/api/user';
 import { useDialog, useUploadFile } from '@/hooks';
 import type { IUser } from '@/types/user.type';
 import { CONFIG } from '@/config';
+import { toast } from 'sonner';
 
 const ID = 'edit-profile';
 
@@ -39,7 +40,7 @@ const EditUserProfile = () => {
       if (target.files && target.files.length > 0) {
         const file = target.files[0];
         if (file.size > CONFIG.MAX_FILE_SIZE) {
-          alert(`File size cannot exceed ${CONFIG.MAX_FILE_SIZE / 1024 / 1024}MB`);
+          toast.error(`File size cannot exceed ${CONFIG.MAX_FILE_SIZE / 1024 / 1024}MB`);
           return;
         }
         const url = await uploadFileFn(file);

@@ -6,6 +6,7 @@ import { useMemo, useState } from 'preact/hooks';
 import pricing from '@/api/pricing';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
 import { environment } from '@/environment';
+import { toast } from 'sonner';
 
 const SUBSCRIPTIONS = environment.subscriptions;
 
@@ -79,7 +80,7 @@ const PlansTable = () => {
       window.location.href = url;
     } catch (error) {
       console.error(error);
-      alert('Failed to start checkout. Please try again.');
+      toast.error('Failed to start checkout. Please try again.');
     } finally {
       setLoadingPlan(null);
     }
@@ -95,7 +96,7 @@ const PlansTable = () => {
       window.location.href = url;
     } catch (e) {
       console.error(e);
-      alert('Failed to open billing portal. Please try again.');
+      toast.error('Failed to open billing portal. Please try again.');
     } finally {
       setLoadingPlan(null);
     }
