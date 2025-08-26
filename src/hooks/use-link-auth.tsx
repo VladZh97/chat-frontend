@@ -12,7 +12,7 @@ const useLinkAuth = () => {
   const authFirebase = getAuth();
   const navigate = useNavigate();
   const [isLinkAuthLoading, setIsLinkAuthLoading] = useState(false);
-  const { showDialog } = useDialog();
+  const { showDialog, closeDialog } = useDialog();
 
   const handleLinkAuth = useCallback(async () => {
     // Early return if not a sign-in link
@@ -32,6 +32,7 @@ const useLinkAuth = () => {
       showDialog(AuthEmailConfirmationDialog.id, AuthEmailConfirmationDialog, {
         onConfirm: (email: string) => {
           window.localStorage.setItem('emailForSignIn', email);
+          closeDialog(AuthEmailConfirmationDialog.id);
           handleLinkAuth();
         },
       });
