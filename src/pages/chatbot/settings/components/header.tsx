@@ -9,7 +9,6 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import TrainingStatusLabel from '@/components/training-status-label';
 import { useGetChatbot } from '../../hooks';
-import { copyEmbedCode } from '@/utils/copy-embed-code';
 import { CopyEmbedCodeDialog } from '@/dialogs/copy-embed-code-dialog';
 import { useDialog } from '@/hooks';
 

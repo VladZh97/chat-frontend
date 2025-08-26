@@ -9,7 +9,6 @@ import { CodeXml, LoaderCircle } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useGetChatbot } from '../../hooks';
-import { copyEmbedCode } from '@/utils/copy-embed-code';
 import { CopyEmbedCodeDialog } from '@/dialogs/copy-embed-code-dialog';
 import { useDialog } from '@/hooks';
 
