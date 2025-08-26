@@ -9,6 +9,7 @@ import { AssistantMessage } from './assistant-message';
 import { UserMessage } from './user-message';
 import { StarterMessages } from './starter-messages';
 import { AssistantMessageLoading } from './assistant-message-loading';
+import { ErrorResponseMessage } from './error-response-message';
 import type { IWidgetMessage } from '@/utils/widget-storage';
 
 export const WidgetMain = ({
@@ -18,6 +19,7 @@ export const WidgetMain = ({
   streamingHtml,
   chatbotId,
   accessToken,
+  onRetryMessage,
 }: {
   messages: IWidgetMessage[];
   setMessages: (message: { role: 'user' | 'assistant'; content: string }) => void;
@@ -25,6 +27,7 @@ export const WidgetMain = ({
   streamingHtml: string;
   chatbotId?: string;
   accessToken?: string;
+  onRetryMessage?: (message: string) => void;
 }) => {
   const { initialMessage, removeBranding } = useConfigStoreShallow(s => ({
     initialMessage: s.initialMessage,
@@ -85,18 +88,37 @@ export const WidgetMain = ({
           {groupedMessages.map((group, groupIndex) => (
             <div key={groupIndex} className="space-y-1">
               {group.role === 'assistant'
-                ? group.messages.map((msg, idx) => (
-                    <AssistantMessage
-                      key={idx}
-                      message={msg.content}
-                      messageId={msg.messageId}
-                      rating={msg.rating}
-                      chatbotId={chatbotId}
-                      visitorId={visitorId || undefined}
-                      conversationId={conversationId || undefined}
-                      accessToken={accessToken}
-                    />
-                  ))
+                ? group.messages.map((msg, idx) => {
+                    // Render error message if message has error
+                    if (msg.error) {
+                      return (
+                        <ErrorResponseMessage
+                          key={idx}
+                          errorMessage={msg.error.message}
+                          onRetry={
+                            msg.error.canRetry && msg.error.originalMessage && onRetryMessage
+                              ? () => onRetryMessage(msg.error!.originalMessage!)
+                              : undefined
+                          }
+                          isRetrying={false}
+                        />
+                      );
+                    }
+
+                    // Render normal assistant message
+                    return (
+                      <AssistantMessage
+                        key={idx}
+                        message={msg.content}
+                        messageId={msg.messageId}
+                        rating={msg.rating}
+                        chatbotId={chatbotId}
+                        visitorId={visitorId || undefined}
+                        conversationId={conversationId || undefined}
+                        accessToken={accessToken}
+                      />
+                    );
+                  })
                 : group.messages.map((msg, idx) => <UserMessage key={idx} message={msg.content} />)}
             </div>
           ))}

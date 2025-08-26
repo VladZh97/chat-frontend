@@ -23,6 +23,8 @@ export const useWidget = () => {
     setConversationId,
     clearSession,
     setSessionRestored,
+    setLastFailedMessage,
+    setRetrying,
   } = useWidgetStoreShallow(s => ({
     messages: s.messages,
     visitorId: s.visitorId,
@@ -34,6 +36,8 @@ export const useWidget = () => {
     setConversationId: s.setConversationId,
     clearSession: s.clearSession,
     setSessionRestored: s.setSessionRestored,
+    setLastFailedMessage: s.setLastFailedMessage,
+    setRetrying: s.setRetrying,
   }));
 
   // Auth sync
@@ -48,17 +52,20 @@ export const useWidget = () => {
   // Clear messages when prompt changes
   usePromptChangeClear(undefined, chatbotId, visitorId ?? undefined, setMessages);
 
-  const { isStreaming, streamingHtml, handleSendMessage } = useSendMessage({
+  const { isStreaming, streamingHtml, handleSendMessage, handleRetryMessage } = useSendMessage({
     messages,
     conversationId,
     setConversationId,
     addMessage,
+    setMessages,
     isAuthenticated,
     accessToken,
     chatbotId: chatbotId!,
     visitorId: visitorId!,
     handleApiError,
     clearInput: () => setInputValue(''),
+    setLastFailedMessage,
+    setRetrying,
   });
 
   const startNewChat = () => {
@@ -85,6 +92,7 @@ export const useWidget = () => {
     inputValue,
     setInputValue,
     handleSendMessage,
+    handleRetryMessage,
     isStreaming,
     streamingHtml,
     isAuthenticated,

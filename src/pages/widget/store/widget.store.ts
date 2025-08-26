@@ -12,6 +12,8 @@ export interface IWidget {
   authError: string | null;
   messages: IWidgetMessage[];
   isSessionRestored: boolean;
+  lastFailedMessage?: string;
+  isRetrying: boolean;
 }
 
 const initState: IWidget = {
@@ -24,6 +26,8 @@ const initState: IWidget = {
   authError: null,
   messages: [],
   isSessionRestored: false,
+  lastFailedMessage: undefined,
+  isRetrying: false,
 };
 
 interface IActions {
@@ -41,6 +45,9 @@ interface IActions {
   restoreSession: (session: IWidgetSession) => void;
   clearSession: () => void;
   setSessionRestored: (restored: boolean) => void;
+  setLastFailedMessage: (message?: string) => void;
+  setRetrying: (retrying: boolean) => void;
+  clearError: () => void;
 }
 
 export const useWidgetStore = create<IWidget & IActions>(set => ({
@@ -65,8 +72,13 @@ export const useWidgetStore = create<IWidget & IActions>(set => ({
       messages: [],
       conversationId: null,
       isSessionRestored: false,
+      lastFailedMessage: undefined,
+      isRetrying: false,
     })),
   setSessionRestored: restored => set(prev => ({ ...prev, isSessionRestored: restored })),
+  setLastFailedMessage: message => set(prev => ({ ...prev, lastFailedMessage: message })),
+  setRetrying: retrying => set(prev => ({ ...prev, isRetrying: retrying })),
+  clearError: () => set(prev => ({ ...prev, lastFailedMessage: undefined, isRetrying: false })),
 }));
 
 export const useWidgetStoreShallow = <U>(selector: (store: IWidget & IActions) => U) => {

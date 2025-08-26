@@ -6,6 +6,12 @@ export interface IWidgetMessage {
   timestamp: number;
   messageId?: string;
   rating?: number;
+  error?: {
+    message: string;
+    code?: string;
+    canRetry?: boolean;
+    originalMessage?: string;
+  };
 }
 
 export interface IWidgetSession {

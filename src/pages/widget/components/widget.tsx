@@ -17,6 +17,7 @@ const Widget = () => {
   const {
     setInputValue,
     handleSendMessage,
+    handleRetryMessage,
     startNewChat,
     isStreaming,
     streamingHtml,
@@ -104,6 +105,7 @@ const Widget = () => {
             streamingHtml={streamingHtml}
             chatbotId={chatbotId || undefined}
             accessToken={accessToken || undefined}
+            onRetryMessage={handleRetryMessage}
           />
           <Footer
             inputValue={inputValue}
