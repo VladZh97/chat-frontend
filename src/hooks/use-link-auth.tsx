@@ -5,11 +5,14 @@ import { getCustomClaims, isLoggedIn, refreshAuthToken } from '@/utils/auth';
 import { getAuth, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import { useNavigate } from 'react-router-dom';
+import { useDialog } from './use-dialog';
+import AuthEmailConfirmationDialog from '@/dialogs/auth-email-confirmation-dialog';
 
 const useLinkAuth = () => {
   const authFirebase = getAuth();
   const navigate = useNavigate();
   const [isLinkAuthLoading, setIsLinkAuthLoading] = useState(false);
+  const { showDialog } = useDialog();
 
   const handleLinkAuth = useCallback(async () => {
     // Early return if not a sign-in link
@@ -23,11 +26,17 @@ const useLinkAuth = () => {
 
     setIsLinkAuthLoading(true);
     // Get email from storage or prompt
-    const email =
-      window.localStorage.getItem('emailForSignIn') ||
-      window.prompt('Please provide your email for confirmation');
+    const email = window.localStorage.getItem('emailForSignIn');
 
-    if (!email) return;
+    if (!email) {
+      showDialog(AuthEmailConfirmationDialog.id, AuthEmailConfirmationDialog, {
+        onConfirm: (email: string) => {
+          window.localStorage.setItem('emailForSignIn', email);
+          handleLinkAuth();
+        },
+      });
+      return;
+    }
 
     try {
       await signInWithEmailLink(authFirebase, email, window.location.href);
