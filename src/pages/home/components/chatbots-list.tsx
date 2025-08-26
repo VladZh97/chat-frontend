@@ -9,6 +9,7 @@ import { useDialog } from '@/hooks';
 import { cn } from '@/lib/utils';
 import type { CSSProperties } from 'preact/compat';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
+import type { IChatbot } from '@/types/chatbot.type';
 
 const ChatbotsList = () => {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const ChatbotsList = () => {
                 `border-[var(--accent-color)] bg-[var(--accent-color)]/10`
               )}
             >
-              <ChatbotPreview />
+              <ChatbotPreview chatbot={chatbot} />
             </div>
             <span className="mt-3 block truncate text-sm font-medium text-stone-900">
               {chatbot.name}
@@ -99,13 +100,17 @@ const Skeleton = () => {
   ));
 };
 
-const ChatbotPreview = () => {
+const ChatbotPreview = ({ chatbot }: { chatbot: IChatbot }) => {
   return (
     <div className="absolute top-4 left-1/2 h-[200%] w-full -translate-x-1/2 px-12">
       <div className="mx-auto h-full w-full max-w-[224px] rounded-xl bg-white px-4 py-3 shadow">
         <div className="mb-4 flex items-center justify-between">
-          <ArrowLeft className="size-2.5 text-stone-700" />
-          <span className="text-[9px] font-medium text-stone-900">New chat</span>
+          <div className="flex items-center gap-2">
+            <ArrowLeft className="size-2.5 text-stone-700" />
+            <span className="block max-w-32 truncate text-[9px] font-medium text-stone-900">
+              {chatbot.publicName || chatbot.name}
+            </span>
+          </div>
           <Ellipsis className="size-2.5 text-stone-700" />
         </div>
         <div className="mb-3 flex items-end gap-1">
