@@ -41,7 +41,7 @@ export const AssistantMessage = ({
       </div>
       <div className="group relative flex flex-col">
         <div
-          className="prose rounded-2xl rounded-bl-none px-4 py-3 text-sm font-normal"
+          className="prose rounded-2xl rounded-bl-none px-4 py-3 text-sm font-normal [&_a]:!text-[var(--accent-color)] [&_a]:transition-opacity [&_a]:hover:opacity-80"
           style={{
             backgroundColor: textOnAccentTint.backgroundColor,
             color: textOnAccentTint.color,

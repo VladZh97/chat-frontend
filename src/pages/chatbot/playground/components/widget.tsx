@@ -158,7 +158,7 @@ const BotMessage = ({ message }: { message: string }) => {
       </div>
       <div className="flex flex-col">
         <div
-          className="prose rounded-2xl rounded-bl-none bg-[var(--accent-color)]/10 px-4 py-3 text-sm font-normal text-stone-900"
+          className="prose rounded-2xl rounded-bl-none bg-[var(--accent-color)]/10 px-4 py-3 text-sm font-normal text-stone-900 [&_a]:!text-[var(--accent-color)] [&_a]:transition-opacity [&_a]:hover:opacity-80"
           dangerouslySetInnerHTML={{ __html: message }}
         />
       </div>
@@ -179,10 +179,8 @@ const BotMessageLoading = () => {
       <div className="size-6 overflow-hidden rounded-full" style={{ backgroundColor: accentColor }}>
         {avatar && <img src={avatar} alt="avatar" className="size-full object-cover" />}
       </div>
-      <p className="py- flex h-11 items-center gap-1 rounded-2xl rounded-bl-none bg-[var(--accent-color)]/10 px-4">
-        <span className="inline-block size-1.5 animate-bounce rounded-full bg-stone-900 [animation-delay:-0.3s]"></span>
-        <span className="inline-block size-1.5 animate-bounce rounded-full bg-stone-900 [animation-delay:-0.15s]"></span>
-        <span className="inline-block size-1.5 animate-bounce rounded-full bg-stone-900"></span>
+      <p className="flex h-11 items-center gap-1 rounded-2xl rounded-bl-none bg-[var(--accent-color)]/10 px-4">
+        <span className="animate-pulse text-sm font-normal text-stone-900/50">Thinking...</span>
       </p>
     </div>
   );

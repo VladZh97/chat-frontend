@@ -302,4 +302,5 @@
 
 .prose {
   @apply text-stone-950;
+  @apply prose-strong:text-stone-950;
 }
