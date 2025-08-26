@@ -3,6 +3,7 @@ import type { ChatStreamEvent } from '@/api/widget';
 import { useParams } from 'react-router-dom';
 import { useChatbotStoreShallow } from '@/store/chatbot.store';
 import chatbot from '@/api/chatbot';
+import { toast } from 'sonner';
 
 export const usePlayground = () => {
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
@@ -59,6 +60,13 @@ export const usePlayground = () => {
           }
         }
       );
+    } catch (error) {
+      console.error('Error in playground message stream:', error);
+      if (error instanceof Error && error.message.includes('429')) {
+        toast.error('Rate limit exceeded. Please wait a moment before trying again.');
+      } else {
+        toast.error('Failed to send message. Please try again.');
+      }
     } finally {
       setIsStreaming(false);
     }

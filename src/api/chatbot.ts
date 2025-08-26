@@ -4,6 +4,7 @@ import queryClient from '@/lib/query';
 import { useChatbotStore } from '@/store/chatbot.store';
 import type { ChatStreamEvent } from './widget';
 import { auth } from '@/lib/auth';
+import { toast } from 'sonner';
 
 const chatbot = {
   create: async (data: Partial<IChatbot>) => {
@@ -60,6 +61,11 @@ const chatbot = {
     });
 
     if (!response.ok) {
+      if (response.status === 429) {
+        toast.error('Rate limit exceeded. Please wait a moment before trying again.');
+      } else {
+        toast.error('Failed to send message. Please try again.');
+      }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     if (!response.body) {

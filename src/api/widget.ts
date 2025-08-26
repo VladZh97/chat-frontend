@@ -2,6 +2,7 @@ import axios from 'axios';
 import type { TMessage } from '@/types/message.type';
 import { WidgetStorage } from '@/utils/widget-storage';
 import { environment } from '@/environment';
+import { toast } from 'sonner';
 
 export interface ChatStreamEvent {
   type: 'connected' | 'chunk' | 'complete';
@@ -68,7 +69,7 @@ widgetApi.interceptors.request.use(async config => {
   return config;
 });
 
-// Add response interceptor to handle 401 errors
+// Add response interceptor to handle 401 and 429 errors
 widgetApi.interceptors.response.use(
   response => response,
   async error => {
@@ -86,6 +87,10 @@ widgetApi.interceptors.response.use(
       } catch (refreshError) {
         console.error('Token refresh failed during API call:', refreshError);
       }
+    }
+
+    if (error.response?.status === 429) {
+      toast.error('Rate limit exceeded. Please wait a moment before trying again.');
     }
 
     return Promise.reject(error);
@@ -147,6 +152,10 @@ const widgetApiService = {
             body: JSON.stringify(data),
           });
         }
+      }
+
+      if (response.status === 429) {
+        toast.error('Rate limit exceeded. Please wait a moment before trying again.');
       }
 
       return response;
