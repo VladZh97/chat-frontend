@@ -132,7 +132,7 @@ const router = createBrowserRouter([
       },
       // 404 page (public)
       {
-        path: "*",
+        path: '*',
         element: (
           <Suspense fallback>
             <NotFound />

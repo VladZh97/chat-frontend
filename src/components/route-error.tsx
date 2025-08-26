@@ -13,7 +13,7 @@ const RouteError = () => {
     if (error?.status === 404) {
       return {
         title: 'Page Not Found',
-        description: 'The page you\'re looking for doesn\'t exist or has been moved.',
+        description: "The page you're looking for doesn't exist or has been moved.",
         action: 'Go Home',
         actionFn: () => navigate('/'),
       };
@@ -31,7 +31,7 @@ const RouteError = () => {
     if (error?.status === 403) {
       return {
         title: 'Access Denied',
-        description: 'You don\'t have permission to access this page.',
+        description: "You don't have permission to access this page.",
         action: 'Go Home',
         actionFn: () => navigate('/'),
       };
@@ -70,24 +70,17 @@ const RouteError = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <p className="text-center text-sm text-stone-600 leading-relaxed">
+              <p className="text-center text-sm leading-relaxed text-stone-600">
                 {errorDetails.description}
               </p>
-              
+
               <div className="flex flex-col gap-2">
-                <Button 
-                  onClick={errorDetails.actionFn}
-                  className="w-full"
-                >
+                <Button onClick={errorDetails.actionFn} className="w-full">
                   <RefreshCw className="mr-2 h-4 w-4" />
                   {errorDetails.action}
                 </Button>
-                
-                <Button 
-                  variant="outline"
-                  onClick={() => navigate('/')}
-                  className="w-full"
-                >
+
+                <Button variant="outline" onClick={() => navigate('/')} className="w-full">
                   <Home className="mr-2 h-4 w-4" />
                   Go to Dashboard
                 </Button>
@@ -113,7 +106,7 @@ const RouteError = () => {
                     {error.stack && (
                       <div>
                         <strong>Stack:</strong>
-                        <pre className="mt-1 whitespace-pre-wrap font-mono text-xs">
+                        <pre className="mt-1 font-mono text-xs whitespace-pre-wrap">
                           {error.stack}
                         </pre>
                       </div>
@@ -125,9 +118,9 @@ const RouteError = () => {
               <div className="pt-4 text-center">
                 <p className="text-xs text-stone-500">
                   If this problem persists, please{' '}
-                  <a 
-                    href="mailto:support@heyway.chat" 
-                    className="text-orange-500 hover:text-orange-600 underline transition-colors"
+                  <a
+                    href="mailto:support@heyway.chat"
+                    className="text-orange-500 underline transition-colors hover:text-orange-600"
                   >
                     contact support
                   </a>

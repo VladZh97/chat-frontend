@@ -43,7 +43,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
     // Log error for debugging
     console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
+
     // Call optional error callback
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
@@ -67,7 +67,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       const FallbackComponent = this.props.fallback || ErrorFallback;
-      
+
       return (
         <FallbackComponent
           error={this.state.error}

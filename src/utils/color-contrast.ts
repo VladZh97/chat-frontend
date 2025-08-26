@@ -216,15 +216,17 @@ export function pickOptimalTextColor(
         };
       }
     }
-    
+
     // If no light color passes, try with relaxed contrast (3:1 instead of 4.5:1) for bright backgrounds
     const backgroundLuminance = rgbToLuminance(backgroundRgb.r, backgroundRgb.g, backgroundRgb.b);
-    if (backgroundLuminance > 0.25) { // Bright background
+    if (backgroundLuminance > 0.25) {
+      // Bright background
       // First try brand colors with relaxed contrast
       for (let L = Math.max(70, targetLightness); L <= 100; L += 2) {
         const textRgb = hslToRgb(brandH, brandS, L);
         const currentContrast = contrast(textRgb, backgroundRgb);
-        if (currentContrast >= 3.0) { // Relaxed contrast requirement
+        if (currentContrast >= 3.0) {
+          // Relaxed contrast requirement
           return {
             color: hslToHex(brandH, brandS, L),
             lightness: L,
@@ -232,7 +234,7 @@ export function pickOptimalTextColor(
           };
         }
       }
-      
+
       // If brand colors don't work, try desaturated light colors
       for (let s = brandS; s >= 20; s -= 20) {
         for (let L = 85; L <= 100; L += 2) {
@@ -247,11 +249,12 @@ export function pickOptimalTextColor(
           }
         }
       }
-      
+
       // Last resort for bright backgrounds: pure white with relaxed contrast
       const whiteRgb = { r: 255, g: 255, b: 255 };
       const whiteContrast = contrast(whiteRgb, backgroundRgb);
-      if (whiteContrast >= 2.5) { // Very relaxed contrast for bright backgrounds
+      if (whiteContrast >= 2.5) {
+        // Very relaxed contrast for bright backgrounds
         return {
           color: '#ffffff',
           lightness: 100,

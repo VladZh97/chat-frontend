@@ -28,7 +28,8 @@ const NetworkError = ({ error, onRetry, retryLabel = 'Try Again' }: NetworkError
         iconColor: 'text-red-500',
         bgColor: 'bg-red-50',
         title: 'No Internet Connection',
-        description: 'Please check your internet connection and try again. Make sure you\'re connected to the internet.',
+        description:
+          "Please check your internet connection and try again. Make sure you're connected to the internet.",
         action: retryLabel,
         showConnectivityTip: true,
       };
@@ -67,7 +68,7 @@ const NetworkError = ({ error, onRetry, retryLabel = 'Try Again' }: NetworkError
           iconColor: 'text-yellow-500',
           bgColor: 'bg-yellow-50',
           title: 'Access Denied',
-          description: 'You don\'t have permission to access this resource.',
+          description: "You don't have permission to access this resource.",
           action: 'Go Home',
           actionFn: () => navigate('/'),
         };
@@ -79,7 +80,8 @@ const NetworkError = ({ error, onRetry, retryLabel = 'Try Again' }: NetworkError
           iconColor: 'text-blue-500',
           bgColor: 'bg-blue-50',
           title: 'Resource Not Found',
-          description: 'The requested resource could not be found. It may have been moved or deleted.',
+          description:
+            'The requested resource could not be found. It may have been moved or deleted.',
           action: 'Go Home',
           actionFn: () => navigate('/'),
         };
@@ -90,7 +92,8 @@ const NetworkError = ({ error, onRetry, retryLabel = 'Try Again' }: NetworkError
         iconColor: 'text-yellow-500',
         bgColor: 'bg-yellow-50',
         title: 'Request Error',
-        description: 'There was a problem with your request. Please check your input and try again.',
+        description:
+          'There was a problem with your request. Please check your input and try again.',
         action: retryLabel,
       };
     }
@@ -137,50 +140,45 @@ const NetworkError = ({ error, onRetry, retryLabel = 'Try Again' }: NetworkError
     <LayoutWrapper className="flex h-full items-center justify-center p-8">
       <Card className="mx-auto w-full max-w-md">
         <CardHeader className="text-center">
-          <div className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${config.bgColor}`}>
+          <div
+            className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${config.bgColor}`}
+          >
             <IconComponent className={`h-8 w-8 ${config.iconColor}`} />
           </div>
-          <CardTitle className="text-xl font-semibold text-stone-950">
-            {config.title}
-          </CardTitle>
+          <CardTitle className="text-xl font-semibold text-stone-950">{config.title}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <p className="text-center text-sm text-stone-600 leading-relaxed">
+            <p className="text-center text-sm leading-relaxed text-stone-600">
               {config.description}
             </p>
-            
+
             {config.showConnectivityTip && (
-              <div className="rounded-md bg-blue-50 border border-blue-200 p-3">
+              <div className="rounded-md border border-blue-200 bg-blue-50 p-3">
                 <p className="text-xs text-blue-700">
-                  <strong>Tips:</strong> Check your WiFi connection, mobile data, or try switching networks.
+                  <strong>Tips:</strong> Check your WiFi connection, mobile data, or try switching
+                  networks.
                 </p>
               </div>
             )}
 
             {config.showServerTip && (
-              <div className="rounded-md bg-orange-50 border border-orange-200 p-3">
+              <div className="rounded-md border border-orange-200 bg-orange-50 p-3">
                 <p className="text-xs text-orange-700">
-                  <strong>Server Status:</strong> We're working to resolve this issue. Please try again shortly.
+                  <strong>Server Status:</strong> We're working to resolve this issue. Please try
+                  again shortly.
                 </p>
               </div>
             )}
-            
+
             <div className="flex flex-col gap-2">
-              <Button 
-                onClick={handleAction}
-                className="w-full"
-              >
+              <Button onClick={handleAction} className="w-full">
                 <RefreshCw className="mr-2 h-4 w-4" />
                 {config.action}
               </Button>
-              
+
               {!config.actionFn && (
-                <Button 
-                  variant="outline"
-                  onClick={handleGoHome}
-                  className="w-full"
-                >
+                <Button variant="outline" onClick={handleGoHome} className="w-full">
                   <Home className="mr-2 h-4 w-4" />
                   Go to Dashboard
                 </Button>
@@ -193,7 +191,8 @@ const NetworkError = ({ error, onRetry, retryLabel = 'Try Again' }: NetworkError
                   Technical Details
                 </summary>
                 <div className="mt-2 text-xs text-gray-600">
-                  <strong>Error Code:</strong> {error.code || 'Unknown'}<br />
+                  <strong>Error Code:</strong> {error.code || 'Unknown'}
+                  <br />
                   <strong>Message:</strong> {error.message}
                 </div>
               </details>
@@ -202,9 +201,9 @@ const NetworkError = ({ error, onRetry, retryLabel = 'Try Again' }: NetworkError
             <div className="pt-4 text-center">
               <p className="text-xs text-stone-500">
                 Need help?{' '}
-                <a 
-                  href="mailto:support@heyway.chat" 
-                  className="text-orange-500 hover:text-orange-600 underline transition-colors"
+                <a
+                  href="mailto:support@heyway.chat"
+                  className="text-orange-500 underline transition-colors hover:text-orange-600"
                 >
                   Contact support
                 </a>

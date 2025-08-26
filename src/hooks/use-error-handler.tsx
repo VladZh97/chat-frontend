@@ -49,36 +49,40 @@ export const useErrorHandler = () => {
     return apiError;
   }, []);
 
-  const showNetworkError = useCallback((apiError: ApiError, onRetry?: () => void) => {
-    const NetworkErrorComponent = () => <NetworkError error={apiError} onRetry={onRetry} />;
-    
-    showDialog('network-error', NetworkErrorComponent);
-  }, [showDialog]);
+  const showNetworkError = useCallback(
+    (apiError: ApiError, onRetry?: () => void) => {
+      const NetworkErrorComponent = () => <NetworkError error={apiError} onRetry={onRetry} />;
+
+      showDialog('network-error', NetworkErrorComponent);
+    },
+    [showDialog]
+  );
 
   const clearError = useCallback(() => {
     setError(null);
   }, []);
 
-  const withErrorHandling = useCallback(<T extends any[], R>(
-    fn: (...args: T) => Promise<R>
-  ) => {
-    return async (...args: T): Promise<R | null> => {
-      try {
-        const result = await fn(...args);
-        clearError();
-        return result;
-      } catch (error) {
-        const apiError = handleError(error);
-        
-        // For critical errors, show the network error dialog
-        if (apiError.type === 'network' || (apiError.code && apiError.code >= 500)) {
-          showNetworkError(apiError, () => fn(...args));
+  const withErrorHandling = useCallback(
+    <T extends any[], R>(fn: (...args: T) => Promise<R>) => {
+      return async (...args: T): Promise<R | null> => {
+        try {
+          const result = await fn(...args);
+          clearError();
+          return result;
+        } catch (error) {
+          const apiError = handleError(error);
+
+          // For critical errors, show the network error dialog
+          if (apiError.type === 'network' || (apiError.code && apiError.code >= 500)) {
+            showNetworkError(apiError, () => fn(...args));
+          }
+
+          return null;
         }
-        
-        return null;
-      }
-    };
-  }, [handleError, clearError, showNetworkError]);
+      };
+    },
+    [handleError, clearError, showNetworkError]
+  );
 
   return {
     error,
